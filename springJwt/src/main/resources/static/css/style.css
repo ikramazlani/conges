@@ -1,0 +1,16 @@
+/* Styles de base */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Animation pour les boutons */
+button, a.button {
+    transition: all 0.3s ease;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+    .container {
+        padding: 1rem;
+    }
+}

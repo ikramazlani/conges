@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de la Demande</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="flex min-h-screen">
+    <aside class="w-64 bg-white shadow flex flex-col justify-between">
+        <div>
+            <h1 class="text-blue-600 text-2xl font-bold p-6">GestionCongés</h1>
+            <nav class="px-4">
+                <ul>
+                    <li class="mb-2">
+                        <a href="leave-request.html" class="flex items-center text-gray-700 font-medium p-2 rounded hover:bg-blue-50 cursor-pointer">
+                            📝 Demande de congé
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="dashboard.html" class="flex items-center bg-blue-100 text-blue-700 font-semibold p-2 rounded">
+                            📊 Tableau de bord
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="historique-conges.html" class="flex items-center text-gray-700 font-medium p-2 rounded hover:bg-blue-50 cursor-pointer">
+                            📋 Historique des congés
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="profile.html" class="flex items-center text-gray-700 font-medium p-2 rounded hover:bg-blue-50 cursor-pointer">
+                            👤 Mon profil
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="p-4">
+            <button id="logoutBtn" class="w-full text-red-600 border border-red-200 bg-red-50 hover:bg-red-100 font-medium py-2 px-4 rounded flex items-center justify-center">
+                🔓 Déconnexion
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-10">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Détails de la demande</h1>
+
+            <div id="demandeDetails" class="space-y-4">
+                <!-- Les détails seront chargés ici -->
+            </div>
+
+            <div id="actionButtons" class="mt-6 flex space-x-4">
+                <!-- Boutons d'action seront ajoutés dynamiquement -->
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'index.html';
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = 'index.html';
+        });
+
+        const demandeId = localStorage.getItem('currentDemandeId');
+        if (!demandeId) {
+            alert('Aucune demande sélectionnée');
+            return window.location.href = 'historique-conges.html';
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/demandes-conge/${demandeId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error('Erreur lors du chargement des détails');
+
+            const demande = await response.json();
+            const detailsContainer = document.getElementById('demandeDetails');
+            const actionButtons = document.getElementById('actionButtons');
+
+            // Formater les dates
+            const dateCreation = new Date(demande.dateCreation).toLocaleDateString('fr-FR');
+            const dateDebut = new Date(demande.dateDebut).toLocaleDateString('fr-FR');
+            const dateFin = new Date(demande.dateFin).toLocaleDateString('fr-FR');
+
+            // Afficher les détails
+            detailsContainer.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Référence</h3>
+                        <p class="mt-1 text-sm text-gray-900">${demande.reference || 'CONG-' + demande.id.toString().padStart(3, '0')}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Date de création</h3>
+                        <p class="mt-1 text-sm text-gray-900">${dateCreation}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Période</h3>
+                        <p class="mt-1 text-sm text-gray-900">${dateDebut} - ${dateFin}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Durée</h3>
+                        <p class="mt-1 text-sm text-gray-900">${demande.duree} jour(s)</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Motif</h3>
+                        <p class="mt-1 text-sm text-gray-900">${demande.motif}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Remplacé par</h3>
+                        <p class="mt-1 text-sm text-gray-900">${demande.remplacerPar || 'Non spécifié'}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Statut</h3>
+                        <span class="mt-1 px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                            ${demande.statut === 'EN_ATTENTE' ? 'text-yellow-600 bg-yellow-100' :
+                              demande.statut.includes('APPROUV') ? 'text-green-600 bg-green-100' :
+                              demande.statut.includes('REFUS') ? 'text-red-600 bg-red-100' :
+                              'text-gray-600 bg-gray-100'}">
+                            ${demande.statut}
+                        </span>
+                    </div>
+                    ${demande.documentLink ? `
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Document</h3>
+                        <a href="${demande.documentLink}" class="mt-1 text-sm text-blue-600 hover:underline" target="_blank">
+                            <i class="far fa-eye"></i> Voir document
+                        </a>
+                    </div>` : ''}
+                </div>
+            `;
+
+            // Ajouter les boutons d'action si la demande est en attente
+            if (demande.statut === 'EN_ATTENTE') {
+                actionButtons.innerHTML = `
+                    <button onclick="window.location.href='edit-demande.html'"
+                            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        <i class="fas fa-edit mr-2"></i> Modifier
+                    </button>
+                    <button onclick="deleteDemande(${demande.id})"
+                            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                        <i class="fas fa-trash mr-2"></i> Supprimer
+                    </button>
+                    <button onclick="window.location.href='historique-conges.html'"
+                            class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+                        <i class="fas fa-arrow-left mr-2"></i> Retour
+                    </button>
+                `;
+            } else {
+                actionButtons.innerHTML = `
+                    <button onclick="window.location.href='historique-conges.html'"
+                            class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+                        <i class="fas fa-arrow-left mr-2"></i> Retour
+                    </button>
+                `;
+            }
+        } catch (err) {
+            console.error(err);
+            document.getElementById('demandeDetails').innerHTML = `
+                <div class="text-red-600">Erreur : ${err.message}</div>
+            `;
+        }
+    });
+
+    async function deleteDemande(demandeId) {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'index.html';
+
+        if (!confirm('Êtes-vous sûr de vouloir supprimer cette demande ?')) return;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/demandes-conge/${demandeId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error('Erreur lors de la suppression');
+
+            alert('Demande supprimée avec succès');
+            window.location.href = 'historique-conges.html';
+        } catch (err) {
+            console.error(err);
+            alert('Erreur: ' + err.message);
+        }
+    }
+</script>
+</body>
+</html>

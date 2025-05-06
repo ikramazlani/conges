@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier Demande de Congé</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr@4.6.13/dist/flatpickr.min.css">
+    <style>
+        .holiday {
+            color: #ef4444 !important;
+            font-weight: bold;
+        }
+        .weekend {
+            color: #3b82f6 !important;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="flex min-h-screen">
+    <!-- Sidebar identique au dashboard -->
+    <aside class="w-64 bg-white shadow flex flex-col justify-between">
+        <div>
+            <h1 class="text-blue-600 text-2xl font-bold p-6">GestionCongés</h1>
+            <nav class="px-4">
+                <ul>
+                    <li class="mb-2">
+                        <a href="leave-request.html" class="flex items-center text-gray-700 font-medium p-2 rounded hover:bg-blue-50 cursor-pointer">
+                            📝 Demande de congé
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="dashboard.html" class="flex items-center bg-blue-100 text-blue-700 font-semibold p-2 rounded">
+                            📊 Tableau de bord
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="historique-conges.html" class="flex items-center text-gray-700 font-medium p-2 rounded hover:bg-blue-50 cursor-pointer">
+                            📋 Historique des congés
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="profile.html" class="flex items-center text-gray-700 font-medium p-2 rounded hover:bg-blue-50 cursor-pointer">
+                            👤 Mon profil
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="p-4">
+            <button id="logoutBtn" class="w-full text-red-600 border border-red-200 bg-red-50 hover:bg-red-100 font-medium py-2 px-4 rounded flex items-center justify-center">
+                🔓 Déconnexion
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 p-8">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        <i class="fas fa-edit text-blue-500 mr-2"></i> Modifier la demande de congé
+                    </h2>
+                </div>
+
+                <form id="editLeaveForm" class="space-y-6">
+                    <input type="hidden" id="demandeId">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="editStartDate" class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-calendar-day text-blue-500 mr-2"></i> Date de début
+                            </label>
+                            <input type="text" id="editStartDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Sélectionnez une date">
+                        </div>
+
+                        <div>
+                            <label for="editEndDate" class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-calendar-day text-blue-500 mr-2"></i> Date de fin
+                            </label>
+                            <input type="text" id="editEndDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Sélectionnez une date">
+                        </div>
+                    </div>
+
+                    <div id="editDurationInfo" class="bg-blue-50 p-4 rounded-lg">
+                        <p class="text-blue-800 font-medium">
+                            <i class="fas fa-clock text-blue-500 mr-2"></i>
+                            Durée du congé: <span id="editDurationDays">0</span> jours (hors weekends et jours fériés)
+                        </p>
+                    </div>
+
+                    <div>
+                        <label for="editReason" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-comment-dots text-blue-500 mr-2"></i> Motif
+                        </label>
+                        <textarea id="editReason" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Veuillez indiquer le motif de votre congé..."></textarea>
+                    </div>
+
+                    <div class="flex justify-end space-x-4 pt-4">
+                        <button type="button" id="editCancelBtn" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                            <i class="fas fa-times mr-2"></i> Annuler
+                        </button>
+                        <button type="submit" id="editSubmitBtn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                            <i class="fas fa-save mr-2"></i> Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" class="fixed top-4 right-4 hidden">
+    <div class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="toastMessage">Modification enregistrée avec succès!</span>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+<script src="https://unpkg.com/flatpickr@4.6.13/dist/l10n/fr.js"></script>
+<script>
+    // Jours fériés marocains (à adapter selon l'année)
+    const holidays = [
+        "2023-01-01", // Nouvel An
+        "2023-01-11", // Manifeste de l'indépendance
+        "2023-05-01", // Fête du travail
+        "2023-07-30", // Fête du trône
+        "2023-08-14", // Oued Eddahab
+        "2023-08-20", // Révolution du roi et du peuple
+        "2023-08-21", // Fête de la jeunesse
+        "2023-11-06", // Marche verte
+        "2023-11-18"  // Fête de l'indépendance
+    ];
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const demandeId = localStorage.getItem('currentDemandeId');
+        if (!demandeId) {
+            window.location.href = 'historique-conges.html';
+            return;
+        }
+
+        // Configuration du date picker
+        const datePickerOptions = {
+            locale: 'fr',
+            dateFormat: 'd/m/Y',
+            disable: [
+                function(date) {
+                    // Désactiver les weekends
+                    return (date.getDay() === 0 || date.getDay() === 6);
+                },
+                // Désactiver les jours fériés
+                ...holidays
+            ]
+        };
+
+        const editStartDatePicker = flatpickr('#editStartDate', {
+            ...datePickerOptions,
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length > 0) {
+                    editEndDatePicker.set('minDate', selectedDates[0]);
+                    calculateEditDuration();
+                }
+            }
+        });
+
+        const editEndDatePicker = flatpickr('#editEndDate', {
+            ...datePickerOptions,
+            onChange: function(selectedDates, dateStr, instance) {
+                calculateEditDuration();
+            }
+        });
+
+        // Charger les données de la demande
+        try {
+            const response = await fetch(`http://localhost:8080/api/demandes-conge/${demandeId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error('Erreur lors du chargement de la demande');
+
+            const demande = await response.json();
+
+            // Remplir le formulaire avec les données existantes
+            document.getElementById('demandeId').value = demande.id;
+
+            const startDate = new Date(demande.dateDebut);
+            const endDate = new Date(demande.dateFin);
+
+            editStartDatePicker.setDate(startDate);
+            editEndDatePicker.setDate(endDate);
+
+            document.getElementById('editReason').value = demande.motif;
+
+            // Calculer et afficher la durée initiale
+            calculateEditDuration();
+
+        } catch (error) {
+            console.error(error);
+            showError('Erreur lors du chargement de la demande');
+        }
+
+        // Calcul de la durée
+        function calculateEditDuration() {
+            const startDate = editStartDatePicker.selectedDates[0];
+            const endDate = editEndDatePicker.selectedDates[0];
+
+            if (!startDate || !endDate) return;
+
+            // Vérifier que la date de fin est après la date de début
+            if (endDate < startDate) {
+                editEndDatePicker.clear();
+                showError('La date de fin doit être après la date de début');
+                return;
+            }
+
+            // Calculer la durée en jours ouvrés
+            let duration = 0;
+            let currentDate = new Date(startDate);
+
+            while (currentDate <= endDate) {
+                const dayOfWeek = currentDate.getDay();
+                const dateStr = currentDate.toISOString().split('T')[0];
+
+                // Ne pas compter les weekends et jours fériés
+                if (dayOfWeek !== 0 && dayOfWeek !== 6 && !holidays.includes(dateStr)) {
+                    duration++;
+                }
+
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // Vérifier la durée maximale (22 jours)
+            if (duration > 22) {
+                showError('La durée maximale de congé est de 22 jours');
+                editEndDatePicker.clear();
+                return;
+            }
+
+            document.getElementById('editDurationDays').textContent = duration;
+        }
+
+        // Gestion du formulaire
+        document.getElementById('editLeaveForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('editSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Enregistrement...';
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/demandes-conge/${demandeId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        dateDebut: editStartDatePicker.selectedDates[0].toISOString(),
+                        dateFin: editEndDatePicker.selectedDates[0].toISOString(),
+                        motif: document.getElementById('editReason').value,
+                        duree: parseInt(document.getElementById('editDurationDays').textContent)
+                    })
+                });
+
+                if (!response.ok) throw new Error('Erreur lors de la modification');
+
+                showToast('Modification enregistrée avec succès!');
+                setTimeout(() => {
+                    window.location.href = 'demande-details.html';
+                }, 2000);
+            } catch (error) {
+                showError(error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i> Enregistrer';
+            }
+        });
+
+        // Bouton annuler
+        document.getElementById('editCancelBtn').addEventListener('click', function() {
+            window.location.href = 'demande-details.html';
+        });
+
+        // Déconnexion
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = 'index.html';
+        });
+
+        // Fonctions d'affichage des messages
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        function showError(message) {
+            const toast = document.getElementById('toast');
+            toast.querySelector('#toastMessage').textContent = message;
+            toast.classList.remove('hidden', 'bg-green-500');
+            toast.classList.add('bg-red-500');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('bg-red-500');
+                toast.classList.add('bg-green-500');
+            }, 3000);
+        }
+    });
+</script>
+</body>
+</html>
