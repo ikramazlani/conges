@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord Admin - Système de gestion des congés</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: {
+                  50: '#EFF6FF',
+                  100: '#DBEAFE',
+                  200: '#BFDBFE',
+                  300: '#93C5FD',
+                  400: '#60A5FA',
+                  500: '#3B82F6',
+                  600: '#2563EB',
+                  700: '#1D4ED8',
+                  800: '#1E40AF',
+                  900: '#1E3A8A',
+                },
+                secondary: {
+                  50: '#F0FDFA',
+                  100: '#CCFBF1',
+                  200: '#99F6E4',
+                  300: '#5EEAD4',
+                  400: '#2DD4BF',
+                  500: '#14B8A6',
+                  600: '#0D9488',
+                  700: '#0F766E',
+                  800: '#115E59',
+                  900: '#134E4A',
+                },
+              },
+              fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+              },
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="min-h-screen flex flex-col">
+    <!-- Top Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                            <path d="m9 16 2 2 4-4"></path>
+                        </svg>
+                        <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <!-- Date Filter -->
+                    <div class="relative mr-4">
+                        <select id="dateFilter" class="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                            <option value="today">Aujourd'hui</option>
+                            <option value="week">Cette semaine</option>
+                            <option value="month" selected>Ce mois</option>
+                            <option value="year">Cette année</option>
+                            <option value="custom">Personnalisé</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Department Filter -->
+                    <div class="relative mr-4">
+                        <select id="departmentFilter" class="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                            <option value="all">Tous départements</option>
+                            <option value="1">RH</option>
+                            <option value="2">IT</option>
+                            <option value="3">Finance</option>
+                            <option value="4">Marketing</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- User Menu -->
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                            <span class="sr-only">Ouvrir le menu utilisateur</span>
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                    A
+                                </div>
+                                <span class="ml-2 text-gray-700">Admin Utilisateur</span>
+                                <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+                            <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
+                            <a href="parametre.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Paramètres</a>
+                            <a href="index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1">
+        <!-- Sidebar -->
+        <div id="sidebar" class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+            <div class="h-full flex flex-col">
+                <nav class="flex-1 py-4 px-2 space-y-1">
+                    <a href="dashboard.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="9"></rect>
+                            <rect x="14" y="3" width="7" height="5"></rect>
+                            <rect x="14" y="12" width="7" height="9"></rect>
+                            <rect x="3" y="16" width="7" height="5"></rect>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                    <a href="users.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Gestion des utilisateurs
+                    </a>
+                    <a href="leave-config.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M9 14l2 2 4-4"></path>
+                        </svg>
+                        Demandes de Congés
+                    </a>
+                    <a href="calendar-config.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                        </svg>
+                        Configuration du calendrier
+                    </a>
+                    <a href="departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                            <line x1="12" y1="22" y2="12" x2="12"></line>
+                        </svg>
+                        Gestion des départements
+                    </a>
+                    <a href="reports.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        Rapports & Statistiques
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Mobile Sidebar Toggle -->
+        <div class="md:hidden bg-white shadow-sm border-b border-gray-200 sticky top-16 z-10 w-full">
+            <button id="mobileSidebarToggle" class="px-4 py-3 flex items-center text-sm text-gray-500 w-full focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                Menu
+            </button>
+
+            <div id="mobileSidebar" class="hidden bg-white shadow-md absolute w-full border-b border-gray-200">
+                <nav class="py-2 space-y-1">
+                    <a href="dashboard.html" class="bg-primary-50 text-primary-700 block px-4 py-2 text-sm font-medium">
+                        Tableau de bord
+                    </a>
+                    <a href="users.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-4 py-2 text-sm font-medium">
+                        Gestion des utilisateurs
+                    </a>
+                    <a href="leave-config.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-4 py-2 text-sm font-medium">
+                        Configuration des congés
+                    </a>
+                    <a href="calendar-config.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-4 py-2 text-sm font-medium">
+                        Configuration du calendrier
+                    </a>
+                    <a href="departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-4 py-2 text-sm font-medium">
+                        Gestion des départements
+                    </a>
+                    <a href="reports.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-4 py-2 text-sm font-medium">
+                        Rapports & Statistiques
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 min-w-0 overflow-auto">
+            <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                <h1 class="text-2xl font-semibold text-gray-900">Tableau de bord</h1>
+
+                <!-- Stats Overview -->
+                <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    <!-- Total Users -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg transition-all duration-300 hover:shadow-md">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-primary-100 rounded-md p-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-700" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Utilisateurs totaux
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="totalUsers" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-4 sm:px-6">
+                            <div class="text-sm">
+                                <a href="users.html" class="font-medium text-primary-700 hover:text-primary-600">
+                                    Voir tous les utilisateurs
+                                    <span class="sr-only"> utilisateurs</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Departments -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg transition-all duration-300 hover:shadow-md">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-indigo-100 rounded-md p-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-700" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                        <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                                        <line x1="12" y1="22" y2="12" x2="12"></line>
+                                    </svg>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Départements
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="totalDepartments" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-4 sm:px-6">
+                            <div class="text-sm">
+                                <a href="departments.html" class="font-medium text-indigo-700 hover:text-indigo-600">
+                                    Voir tous les départements
+                                    <span class="sr-only"> départements</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Approved Leaves -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg transition-all duration-300 hover:shadow-md">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-700" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Congés approuvés
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="approvedLeaves" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-4 sm:px-6">
+                            <div class="text-sm">
+                                <a href="leave-config.html" class="font-medium text-green-700 hover:text-green-600">
+                                    Voir les demandes
+                                    <span class="sr-only"> congés approuvés</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Leaves -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg transition-all duration-300 hover:shadow-md">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-yellow-100 rounded-md p-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-700" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                    </svg>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Congés en attente
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="pendingLeaves" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-4 sm:px-6">
+                            <div class="text-sm">
+                                <a href="leave-config.html" class="font-medium text-yellow-700 hover:text-yellow-600">
+                                    Voir les demandes
+                                    <span class="sr-only"> congés en attente</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Leaves by Department Chart -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Congés par département</h3>
+                        <div class="h-80">
+                            <canvas id="leavesByDepartmentChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Leaves Status Pie Chart -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Statut des demandes</h3>
+                        <div class="h-80">
+                            <canvas id="leavesStatusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Leaves and Users -->
+                <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Recent Leaves -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Demandes récentes</h3>
+                            <p class="mt-1 text-sm text-gray-500">Les 5 dernières demandes de congé</p>
+                        </div>
+                        <div class="bg-white px-4 py-5 sm:p-6">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employé</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Période</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="recentLeavesTable" class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-4 text-center text-gray-500">Chargement des données...</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-4 sm:px-6">
+                            <div class="text-sm">
+                                <a href="leave-config.html" class="font-medium text-primary-700 hover:text-primary-600">
+                                    Voir toutes les demandes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Users -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Nouveaux utilisateurs</h3>
+                            <p class="mt-1 text-sm text-gray-500">Les 5 derniers utilisateurs inscrits</p>
+                        </div>
+                        <div class="bg-white px-4 py-5 sm:p-6">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Département</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="recentUsersTable" class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-4 text-center text-gray-500">Chargement des données...</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-4 sm:px-6">
+                            <div class="text-sm">
+                                <a href="users.html" class="font-medium text-primary-700 hover:text-primary-600">
+                                    Voir tous les utilisateurs
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Department Overview -->
+                <div class="mt-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Aperçu des départements</h3>
+                        <button id="refreshDataBtn" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Actualiser
+                        </button>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Département
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Employés
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Congés approuvés
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Taux d'occupation
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="departmentsTable" class="bg-white divide-y divide-gray-200">
+                                        <tr>
+                                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">Chargement des données...</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // User menu toggle functionality
+    const userMenuButton = document.getElementById('userMenuBtn');
+    const userMenu = document.getElementById('userMenu');
+
+    if (userMenuButton && userMenu) {
+      userMenuButton.addEventListener('click', () => {
+        const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+        userMenuButton.setAttribute('aria-expanded', !expanded);
+        userMenu.classList.toggle('hidden');
+      });
+
+      // Close the menu when clicking outside
+      document.addEventListener('click', (event) => {
+        if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+          userMenuButton.setAttribute('aria-expanded', 'false');
+          userMenu.classList.add('hidden');
+        }
+      });
+    }
+
+    // Mobile sidebar toggle functionality
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    const mobileSidebar = document.getElementById('mobileSidebar');
+
+    if (mobileSidebarToggle && mobileSidebar) {
+      mobileSidebarToggle.addEventListener('click', () => {
+        mobileSidebar.classList.toggle('hidden');
+      });
+
+      // Close the sidebar when clicking outside
+      document.addEventListener('click', (event) => {
+        if (!mobileSidebarToggle.contains(event.target) && !mobileSidebar.contains(event.target)) {
+          mobileSidebar.classList.add('hidden');
+        }
+      });
+    }
+
+    // Charts initialization
+    let leavesByDepartmentChart;
+    let leavesStatusChart;
+
+    // Function to get JWT token from localStorage
+    function getToken() {
+      return localStorage.getItem('token');
+    }
+
+    // Function to make authenticated requests
+    async function makeAuthenticatedRequest(url, method = 'GET', body = null) {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getToken()}`
+      };
+
+      const config = {
+        method: method,
+        headers: headers
+      };
+
+      if (body) {
+        config.body = JSON.stringify(body);
+      }
+
+      const response = await fetch(url, config);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return response.json();
+    }
+
+    // Function to fetch dashboard data
+    async function fetchDashboardData() {
+      try {
+        // Fetch user count
+        const userCount = await makeAuthenticatedRequest('http://localhost:8080/api/users/count');
+        document.getElementById('totalUsers').textContent = userCount || '--';
+
+        // Fetch department count
+        const departments = await makeAuthenticatedRequest('http://localhost:8080/api/departements');
+        document.getElementById('totalDepartments').textContent = departments.length || '--';
+
+        // Fetch leave statistics
+        const leavesStats = await makeAuthenticatedRequest('http://localhost:8080/api/demandes-conge/stats');
+        document.getElementById('approvedLeaves').textContent = leavesStats.APPROVED || '--';
+        document.getElementById('pendingLeaves').textContent = leavesStats.PENDING || '--';
+
+        // Fetch all leaves with employee info for charts
+        const allLeaves = await makeAuthenticatedRequest('http://localhost:8080/api/demandes-conge/all-with-employee-info');
+
+        // Prepare data for charts
+        const chartData = prepareChartData(departments, allLeaves);
+        updateCharts(chartData);
+
+        // Fetch recent leaves
+        const recentLeaves = allLeaves.slice(0, 5); // Get first 5 leaves
+        populateRecentLeaves(recentLeaves);
+
+        // Fetch recent users
+        const allUsers = await makeAuthenticatedRequest('http://localhost:8080/api/users/all');
+        const recentUsers = allUsers.slice(0, 5); // Get first 5 users
+        populateRecentUsers(recentUsers);
+
+        // Prepare departments overview
+        const departmentsOverview = await prepareDepartmentsOverview(departments, allUsers, allLeaves);
+        populateDepartmentsTable(departmentsOverview);
+
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        // Show error messages or retry logic can be added here
+      }
+    }
+
+    // Function to prepare chart data
+    function prepareChartData(departments, leaves) {
+      const result = {
+        departments: [],
+        approvedLeaves: 0,
+        pendingLeaves: 0,
+        rejectedLeaves: 0
+      };
+
+      // Count leaves by status
+      leaves.forEach(leave => {
+        if (leave.statut === 'APPROVED' || 'APPROUVÉ') result.approvedLeaves++;
+        else if (leave.statut === 'PENDING' || ' EN_ATTENTE') result.pendingLeaves++;
+        else if (leave.statut === 'REJECTED' || 'REFUSÉ') result.rejectedLeaves++;
+      });
+
+      // Prepare data for leaves by department chart
+      result.departments = departments.map(dept => {
+        const deptLeaves = leaves.filter(leave =>
+          leave.employee && leave.employee.departement &&
+          leave.employee.departement.id === dept.id
+        );
+
+        return {
+          name: dept.nom || 'N/A',
+          approvedLeaves: deptLeaves.filter(l => l.statut === 'APPROUVÉ' ).length,
+          pendingLeaves: deptLeaves.filter(l => l.statut === 'REFUSÉ').length,
+          employeeCount: 0 // Will be updated later
+        };
+      });
+
+      return result;
+    }
+
+    // Function to prepare departments overview
+    async function prepareDepartmentsOverview(departments, users, leaves) {
+      return departments.map(dept => {
+        const deptUsers = users.filter(user =>
+          user.departement && user.departement.id === dept.id
+        );
+
+        const deptLeaves = leaves.filter(leave =>
+          leave.employee && leave.employee.departement &&
+          leave.employee.departement.id === dept.id
+        );
+
+        const approvedLeaves = deptLeaves.filter(l => l.statut === 'APPROUVÉ').length;
+        const employeeCount = deptUsers.length;
+        const occupancyRate = employeeCount > 0 ?
+          Math.round((approvedLeaves / employeeCount) * 100) : 0;
+
+        return {
+          id: dept.id,
+          name: dept.nom || 'N/A',
+          employeeCount: employeeCount,
+          approvedLeaves: approvedLeaves,
+          occupancyRate: occupancyRate
+        };
+      });
+    }
+
+    // Function to update charts with new data
+    function updateCharts(chartData) {
+      // Leaves by Department Chart
+      const leavesByDepartmentCtx = document.getElementById('leavesByDepartmentChart').getContext('2d');
+
+      if (leavesByDepartmentChart) {
+        leavesByDepartmentChart.destroy();
+      }
+
+      leavesByDepartmentChart = new Chart(leavesByDepartmentCtx, {
+        type: 'bar',
+        data: {
+          labels: chartData.departments.map(dept => dept.name),
+          datasets: [{
+            label: 'Congés approuvés',
+            data: chartData.departments.map(dept => dept.approvedLeaves),
+            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+            borderColor: 'rgba(59, 130, 246, 1)',
+            borderWidth: 1
+          }, {
+            label: 'Congés en attente',
+            data: chartData.departments.map(dept => dept.pendingLeaves),
+            backgroundColor: 'rgba(234, 179, 8, 0.7)',
+            borderColor: 'rgba(234, 179, 8, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // Leaves Status Pie Chart
+      const leavesStatusCtx = document.getElementById('leavesStatusChart').getContext('2d');
+
+      if (leavesStatusChart) {
+        leavesStatusChart.destroy();
+      }
+
+      leavesStatusChart = new Chart(leavesStatusCtx, {
+        type: 'pie',
+        data: {
+          labels: ['Approuvés', 'En attente', 'Rejetés'],
+          datasets: [{
+            data: [
+              chartData.approvedLeaves || 0,
+              chartData.pendingLeaves || 0,
+              chartData.rejectedLeaves || 0
+            ],
+            backgroundColor: [
+              'rgba(16, 185, 129, 0.7)',
+              'rgba(234, 179, 8, 0.7)',
+              'rgba(239, 68, 68, 0.7)'
+            ],
+            borderColor: [
+              'rgba(16, 185, 129, 1)',
+              'rgba(234, 179, 8, 1)',
+              'rgba(239, 68, 68, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+
+    // Function to populate recent leaves table
+    function populateRecentLeaves(leaves) {
+      const tableBody = document.getElementById('recentLeavesTable');
+      tableBody.innerHTML = '';
+
+      if (!leaves || leaves.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="3" class="px-6 py-4 text-center text-gray-500">Aucune demande récente</td>
+          </tr>
+        `;
+        return;
+      }
+
+      leaves.forEach(leave => {
+        const row = document.createElement('tr');
+
+        // Determine status badge color
+        let statusClass = '';
+        if (leave.statut === 'APPROVED') {
+          statusClass = 'bg-green-100 text-green-800';
+        } else if (leave.statut === 'PENDING') {
+          statusClass = 'bg-yellow-100 text-yellow-800';
+        } else {
+          statusClass = 'bg-red-100 text-red-800';
+        }
+
+        const employee = leave.employee || {};
+        const departement = employee.departement || {};
+
+        row.innerHTML = `
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700">
+                ${employee.firstName ? employee.firstName.charAt(0) : ''}${employee.lastName ? employee.lastName.charAt(0) : ''}
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900">${employee.firstName || 'N/A'} ${employee.lastName || 'N/A'}</div>
+                <div class="text-sm text-gray-500">${departement.nom || 'N/A'}</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${formatDate(leave.dateDebut)} - ${formatDate(leave.dateFin)}</div>
+            <div class="text-sm text-gray-500">${leave.motif || 'N/A'}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+              ${formatStatus(leave.statut)}
+            </span>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Function to populate recent users table
+    function populateRecentUsers(users) {
+      const tableBody = document.getElementById('recentUsersTable');
+      tableBody.innerHTML = '';
+
+      if (!users || users.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="3" class="px-6 py-4 text-center text-gray-500">Aucun nouvel utilisateur</td>
+          </tr>
+        `;
+        return;
+      }
+
+      users.forEach(user => {
+        const row = document.createElement('tr');
+        const departement = user.departement || {};
+
+        row.innerHTML = `
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700">
+                ${user.firstName ? user.firstName.charAt(0) : ''}${user.lastName ? user.lastName.charAt(0) : ''}
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900">${user.firstName || 'N/A'} ${user.lastName || 'N/A'}</div>
+                <div class="text-sm text-gray-500">${user.email || 'N/A'}</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${departement.nom || 'N/A'}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">
+              ${user.role === 'ADMIN' ? 'Administrateur' : 'Employé'}
+            </span>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Function to populate departments table
+    function populateDepartmentsTable(departments) {
+      const tableBody = document.getElementById('departmentsTable');
+      tableBody.innerHTML = '';
+
+      if (!departments || departments.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="4" class="px-6 py-4 text-center text-gray-500">Aucun département trouvé</td>
+          </tr>
+        `;
+        return;
+      }
+
+      departments.forEach(dept => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${dept.name}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${dept.employeeCount}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${dept.approvedLeaves}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                <div class="bg-primary-600 h-2.5 rounded-full" style="width: ${dept.occupancyRate}%"></div>
+              </div>
+              <span class="text-sm text-gray-500">${dept.occupancyRate}%</span>
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Helper function to format date
+    function formatDate(dateString) {
+      if (!dateString) return 'N/A';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('fr-FR');
+    }
+
+    // Helper function to format status
+    function formatStatus(status) {
+      const statusMap = {
+        'PENDING': 'En attente',
+        'APPROVED': 'Approuvé',
+        'REJECTED': 'Rejeté'
+      };
+      return statusMap[status] || status;
+    }
+
+    // Refresh button functionality
+    document.getElementById('refreshDataBtn').addEventListener('click', fetchDashboardData);
+
+    // Date filter functionality
+    document.getElementById('dateFilter').addEventListener('change', function() {
+      // You would typically fetch new data based on the selected filter
+      fetchDashboardData();
+    });
+
+    // Department filter functionality
+    document.getElementById('departmentFilter').addEventListener('change', function() {
+      // You would typically fetch new data based on the selected department
+      fetchDashboardData();
+    });
+
+    // Check authentication before loading data
+    function checkAuthAndLoadData() {
+      if (!getToken()) {
+        // Redirect to login if no token found
+        window.location.href = '/login.html';
+      } else {
+        // Initialize dashboard
+        fetchDashboardData();
+      }
+    }
+
+    // Initialize dashboard when page loads
+    document.addEventListener('DOMContentLoaded', checkAuthAndLoadData);
+</script>
+</body>
+</html>

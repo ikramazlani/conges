@@ -1,5 +1,6 @@
 package com.helloIftekhar.springJwt.repository;
 
+import com.helloIftekhar.springJwt.dto.DemandeCongeResponseDTO;
 import com.helloIftekhar.springJwt.model.DemandeConge;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,11 @@ public interface DemandeCongeRepository extends JpaRepository<DemandeConge, Long
     List<DemandeConge> findByIdEmployee(Long idEmployee);
 
 
+
+    @Modifying
+    @Query("DELETE FROM DemandeConge d WHERE d.idEmployee = :employeeId")
+    void deleteByIdEmployee(@Param("employeeId") Long employeeId);
+
     Page<DemandeConge> findByIdEmployeeOrderByDateCreationDesc(Long idEmployee, Pageable pageable);
 
     // Méthode pour obtenir toute la liste (sans pagination)
@@ -33,6 +39,15 @@ public interface DemandeCongeRepository extends JpaRepository<DemandeConge, Long
         String getStatus();
         Long getCount();
     }
+
+
+    @Query("SELECT new com.helloIftekhar.springJwt.dto.DemandeCongeResponseDTO(" +
+            "d.id, d.idEmployee, CONCAT(u.firstName, ' ', u.lastName), dep.nomDepartement, " +
+            "d.dateCreation, d.dateDebut, d.dateFin, d.motif, d.statut, d.duree, d.remplacerPar) " +
+            "FROM DemandeConge d " +
+            "JOIN User u ON d.idEmployee = u.id " +
+            "LEFT JOIN u.departement dep")
+    List<DemandeCongeResponseDTO> findAllWithEmployeeInfo();
 
     Optional<DemandeConge> findByIdAndIdEmployee(Long id, Long idEmployee);
 

@@ -47,4 +47,8 @@ public class AuthenticationController {
         // La logique réelle est gérée par Spring Security via votre configuration
         return ResponseEntity.ok("Déconnexion réussie");
     }
+
+
+
+
 }

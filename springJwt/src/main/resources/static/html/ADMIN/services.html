@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Services - Système de gestion des congés</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#EFF6FF',
+                            100: '#DBEAFE',
+                            200: '#BFDBFE',
+                            300: '#93C5FD',
+                            400: '#60A5FA',
+                            500: '#3B82F6',
+                            600: '#2563EB',
+                            700: '#1D4ED8',
+                            800: '#1E40AF',
+                            900: '#1E3A8A',
+                        },
+                        secondary: {
+                            50: '#F0FDFA',
+                            100: '#CCFBF1',
+                            200: '#99F6E4',
+                            300: '#5EEAD4',
+                            400: '#2DD4BF',
+                            500: '#14B8A6',
+                            600: '#0D9488',
+                            700: '#0F766E',
+                            800: '#115E59',
+                            900: '#134E4A',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="min-h-screen flex flex-col">
+    <!-- Top Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                            <path d="m9 16 2 2 4-4"></path>
+                        </svg>
+                        <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                            <span class="sr-only">Ouvrir le menu utilisateur</span>
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                    A
+                                </div>
+                                <span class="ml-2 text-gray-700">Admin Utilisateur</span>
+                                <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Paramètres</a>
+                            <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1">
+        <!-- Sidebar -->
+        <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+            <div class="h-full flex flex-col">
+                <nav class="flex-1 py-4 px-2 space-y-1">
+                    <a href="departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="9"></rect>
+                            <rect x="14" y="3" width="7" height="5"></rect>
+                            <rect x="14" y="12" width="7" height="9"></rect>
+                            <rect x="3" y="16" width="7" height="5"></rect>
+                        </svg>
+                        Tableau de bord
+                    </a>
+
+                    <a href="calendar-config.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                        </svg>
+                        Configuration du Calendrier
+                    </a>
+                    <a href="liste_users.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Gestion des utilisateurs
+                    </a>
+                    <a href="../ADMIN/leave-requests.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M9 14l2 2 4-4"></path>
+                        </svg>
+                        Demandes de Congés
+                    </a>
+                    <a href="../ADMIN/departments.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                            <line x1="12" y1="22" y2="12" x2="12"></line>
+                        </svg>
+                        Gestion des départements
+                    </a>
+                    <a href="services.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                        </svg>
+                        Gestion des Services
+                    </a>
+                    <a href="profile.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                            <line x1="12" y1="22" y2="12" x2="12"></line>
+                        </svg>
+                        Mon Profil
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 min-w-0 overflow-auto">
+            <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-semibold text-gray-900">Gestion des Services</h1>
+                    <button id="addServiceBtn" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Ajouter un service
+                    </button>
+                </div>
+
+                <!-- Department Filter -->
+                <div class="mb-6">
+                    <label for="departmentFilter" class="block text-sm font-medium text-gray-700 mb-1">Filtrer par département</label>
+                    <select id="departmentFilter" class="w-full sm:w-64 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="">Tous les départements</option>
+                        <!-- Départements seront chargés ici -->
+                    </select>
+                </div>
+
+                <!-- Services Table -->
+                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Nom du service
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Département
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Description
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="servicesTable" class="bg-white divide-y divide-gray-200">
+                        <!-- Services will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Service Modal -->
+<div id="serviceModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+        <div class="p-6">
+            <h2 id="modalTitle" class="text-xl font-semibold text-gray-800 mb-4">Ajouter un service</h2>
+            <form id="serviceForm">
+                <input type="hidden" id="serviceId">
+                <div class="mb-4">
+                    <label for="serviceName" class="block text-sm font-medium text-gray-700 mb-1">Nom du service *</label>
+                    <input type="text" id="serviceName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500" required>
+                    <p id="nameError" class="mt-1 text-sm text-red-600 hidden">Le nom du service est requis</p>
+                </div>
+                <div class="mb-4">
+                    <label for="serviceDepartment" class="block text-sm font-medium text-gray-700 mb-1">Département *</label>
+                    <select id="serviceDepartment" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500" required>
+                        <!-- Départements seront chargés ici -->
+                    </select>
+                    <p id="departmentError" class="mt-1 text-sm text-red-600 hidden">Veuillez sélectionner un département</p>
+                </div>
+                <div class="mb-4">
+                    <label for="serviceDescription" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea id="serviceDescription" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" id="cancelModalBtn" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Annuler
+                    </button>
+
+
+                    <button type="submit" id="saveServiceBtn" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700">
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+        <div class="p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Confirmer la suppression</h2>
+            <p id="confirmMessage" class="text-gray-600 mb-6">Êtes-vous sûr de vouloir supprimer ce service?</p>
+            <div class="flex justify-end space-x-3">
+                <button type="button" id="cancelConfirmBtn" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    Annuler
+                </button>
+                <button type="button" id="confirmDeleteBtn" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700">
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '../user/index.html';
+            return;
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('userRole');
+            window.location.href = '../user/index.html';
+        });
+
+        // User menu toggle
+        const userMenuButton = document.getElementById('userMenuBtn');
+        const userMenu = document.getElementById('userMenu');
+
+        if (userMenuButton && userMenu) {
+            userMenuButton.addEventListener('click', () => {
+                const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+                userMenuButton.setAttribute('aria-expanded', !expanded);
+                userMenu.classList.toggle('hidden');
+            });
+
+            // Close the menu when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                    userMenuButton.setAttribute('aria-expanded', 'false');
+                    userMenu.classList.add('hidden');
+                }
+            });
+        }
+
+        // Modal elements
+        const serviceModal = document.getElementById('serviceModal');
+        const confirmModal = document.getElementById('confirmModal');
+        const addServiceBtn = document.getElementById('addServiceBtn');
+        const cancelModalBtn = document.getElementById('cancelModalBtn');
+        const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
+        const serviceForm = document.getElementById('serviceForm');
+        const servicesTable = document.getElementById('servicesTable');
+        const nameError = document.getElementById('nameError');
+        const departmentError = document.getElementById('departmentError');
+        const departmentFilter = document.getElementById('departmentFilter');
+
+        // Load departments for filter and modal
+        loadDepartmentsForFilter();
+        loadDepartmentsForModal();
+
+        // Load all services initially
+        loadServices();
+
+        // Department filter change event
+        departmentFilter.addEventListener('change', function() {
+            loadServices(this.value);
+        });
+
+        // Add service button click
+        addServiceBtn.addEventListener('click', function() {
+            document.getElementById('modalTitle').textContent = 'Ajouter un service';
+            document.getElementById('serviceId').value = '';
+            document.getElementById('serviceName').value = '';
+            document.getElementById('serviceDescription').value = '';
+            document.getElementById('serviceDepartment').selectedIndex = 0;
+            nameError.classList.add('hidden');
+            departmentError.classList.add('hidden');
+            serviceModal.classList.remove('hidden');
+        });
+
+        // Cancel modal button
+        cancelModalBtn.addEventListener('click', function() {
+            serviceModal.classList.add('hidden');
+        });
+
+        // Cancel confirm button
+        cancelConfirmBtn.addEventListener('click', function() {
+            confirmModal.classList.add('hidden');
+        });
+
+        // Form submission
+        serviceForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Validate form
+            const name = document.getElementById('serviceName').value.trim();
+            const departmentId = document.getElementById('serviceDepartment').value;
+            let isValid = true;
+
+            if (!name) {
+                nameError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                nameError.classList.add('hidden');
+            }
+
+            if (!departmentId) {
+                departmentError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                departmentError.classList.add('hidden');
+            }
+
+            if (isValid) {
+                saveService();
+            }
+        });
+
+        // Name field validation
+        document.getElementById('serviceName').addEventListener('input', function() {
+            if (this.value.trim()) {
+                nameError.classList.add('hidden');
+            }
+        });
+
+        // Department field validation
+        document.getElementById('serviceDepartment').addEventListener('change', function() {
+            if (this.value) {
+                departmentError.classList.add('hidden');
+            }
+        });
+
+        // Load departments for filter dropdown
+        async function loadDepartmentsForFilter() {
+            try {
+                const response = await fetch('http://localhost:8080/api/departements', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des départements');
+                }
+
+                const departments = await response.json();
+
+                let html = '<option value="">Tous les départements</option>';
+                departments.forEach(dept => {
+                    html += `<option value="${dept.id}">${escapeHtml(dept.nomDepartement)}</option>`;
+                });
+
+                departmentFilter.innerHTML = html;
+            } catch (error) {
+                console.error('Error:', error);
+                departmentFilter.innerHTML = '<option value="">Erreur de chargement</option>';
+            }
+        }
+
+        // Load departments for modal dropdown
+        async function loadDepartmentsForModal() {
+            try {
+                const response = await fetch('http://localhost:8080/api/departements', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des départements');
+                }
+
+                const departments = await response.json();
+
+                let html = '<option value="">Sélectionner un département</option>';
+                departments.forEach(dept => {
+                    html += `<option value="${dept.id}">${escapeHtml(dept.nomDepartement)}</option>`;
+                });
+
+                document.getElementById('serviceDepartment').innerHTML = html;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('serviceDepartment').innerHTML = '<option value="">Erreur de chargement</option>';
+            }
+        }
+
+        // Load services from API
+        async function loadServices(departmentId = null) {
+            try {
+                let url = departmentId
+                    ? `http://localhost:8080/api/services-departement/departement/${departmentId}/all`
+                    : 'http://localhost:8080/api/services-departement/all';
+
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des services');
+                }
+
+                const services = await response.json();
+                renderServices(services);
+            } catch (error) {
+                console.error('Error:', error);
+                servicesTable.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-red-600">Erreur: ${error.message}</td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Render services in table
+        function renderServices(services) {
+            if (services.length === 0) {
+                servicesTable.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Aucun service trouvé</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            servicesTable.innerHTML = services.map(service => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${escapeHtml(service.nomService || 'Non spécifié')}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${escapeHtml(service.nomDepartement || 'Non spécifié')}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-gray-500 max-w-xs truncate">${escapeHtml(service.description || 'Aucune description')}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="editService('${service.id}', '${escapeHtml(service.nomService || '')}', '${service.departementId}', '${escapeHtml(service.description || '')}')" class="text-primary-600 hover:text-primary-900 mr-3">
+                            <i class="fas fa-edit mr-1"></i>Modifier
+                        </button>
+                        <button onclick="showDeleteConfirm('${service.id}', '${escapeHtml(service.nomService || 'Service sans nom')}')" class="text-red-600 hover:text-red-900">
+                            <i class="fas fa-trash mr-1"></i>Supprimer
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Save service (add or update)
+        async function saveService() {
+            const id = document.getElementById('serviceId').value;
+            const name = document.getElementById('serviceName').value;
+            const description = document.getElementById('serviceDescription').value;
+            const departmentId = document.getElementById('serviceDepartment').value;
+
+            const serviceData = {
+                nomService: name,
+                description: description,
+                departementId: departmentId
+            };
+
+            const saveBtn = document.getElementById('saveServiceBtn');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Enregistrement...';
+
+            try {
+                let response;
+                if (id) {
+                    // Update existing service
+                    response = await fetch(`http://localhost:8080/api/services-departement/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(serviceData)
+                    });
+                } else {
+                    // Create new service
+                    response = await fetch('http://localhost:8080/api/services-departement', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(serviceData)
+                    });
+                }
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || (id ? 'Erreur lors de la mise à jour du service' : 'Erreur lors de la création du service'));
+                }
+
+                serviceModal.classList.add('hidden');
+                loadServices(departmentFilter.value);
+            } catch (error) {
+                               console.error('Error:', error);
+                alert(`Erreur: Un service avec ce nom existe déjà dans ce département`);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = 'Enregistrer';
+            }
+        }
+
+        // Edit service - show modal with service data
+        window.editService = function(id, name, departmentId, description) {
+            document.getElementById('modalTitle').textContent = 'Modifier le service';
+            document.getElementById('serviceId').value = id;
+            document.getElementById('serviceName').value = name;
+            document.getElementById('serviceDescription').value = description;
+
+            // Set the department select value
+            const departmentSelect = document.getElementById('serviceDepartment');
+            if (departmentSelect) {
+                for (let i = 0; i < departmentSelect.options.length; i++) {
+                    if (departmentSelect.options[i].value === departmentId) {
+                        departmentSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            nameError.classList.add('hidden');
+            departmentError.classList.add('hidden');
+            serviceModal.classList.remove('hidden');
+        };
+
+        // Show delete confirmation modal
+        window.showDeleteConfirm = function(id, name) {
+            document.getElementById('confirmMessage').textContent = `Êtes-vous sûr de vouloir supprimer le service "${name}"?`;
+            document.getElementById('confirmDeleteBtn').setAttribute('data-service-id', id);
+            confirmModal.classList.remove('hidden');
+        };
+
+        // Confirm delete button click
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+            const serviceId = this.getAttribute('data-service-id');
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Suppression...';
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/services-departement/${serviceId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la suppression du service');
+                }
+
+                confirmModal.classList.add('hidden');
+                loadServices(departmentFilter.value);
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Erreur: ${error.message}`);
+            } finally {
+                this.disabled = false;
+                this.innerHTML = 'Supprimer';
+            }
+        });
+
+        // Utility function to escape HTML
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    });
+</script>
+</body>
+</html>

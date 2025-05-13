@@ -1,8 +1,10 @@
 package com.helloIftekhar.springJwt.dto;
 
 
-import java.util.Date;
+import lombok.Data;
 
+import java.util.Date;
+@Data
 public class DemandeCongeResponseDTO {
     private Long id;
     private Long idEmployee;
@@ -13,7 +15,27 @@ public class DemandeCongeResponseDTO {
     private String statut;
     private int duree;
     private String remplacerPar;
+    private String employeeName;
+    private String departement;
 
+    public DemandeCongeResponseDTO() {
+    }
+
+    public DemandeCongeResponseDTO(Long id, Long idEmployee, String employeeName, String departement,
+                                   Date dateCreation, Date dateDebut, Date dateFin,
+                                   String motif, String statut, int duree, String remplacerPar) {
+        this.id = id;
+        this.idEmployee = idEmployee;
+        this.employeeName = employeeName;
+        this.departement = departement;
+        this.dateCreation = dateCreation;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+        this.motif = motif;
+        this.statut = statut;
+        this.duree = duree;
+        this.remplacerPar = remplacerPar;
+    }
     // Getters et Setters
     public Long getId() {
         return id;

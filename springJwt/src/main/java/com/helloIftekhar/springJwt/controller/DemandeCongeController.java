@@ -133,4 +133,16 @@ public class DemandeCongeController {
         return responseDTO;
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<DemandeCongeResponseDTO>> getAllDemandes() {
+        List<DemandeCongeResponseDTO> allDemandes = demandeCongeService.getAllDemandes();
+        return ResponseEntity.ok(allDemandes);
+    }
+
+    @GetMapping("/all-with-employee-info")
+    public ResponseEntity<List<DemandeCongeResponseDTO>> getAllDemandesWithEmployeeInfo() {
+        List<DemandeCongeResponseDTO> allDemandes = demandeCongeService.getAllDemandesWithEmployeeInfo();
+        return ResponseEntity.ok(allDemandes);
+    }
+
 }

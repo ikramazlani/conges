@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter Utilisateur - Système de Gestion des Congés</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: {
+                  50: '#EFF6FF',
+                  100: '#DBEAFE',
+                  200: '#BFDBFE',
+                  300: '#93C5FD',
+                  400: '#60A5FA',
+                  500: '#3B82F6',
+                  600: '#2563EB',
+                  700: '#1D4ED8',
+                  800: '#1E40AF',
+                  900: '#1E3A8A',
+                },
+                secondary: {
+                  50: '#F0FDFA',
+                  100: '#CCFBF1',
+                  200: '#99F6E4',
+                  300: '#5EEAD4',
+                  400: '#2DD4BF',
+                  500: '#14B8A6',
+                  600: '#0D9488',
+                  700: '#0F766E',
+                  800: '#115E59',
+                  900: '#134E4A',
+                },
+              },
+              fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+              },
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="min-h-screen flex flex-col">
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                            <path d="m9 16 2 2 4-4"></path>
+                        </svg>
+                        <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                            <span class="sr-only">Ouvrir le menu utilisateur</span>
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                    A
+                                </div>
+                                <span class="ml-2 text-gray-700">Admin Utilisateur</span>
+                                <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Paramètres</a>
+                            <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1">
+        <!-- Sidebar -->
+        <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+            <div class="h-full flex flex-col">
+                <nav class="flex-1 py-4 px-2 space-y-1">
+                    <a href="departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="9"></rect>
+                            <rect x="14" y="3" width="7" height="5"></rect>
+                            <rect x="14" y="12" width="7" height="9"></rect>
+                            <rect x="3" y="16" width="7" height="5"></rect>
+                        </svg>
+                        Tableau de bord
+                    </a>
+
+                    <a href="calendar-config.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                        </svg>
+                        Configuration du Calendrier
+                    </a>
+                    <a href="../ADMIN/users.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Gestion des utilisateurs
+                    </a>
+                    <a href="../ADMIN/leave-requests.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M9 14l2 2 4-4"></path>
+                        </svg>
+                        Demandes de Congés
+                    </a>
+                    <a href="../ADMIN/departments.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                            <line x1="12" y1="22" y2="12" x2="12"></line>
+                        </svg>
+                        Gestion des départements
+                    </a>
+                    <a href="services.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                        </svg>
+                        Gestion des Services
+                    </a>
+                    <a href="profile.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                            <line x1="12" y1="22" y2="12" x2="12"></line>
+                        </svg>
+                        Mon Profil
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+
+        <!-- Contenu principal -->
+        <div class="flex-1 min-w-0 overflow-auto">
+            <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-semibold text-gray-900">Ajouter un Utilisateur</h1>
+                        <nav class="flex mt-2" aria-label="Breadcrumb">
+                            <ol class="flex items-center space-x-4">
+                                <li>
+                                    <div>
+                                        <a href="dashboard.html" class="text-gray-400 hover:text-gray-500">
+                                            <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                                            </svg>
+                                            <span class="sr-only">Accueil</span>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex items-center">
+                                        <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                        <a href="users.html" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Utilisateurs</a>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex items-center">
+                                        <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="ml-4 text-sm font-medium text-gray-500">Ajouter</span>
+                                    </div>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <a href="liste_users.html" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5 text-gray-500" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Retour à la liste
+                    </a>
+                </div>
+
+                <div class="mt-8 bg-white shadow overflow-hidden rounded-lg">
+                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Informations de l'utilisateur</h3>
+                        <p class="mt-1 text-sm text-gray-500">Remplissez tous les champs obligatoires pour créer un nouvel utilisateur.</p>
+                    </div>
+
+                    <form id="userForm" class="p-6">
+                        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                            <div class="sm:col-span-3">
+                                <label for="firstName" class="block text-sm font-medium text-gray-700">Prénom <span class="text-red-500">*</span></label>
+                                <input type="text" name="firstName" id="firstName" autocomplete="given-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="lastName" class="block text-sm font-medium text-gray-700">Nom <span class="text-red-500">*</span></label>
+                                <input type="text" name="lastName" id="lastName" autocomplete="family-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="username" class="block text-sm font-medium text-gray-700">Nom d'utilisateur <span class="text-red-500">*</span></label>
+                                <input type="text" name="username" id="username" autocomplete="username" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe <span class="text-red-500">*</span></label>
+                                <input type="password" name="password" id="password" autocomplete="new-password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-6">
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+                                <input type="email" name="email" id="email" autocomplete="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="matricule" class="block text-sm font-medium text-gray-700">Matricule <span class="text-red-500">*</span></label>
+                                <input type="text" name="matricule" id="matricule" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="grade" class="block text-sm font-medium text-gray-700">Grade <span class="text-red-500">*</span></label>
+                                <input type="text" name="grade" id="grade" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="dateNaissance" class="block text-sm font-medium text-gray-700">Date de Naissance <span class="text-red-500">*</span></label>
+                                <input type="date" name="dateNaissance" id="dateNaissance" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="echelle" class="block text-sm font-medium text-gray-700">Échelle <span class="text-red-500">*</span></label>
+                                <input type="text" name="echelle" id="echelle" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-6">
+                                <label for="adresse" class="block text-sm font-medium text-gray-700">Adresse <span class="text-red-500">*</span></label>
+                                <input type="text" name="adresse" id="adresse" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="role" class="block text-sm font-medium text-gray-700">Rôle <span class="text-red-500">*</span></label>
+                                <select id="role" name="role" class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                                    <option value="">Sélectionner un rôle</option>
+                                    <option value="USER">Utilisateur</option>
+                                    <option value="ADMIN">Administrateur</option>
+                                    <option value="RH">Manager</option>
+                                </select>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="departement" class="block text-sm font-medium text-gray-700">Département <span class="text-red-500">*</span></label>
+                                <select id="departement" name="departement" class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                                    <option value="">Chargement des départements...</option>
+                                </select>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="service" class="block text-sm font-medium text-gray-700">Service <span class="text-red-500">*</span></label>
+                                <select id="service" name="service" disabled class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                                    <option value="">Sélectionnez d'abord un département</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 pt-5 border-t border-gray-200 flex justify-end">
+                            <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                Annuler
+                            </button>
+                            <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-700 hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                Enregistrer l'utilisateur
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Récupérer le token depuis le stockage local
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/login.html'; // Rediriger si pas de token
+    }
+
+    // Éléments du DOM
+    const departementSelect = document.getElementById('departement');
+    const serviceSelect = document.getElementById('service');
+    const userForm = document.getElementById('userForm');
+
+    // Charger les départements au chargement de la page
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/departements/details', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur lors du chargement des départements');
+        }
+
+        const departments = await response.json();
+
+        // Remplir le select des départements
+        departementSelect.innerHTML = '<option value="">Sélectionner un département</option>' +
+          departments.map(dept =>
+            `<option value="${dept.id}">${dept.nomDepartement || 'Département sans nom'}</option>`
+          ).join('');
+
+      } catch (error) {
+        console.error('Erreur:', error);
+        departementSelect.innerHTML = '<option value="">Erreur de chargement des départements</option>';
+      }
+    });
+
+    // Écouter les changements sur le select des départements
+    departementSelect.addEventListener('change', async (e) => {
+      const departementId = e.target.value;
+
+      if (!departementId) {
+        serviceSelect.innerHTML = '<option value="">Sélectionnez d\'abord un département</option>';
+        serviceSelect.disabled = true;
+        return;
+      }
+
+      try {
+        serviceSelect.disabled = true;
+        serviceSelect.innerHTML = '<option value="">Chargement des services...</option>';
+
+        const response = await fetch(`http://localhost:8080/api/services-departement/departement/${departementId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur lors du chargement des services');
+        }
+
+        const services = await response.json();
+
+        // Remplir le select des services
+        serviceSelect.innerHTML = '<option value="">Sélectionner un service</option>' +
+          services.map(service =>
+            `<option value="${service.id}">${service.nomService || 'Service sans nom'}</option>`
+          ).join('');
+
+        serviceSelect.disabled = false;
+
+      } catch (error) {
+        console.error('Erreur:', error);
+        serviceSelect.innerHTML = '<option value="">Erreur de chargement des services</option>';
+        serviceSelect.disabled = true;
+      }
+    });
+
+    // Gérer la soumission du formulaire
+    userForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Valider que tous les champs requis sont remplis
+      const requiredFields = userForm.querySelectorAll('[required]');
+      let isValid = true;
+
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          isValid = false;
+          field.classList.add('border-red-500');
+          field.classList.remove('border-gray-300');
+        } else {
+          field.classList.remove('border-red-500');
+          field.classList.add('border-gray-300');
+        }
+      });
+
+      if (!isValid) {
+        alert('Veuillez remplir tous les champs obligatoires');
+        return;
+      }
+
+      // Afficher un indicateur de chargement
+      const submitBtn = userForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Enregistrement en cours...';
+
+      // Préparer les données à envoyer
+      const formData = {
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        username: document.getElementById('username').value.trim(),
+        password: document.getElementById('password').value,
+        matricule: document.getElementById('matricule').value.trim(),
+        grade: document.getElementById('grade').value.trim(),
+        dateNaissance: document.getElementById('dateNaissance').value,
+        adresse: document.getElementById('adresse').value.trim(),
+        echelle: document.getElementById('echelle').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        role: document.getElementById('role').value,
+        departement: {
+          id: parseInt(document.getElementById('departement').value)
+        },
+        service: {
+          id: parseInt(document.getElementById('service').value)
+        }
+      };
+
+      try {
+        const response = await fetch('http://localhost:8080/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Erreur lors de l\'enregistrement');
+        }
+
+        const data = await response.json();
+        alert('Utilisateur enregistré avec succès!');
+        userForm.reset();
+        serviceSelect.innerHTML = '<option value="">Sélectionnez d\'abord un département</option>';
+        serviceSelect.disabled = true;
+
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert(error.message || 'Une erreur inconnue est survenue');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+      }
+    });
+</script>
+</body>
+</html>

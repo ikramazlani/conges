@@ -9,6 +9,7 @@ import java.util.Date;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -26,7 +27,11 @@ public class Departement {
     private String description;
 
     @Column(name = "date")
-    private Date date;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date = new Date();
+
+    @OneToMany(mappedBy = "departement", fetch = FetchType.EAGER)
+    private List<User> users;
 
     // Constructeur avec paramètres
     public Departement(String nomDepartement, String description, Date date) {
@@ -37,5 +42,9 @@ public class Departement {
 
     // Constructeur par défaut requis par JPA
     public Departement() {
+    }
+
+    public String getNom() {
+        return this.nomDepartement;
     }
 }

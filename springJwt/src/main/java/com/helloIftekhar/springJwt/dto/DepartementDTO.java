@@ -9,4 +9,5 @@ public class DepartementDTO {
     private String nomDepartement;
     private String description;
     private Date date;
+    private Integer nombreUtilisateurs;
 }

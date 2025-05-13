@@ -43,8 +43,9 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Enumerated(value = EnumType.STRING)
-    private Role role;
+    @Column(name = "role")
+    private String role;
+
 
     @Column(name = "matricule")
     private String matricule;
@@ -57,11 +58,22 @@ public class User implements UserDetails {
     @JoinColumn(name = "departement_id", nullable = true)
     private Departement departement;
 
-    @OneToMany(mappedBy = "user")
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "service_id", nullable = true)
+    private ServiceDepartement service;
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> tokens;
 
+    public void setDepartement(Departement departement) {
+        this.departement = departement;
+    }
 
-
+    public Departement getDepartement() {
+        return departement;
+    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -88,7 +100,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(getRole()));
     }
 
 

@@ -27,11 +27,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     // Trouver par département
     List<User> findByDepartementId(Integer departementId);
 
+
     // Vérifier si un username existe
     boolean existsByUsername(String username);
 
     @Query("SELECT u.id FROM User u WHERE u.username = :username")
     Optional<Long> findIdByUsername(@Param("username") String username);
+
 
 
 

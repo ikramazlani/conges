@@ -18,7 +18,7 @@ public class UserDTO {
     private String username;
     private String matricule;
     private String email;
-    private Role role;
+    private String role;
     private DepartementDTO departement; // Nested DTO
 
     // Exclude sensitive fields like 'password' and 'tokens'

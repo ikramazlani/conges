@@ -4,6 +4,7 @@ import com.helloIftekhar.springJwt.dto.SoldeCongeDTO;
 import com.helloIftekhar.springJwt.model.SoldeConge;
 import com.helloIftekhar.springJwt.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -22,6 +23,12 @@ public interface SoldeCongeRepository extends JpaRepository<SoldeConge, Long> {
             "s.id, s.soldeGlobal, s.soldeAnneeCourante, s.soldeAnneePrecedente, s.annee) " +
             "FROM SoldeConge s WHERE s.employee.id = :userId ORDER BY s.annee DESC LIMIT 1")
     Optional<SoldeCongeDTO> findLatestSoldeByUserId(@Param("userId") Long userId);
+
+
+
+    @Modifying
+    @Query("DELETE FROM SoldeConge s WHERE s.employee.id = :employeeId")
+    void deleteByEmployeeId(@Param("employeeId") Long employeeId);
 
 
     @Query("SELECT d.statut as status, COUNT(d) as count " +

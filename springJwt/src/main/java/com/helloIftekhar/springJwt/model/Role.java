@@ -1,7 +1,7 @@
 package com.helloIftekhar.springJwt.model;
 
 public enum Role {
-    USER,
+    RH,
     ADMIN,
-    RH
+    USER
 }

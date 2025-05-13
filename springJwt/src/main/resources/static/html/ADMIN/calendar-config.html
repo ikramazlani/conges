@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration du Calendrier - Système de Gestion des Congés</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier Automatique - Maroc</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: {
+                  50: '#EFF6FF',
+                  100: '#DBEAFE',
+                  200: '#BFDBFE',
+                  300: '#93C5FD',
+                  400: '#60A5FA',
+                  500: '#3B82F6',
+                  600: '#2563EB',
+                  700: '#1D4ED8',
+                  800: '#1E40AF',
+                  900: '#1E3A8A',
+                },
+                secondary: {
+                  50: '#F0FDFA',
+                  100: '#CCFBF1',
+                  200: '#99F6E4',
+                  300: '#5EEAD4',
+                  400: '#2DD4BF',
+                  500: '#14B8A6',
+                  600: '#0D9488',
+                  700: '#0F766E',
+                  800: '#115E59',
+                  900: '#134E4A',
+                },
+                holiday: {
+                  public: '#FEE2E2',
+                  religious: '#DCFCE7',
+                  company: '#DBEAFE',
+                }
+              },
+              fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+              },
+              animation: {
+                'fade-in': 'fadeIn 0.3s ease-in-out',
+                'slide-in': 'slideIn 0.3s ease-in-out',
+                'slide-up': 'slideUp 0.3s ease-in-out',
+                'slide-down': 'slideDown 0.3s ease-in-out',
+              },
+              keyframes: {
+                fadeIn: {
+                  '0%': { opacity: '0' },
+                  '100%': { opacity: '1' },
+                },
+                slideIn: {
+                  '0%': { transform: 'translateY(-10px)', opacity: '0' },
+                  '100%': { transform: 'translateY(0)', opacity: '1' },
+                },
+                slideUp: {
+                  '0%': { transform: 'translateY(10px)', opacity: '0' },
+                  '100%': { transform: 'translateY(0)', opacity: '1' },
+                },
+                slideDown: {
+                  '0%': { transform: 'translateY(-10px)', opacity: '0' },
+                  '100%': { transform: 'translateY(0)', opacity: '1' },
+                },
+              },
+            }
+          }
+        }
+      </script>
+
+    <style>
+        :root {
+            /* Color palette */
+            --primary: #c6432f;
+            --primary-light: #e86a57;
+            --primary-dark: #9e3526;
+            --secondary: #166e96;
+            --secondary-light: #3a8fb2;
+            --secondary-dark: #0e546f;
+            --accent: #f0b83b;
+            --accent-light: #f5cc6a;
+            --accent-dark: #d69e1e;
+            
+            /* Holiday colors */
+            --national-holiday: #ffcdd2;
+            --national-holiday-border: #ef9a9a;
+            --religious-holiday: #c8e6c9;
+            --religious-holiday-border: #a5d6a7;
+            --today-bg: #e3f2fd;
+            --today-border: #bbdefb;
+            
+            /* Neutral colors */
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --surface-hover: #f3f4f6;
+            --border: #e2e8f0;
+            --divider: #edf2f7;
+            
+            /* Text colors */
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-tertiary: #718096;
+            --text-weekend: #c6432f;
+            --text-weekend-faded: #e86a57;
+            
+            /* UI colors */
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-xxl: 48px;
+            
+            /* Border radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: var(--space-lg);
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .calendar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 25px var(--shadow-color);
+            padding: var(--space-xl);
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--divider);
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+        
+        .calendar-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .calendar-header h1::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23c6432f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 2v4'/%3E%3Cpath d='M16 2v4'/%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M3 10h18'/%3E%3Cpath d='M8 14h.01'/%3E%3Cpath d='M12 14h.01'/%3E%3Cpath d='M16 14h.01'/%3E%3Cpath d='M8 18h.01'/%3E%3Cpath d='M12 18h.01'/%3E%3Cpath d='M16 18h.01'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        
+        .year-selector {
+            display: flex;
+            align-items: center;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: var(--space-xs);
+        }
+        
+        .year-selector button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .year-selector button:hover {
+            background-color: var(--surface-hover);
+            color: var(--primary);
+        }
+        
+        .year-selector button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+        
+        .current-year {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0 var(--space-md);
+            min-width: 80px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        
+        .months-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+        }
+        
+        .month-container {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            background-color: var(--surface);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+        
+        .month-container:hover {
+            box-shadow: 0 4px 8px var(--shadow-color);
+            transform: translateY(-2px);
+        }
+        
+        .month-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--divider);
+        }
+        
+        .month-name {
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: var(--secondary);
+        }
+        
+        .month-holidays {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .holiday-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-xs);
+            padding: var(--space-xs) 0;
+        }
+        
+        .holiday-color {
+            width: 10px;
+            height: 10px;
+            border-radius: var(--radius-sm);
+            margin-right: var(--space-sm);
+            flex-shrink: 0;
+        }
+        
+        .days-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: var(--space-sm);
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-xs);
+        }
+        
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+        }
+        
+        .day:hover {
+            background-color: var(--surface-hover);
+            transform: scale(1.05);
+            z-index: 1;
+        }
+        
+        .day.today {
+            background-color: var(--today-bg);
+            font-weight: 600;
+            color: var(--secondary-dark);
+            border-color: var(--today-border);
+        }
+        
+        .day.other-month {
+            color: var(--text-tertiary);
+            background-color: var(--surface-hover);
+            opacity: 0.7;
+        }
+        
+        .day.weekend {
+            color: var(--text-weekend);
+            font-weight: 500;
+        }
+        
+        .day.weekend.other-month {
+            color: var(--text-weekend-faded);
+            opacity: 0.5;
+        }
+        
+        .holiday-type-1 {
+            background-color: var(--national-holiday);
+            border-color: var(--national-holiday-border);
+            font-weight: 500;
+        }
+        
+        .holiday-type-2 {
+            background-color: var(--religious-holiday);
+            border-color: var(--religious-holiday-border);
+            font-weight: 500;
+        }
+        
+        .holiday-type-3 {
+            background-color: var(--today-bg);
+            border-color: var(--today-border);
+            font-weight: 500;
+        }
+        
+        .holiday-type-4 {
+            background-color: var(--accent-light);
+            border-color: var(--accent-dark);
+            font-weight: 500;
+        }
+        
+        .legend {
+            margin-top: var(--space-xl);
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-lg);
+            justify-content: center;
+            padding: var(--space-md);
+            background-color: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .legend-item:hover {
+            background-color: var(--surface-hover);
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: var(--radius-sm);
+            margin-right: var(--space-sm);
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        
+        .weekend-legend {
+            color: var(--text-weekend);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1100px) {
+            .months-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .calendar-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-md);
+            }
+            
+            .year-selector {
+                align-self: center;
+            }
+            
+            .months-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-container {
+                padding: var(--space-md);
+            }
+            
+            .legend {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-sm);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: var(--space-sm);
+            }
+            
+            .calendar-container {
+                padding: var(--space-sm);
+                border-radius: var(--radius-sm);
+            }
+            
+            .calendar-header h1 {
+                font-size: 1.25rem;
+            }
+            
+            .current-year {
+                font-size: 1rem;
+            }
+            
+            .legend-item {
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* Elegant animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .month-container {
+            animation: fadeIn 0.3s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .month-container:nth-child(3n+1) { animation-delay: 0.1s; }
+        .month-container:nth-child(3n+2) { animation-delay: 0.2s; }
+        .month-container:nth-child(3n+3) { animation-delay: 0.3s; }
+        
+        .day.today {
+            animation: pulse 2s infinite;
+        }
+
+        .calendar-day {
+            transition: all 0.2s ease;
+        }
+        .calendar-day:hover:not(.day-disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .year-selector {
+            scrollbar-width: thin;
+            scrollbar-color: #3B82F6 #F3F4F6;
+        }
+        .year-selector::-webkit-scrollbar {
+            width: 6px;
+        }
+        .year-selector::-webkit-scrollbar-track {
+            background: #F3F4F6;
+            border-radius: 20px;
+        }
+        .year-selector::-webkit-scrollbar-thumb {
+            background-color: #3B82F6;
+            border-radius: 20px;
+        }
+        .month-slide-enter {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        .month-slide-enter-active {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .month-slide-exit {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .month-slide-exit-active {
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .tab-column {
+            transition: all 0.3s ease;
+        }
+        .tab-column.active {
+            background-color: #fff;
+            border-bottom: 2px solid #3B82F6;
+        }
+        .tab-column:hover:not(.active) {
+            background-color: #EFF6FF;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .calendar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .year-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .year-selector button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+        
+        .year-selector button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .current-year {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0 15px;
+        }
+        
+        .months-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .month-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: white;
+        }
+        
+        .month-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .month-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .month-holidays {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .holiday-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+        
+        .holiday-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+        
+        .days-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 5px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+        }
+        
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            background-color: #fff;
+            border: 1px solid #eee;
+        }
+        
+        .day:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .day.today {
+            background-color: #e3f2fd;
+            font-weight: bold;
+            color: #1976d2;
+            border-color: #bbdefb;
+        }
+        
+        .day.other-month {
+            color: #aaa;
+            background-color: #f9f9f9;
+        }
+        
+        .day.weekend {
+            color: #d32f2f;
+        }
+        
+        .day.weekend.other-month {
+            color: #ffcdd2;
+        }
+        
+        .holiday-type-1 {
+            background-color: #ffcdd2;
+            border-color: #ef9a9a;
+        }
+        
+        .holiday-type-2 {
+            background-color: #c8e6c9;
+            border-color: #a5d6a7;
+        }
+        
+        .holiday-type-3 {
+            background-color: #bbdefb;
+            border-color: #90caf9;
+        }
+        
+        .holiday-type-4 {
+            background-color: #fff9c4;
+            border-color: #fff59d;
+        }
+        
+        .legend {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        @media (max-width: 900px) {
+            .months-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .months-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .calendar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .year-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .year-selector button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+        
+        .year-selector button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .current-year {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0 15px;
+        }
+        
+        .months-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .month-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: white;
+        }
+        
+        .month-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .month-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .month-holidays {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .holiday-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+        
+        .holiday-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+        
+        .days-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 5px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+        }
+        
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            background-color: #fff;
+            border: 1px solid #eee;
+        }
+        
+        .day:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .day.today {
+            background-color: #e3f2fd;
+            font-weight: bold;
+            color: #1976d2;
+            border-color: #bbdefb;
+        }
+        
+        .day.other-month {
+            color: #aaa;
+            background-color: #f9f9f9;
+        }
+        
+        .day.weekend {
+            color: #d32f2f;
+        }
+        
+        .day.weekend.other-month {
+            color: #ffcdd2;
+        }
+        
+        .holiday-type-1 {
+            background-color: #ffcdd2;
+            border-color: #ef9a9a;
+        }
+        
+        .holiday-type-2 {
+            background-color: #c8e6c9;
+            border-color: #a5d6a7;
+        }
+        
+        .legend {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        @media (max-width: 900px) {
+            .months-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .months-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+
+        /* Styles pour le modal d'ajout/modification de jours fériés */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 60%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .holiday-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group select, 
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .add-holiday-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .add-holiday-btn:hover {
+            background-color: #45a049;
+        }
+
+        .submit-holiday-btn {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            grid-column: span 3;
+        }
+
+        .submit-holiday-btn:hover {
+            background-color: #0b7dda;
+        }
+
+        .delete-holiday-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            grid-column: span 3;
+        }
+
+        .delete-holiday-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Top Navigation -->
+        <nav class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                                <line x1="16" x2="16" y1="2" y2="6"></line>
+                                <line x1="8" x2="8" y1="2" y2="6"></line>
+                                <line x1="3" x2="21" y1="10" y2="10"></line>
+                                <path d="m9 16 2 2 4-4"></path>
+                            </svg>
+                            <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="relative">
+                            <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                                <span class="sr-only">Ouvrir le menu utilisateur</span>
+                                <div class="flex items-center">
+                                    <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                        A
+                                    </div>
+                                    <span class="ml-2 text-gray-700">Admin Utilisateur</span>
+                                    <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                            <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+                                <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Paramètres</a>
+                                <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="flex flex-1">
+            <!-- Sidebar -->
+            <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+                <div class="h-full flex flex-col">
+                    <nav class="flex-1 py-4 px-2 space-y-1">
+                        <a href="departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="9"></rect>
+                                <rect x="14" y="3" width="7" height="5"></rect>
+                                <rect x="14" y="12" width="7" height="9"></rect>
+                                <rect x="3" y="16" width="7" height="5"></rect>
+                            </svg>
+                            Tableau de bord
+                        </a>
+
+                        <a href="calendar-config.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                                <line x1="16" x2="16" y1="2" y2="6"></line>
+                                <line x1="8" x2="8" y1="2" y2="6"></line>
+                                <line x1="3" x2="21" y1="10" y2="10"></line>
+                            </svg>
+                            Configuration du Calendrier
+                        </a>
+                        <a href="liste_users.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            Gestion des utilisateurs
+                        </a>
+                        <a href="../ADMIN/leave-requests.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                <path d="M9 14l2 2 4-4"></path>
+                            </svg>
+                            Demandes de Congés
+                        </a>
+                        <a href="../ADMIN/departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 00 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                                <line x1="12" y1="22" y2="12" x2="12"></line>
+                            </svg>
+                            Gestion des départements
+                        </a>
+                        <a href="services.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                            </svg>
+                            Demandes de Services
+                        </a>
+                        <a href="profile.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                                <line x1="12" y1="22" y2="12" x2="12"></line>
+                            </svg>
+                            Mon Profil
+                        </a>
+                    </nav>
+                </div>
+            </div>
+    
+          <!-- Main Content -->
+          <div class="flex-1 min-w-0 overflow-auto">
+            <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+              <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-semibold text-gray-900">Configuration du Calendrier</h1>
+              </div>
+    
+              <!-- Tab Navigation -->
+              <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-gray-200">
+                <button class="tab-column py-4 px-6 text-lg font-medium text-center text-primary-700 active" data-tab="working-hours">
+                  Heures de Travail par Défaut
+                </button>
+                <button class="tab-column py-4 px-6 text-lg font-medium text-center text-gray-500" data-tab="morocco-holidays">
+                  Calendrier 
+                </button>
+              </div>
+    
+              <!-- Tab Content Container -->
+              <div class="mt-6">
+                <!-- Default Working Hours Tab -->
+                <div id="working-hours-tab" class="tab-content active">
+                  <div class="bg-white shadow rounded-lg p-6">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Heures de Travail par Défaut</h2>
+                    <div class="space-y-4">
+                      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                        <div>
+                          <h3 class="text-sm font-medium text-gray-900">Semaine de Travail Standard</h3>
+                          <p class="mt-1 text-sm text-gray-500">Définir les jours de travail standard pour votre organisation</p>
+                        </div>
+                        <div class="mt-4 lg:mt-0 grid grid-cols-7 gap-2">
+                          <div class="flex flex-col items-center">
+                            <div class="text-xs text-gray-500 mb-1">Dim</div>
+                            <div class="h-8 w-8 rounded-full flex items-center justify-center cursor-pointer bg-gray-100 text-gray-400">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div class="flex flex-col items-center">
+                            <div class="text-xs text-gray-500 mb-1">Lun</div>
+                            <div class="h-8 w-8 rounded-full flex items-center justify-center cursor-pointer bg-primary-600 text-white">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div class="flex flex-col items-center">
+                            <div class="text-xs text-gray-500 mb-1">Mar</div>
+                            <div class="h-8 w-8 rounded-full flex items-center justify-center cursor-pointer bg-primary-600 text-white">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div class="flex flex-col items-center">
+                            <div class="text-xs text-gray-500 mb-1">Mer</div>
+                            <div class="h-8 w-8 rounded-full flex items-center justify-center cursor-pointer bg-primary-600 text-white">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div class="flex flex-col items-center">
+                            <div class="text-xs text-gray-500 mb-1">Jeu</div>
+                            <div class="h-8 w-8 rounded-full flex items-center justify-center cursor-pointer bg-primary-600 text-white">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div class="flex flex-col items-center">
+                            <div class="text-xs text-gray-500 mb-1">Ven</div>
+                            <div class="h-8 w-8 rounded-full flex items-center justify-center cursor-pointer bg-primary-600 text-white">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div class="flex flex-col items-center">
+                            <div class="text-xs text-gray-500 mb-1">Sam</div>
+                            <div class="h-8 w-8 rounded-full flex items-center justify-center cursor-pointer bg-gray-100 text-gray-400">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="pt-6 border-t border-gray-200">
+                        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                          <div>
+                            <h3 class="text-sm font-medium text-gray-900">Heures de Travail</h3>
+                            <p class="mt-1 text-sm text-gray-500">Définir les heures de travail standard pour votre organisation</p>
+                          </div>
+                          <div class="mt-4 lg:mt-0 flex items-center space-x-4">
+                            <div class="flex items-center">
+                              <label for="startTime" class="text-sm text-gray-500 mr-2">De</label>
+                              <input type="time" id="startTime" name="startTime" class="block rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm" value="09:00">
+                            </div>
+                            <div class="flex items-center">
+                              <label for="endTime" class="text-sm text-gray-500 mr-2">À</label>
+                              <input type="time" id="endTime" name="endTime" class="block rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm" value="17:00">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="pt-6 border-t border-gray-200">
+                        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                          <div>
+                            <h3 class="text-sm font-medium text-gray-900">Pause</h3>
+                            <p class="mt-1 text-sm text-gray-500">Définir la pause standard pour votre organisation</p>
+                          </div>
+                          <div class="mt-4 lg:mt-0 flex items-center space-x-4">
+                            <div class="flex items-center">
+                              <label for="breakStartTime" class="text-sm text-gray-500 mr-2">De</label>
+                              <input type="time" id="breakStartTime" name="breakStartTime" class="block rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm" value="12:00">
+                            </div>
+                            <div class="flex items-center">
+                              <label for="breakEndTime" class="text-sm text-gray-500 mr-2">À</label>
+                              <input type="time" id="breakEndTime" name="breakEndTime" class="block rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm" value="13:00">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+    
+                    <div class="mt-6 flex justify-end">
+                      <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-700 hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        Enregistrer les Modifications
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Morocco Holidays Calendar Tab -->
+                <div id="morocco-holidays-tab" class="tab-content">
+                  <div class="calendar-container">
+                    <div class="calendar-header">
+                        <h1>Calendrier Maroc - Jours Fériés</h1>
+                        <div class="year-selector">
+                            <button id="prev-year">&lt;&lt;</button>
+                            <div class="current-year" id="current-year">2023</div>
+                            <button id="next-year">&gt;&gt;</button>
+                        </div>
+                    </div>
+            
+                    <button class="add-holiday-btn" id="add-holiday-btn" style="display: none;">Ajouter jours fériés</button>
+                    
+                    <div class="months-container" id="months-container">
+                        <div class="loading">Chargement du calendrier...</div>
+                    </div>
+                    
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #e3f2fd; border-color: #bbdefb;"></div>
+                            <span>Aujourd'hui</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #ffcdd2; border-color: #ef9a9a;"></div>
+                            <span>Fêtes nationales</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #c8e6c9; border-color: #a5d6a7;"></div>
+                            <span>Fêtes religieuses</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="color: #d32f2f; background-color: transparent;">R</div>
+                            <span>Week-end</span>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+          
+      <!-- Modal pour ajouter/modifier des jours fériés -->
+    <div id="holiday-modal" class="modal">
+      <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2 id="modal-title">Ajouter un jour férié religieux</h2>
+          <form id="holiday-form" class="holiday-form">
+              <input type="hidden" id="holiday-id">
+              <div class="form-group">
+                  <label for="holiday-name">Jour férié</label>
+                  <select id="holiday-name" required>
+                      <option value="">Sélectionner un jour férié</option>
+                      <option value="Aïd al-Fitr">Aïd al-Fitr</option>
+                      <option value="Aïd al-Adha">Aïd al-Adha</option>
+                      <option value="Nouvel An islamique">Nouvel An islamique</option>
+                      <option value="Achoura">Achoura</option>
+                      <option value="Al-Mawlid">Al-Mawlid</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="holiday-duration">Durée des vacances (jours)</label>
+                  <input type="number" id="holiday-duration" min="1" value="1" required>
+              </div>
+              <div class="form-group">
+                  <label for="holiday-date">Date du jour férié</label>
+                  <input type="date" id="holiday-date" required>
+              </div>
+              <button type="submit" class="submit-holiday-btn" id="submit-holiday-btn">Ajouter le jour férié</button>
+              <button type="button" class="delete-holiday-btn" id="delete-holiday-btn" style="display: none;">Supprimer le jour férié</button>
+          </form>
+      </div>
+  </div>
+        <script src="calendar-config.js"></script>  
+      <script>
+        // Fonction pour basculer entre les onglets
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-column');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // Désactiver tous les onglets
+                    tabButtons.forEach(btn => btn.classList.remove('active', 'text-primary-700'));
+                    tabButtons.forEach(btn => btn.classList.add('text-gray-500'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Activer l'onglet cliqué
+                    this.classList.add('active', 'text-primary-700');
+                    this.classList.remove('text-gray-500');
+                    document.getElementById(tabName + '-tab').classList.add('active');
+                });
+            });
+            
+            // Gestion du menu utilisateur
+            const userMenuBtn = document.getElementById('userMenuBtn');
+            const userMenu = document.getElementById('userMenu');
+            
+            if (userMenuBtn && userMenu) {
+                userMenuBtn.addEventListener('click', function() {
+                    userMenu.classList.toggle('hidden');
+                });
+                
+                // Fermer le menu quand on clique ailleurs
+                document.addEventListener('click', function(event) {
+                    if (!userMenuBtn.contains(event.target) && !userMenu.contains(event.target)) {
+                        userMenu.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // Gestion du sidebar mobile
+            const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+            const mobileSidebar = document.getElementById('mobileSidebar');
+            
+            if (mobileSidebarToggle && mobileSidebar) {
+                mobileSidebarToggle.addEventListener('click', function() {
+                    mobileSidebar.classList.toggle('hidden');
+                });
+            }
+        });
+
+        // Gestion du modal
+        const modal = document.getElementById("holiday-modal");
+        const btn = document.getElementById("add-holiday-btn");
+        const span = document.getElementsByClassName("close")[0];
+        const holidayForm = document.getElementById("holiday-form");
+        const modalTitle = document.getElementById("modal-title");
+        const submitBtn = document.getElementById("submit-holiday-btn");
+        const deleteBtn = document.getElementById("delete-holiday-btn");
+        const holidayIdInput = document.getElementById("holiday-id");
+        const currentYearElement = document.getElementById("current-year");
+
+        // Variable pour stocker les jours fériés
+        let holidays = [];
+        let currentEditingHoliday = null;
+
+        // Fonction pour mettre à jour la visibilité du bouton en fonction de l'année
+        function updateAddHolidayButtonVisibility() {
+            const currentYear = parseInt(currentYearElement.textContent);
+            const addHolidayBtn = document.getElementById("add-holiday-btn");
+            
+            if (currentYear >= 2025) {
+                addHolidayBtn.style.display = "inline-block";
+            } else {
+                addHolidayBtn.style.display = "none";
+            }
+        }
+
+        // Fonction pour ouvrir le modal en mode édition
+        function openEditModal(holiday) {
+            currentEditingHoliday = holiday;
+            modalTitle.textContent = "Modifier jour férié";
+            submitBtn.textContent = "Mettre à jour";
+            deleteBtn.style.display = "block";
+            
+            // Remplir le formulaire avec les données du jour férié
+            holidayIdInput.value = holiday.id;
+            document.getElementById("holiday-name").value = holiday.name;
+            document.getElementById("holiday-duration").value = holiday.duration;
+            document.getElementById("holiday-date").value = holiday.date;
+            
+            modal.style.display = "block";
+        }
+
+        // Fonction pour ouvrir le modal en mode ajout
+        function openAddModal() {
+            currentEditingHoliday = null;
+            modalTitle.textContent = "Ajouter un jour férié religieux";
+            submitBtn.textContent = "Ajouter le jour férié";
+            deleteBtn.style.display = "none";
+            
+            // Réinitialiser le formulaire
+            holidayForm.reset();
+            
+            modal.style.display = "block";
+        }
+
+        btn.onclick = openAddModal;
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Fonction pour gérer la soumission du formulaire (ajout ou modification)
+        holidayForm.onsubmit = function(e) {
+            e.preventDefault();
+            
+            const holidayData = {
+                id: holidayIdInput.value || Date.now().toString(),
+                name: document.getElementById("holiday-name").value,
+                duration: document.getElementById("holiday-duration").value,
+                date: document.getElementById("holiday-date").value,
+                type: 2 // Type 2 pour les fêtes religieuses
+            };
+            
+            if (currentEditingHoliday) {
+                // Mettre à jour le jour férié existant
+                const index = holidays.findIndex(h => h.id === currentEditingHoliday.id);
+                if (index !== -1) {
+                    holidays[index] = holidayData;
+                    console.log("Jour férié mis à jour:", holidayData);
+                }
+            } else {
+                // Ajouter un nouveau jour férié
+                holidays.push(holidayData);
+                console.log("Jour férié ajouté:", holidayData);
+            }
+            
+            // Fermer le modal après soumission
+            modal.style.display = "none";
+            
+            // Mettre à jour l'affichage du calendrier
+            updateCalendarDisplay();
+        }
+
+        // Fonction pour supprimer un jour férié
+        deleteBtn.onclick = function() {
+            if (currentEditingHoliday) {
+                const index = holidays.findIndex(h => h.id === currentEditingHoliday.id);
+                if (index !== -1) {
+                    holidays.splice(index, 1);
+                    console.log("Jour férié supprimé:", currentEditingHoliday);
+                }
+                
+                // Fermer le modal
+                modal.style.display = "none";
+                
+                // Mettre à jour l'affichage du calendrier
+                updateCalendarDisplay();
+            }
+        }
+
+        // Fonction pour mettre à jour l'affichage du calendrier
+        function updateCalendarDisplay() {
+            // Ici vous devriez implémenter la logique pour mettre à jour l'affichage
+            // du calendrier avec les jours fériés actuels
+            console.log("Mise à jour du calendrier avec les jours fériés:", holidays);
+            
+            // Exemple: marquer les jours fériés dans le calendrier
+            document.querySelectorAll('.day').forEach(dayElement => {
+                const dateStr = dayElement.getAttribute('data-date');
+                if (dateStr) {
+                    const isHoliday = holidays.some(holiday => {
+                        const holidayDate = new Date(holiday.date);
+                        const dayDate = new Date(dateStr);
+                        return holidayDate.toDateString() === dayDate.toDateString();
+                    });
+                    
+                    if (isHoliday) {
+                        dayElement.classList.add('holiday-type-2');
+                    } else {
+                        dayElement.classList.remove('holiday-type-2');
+                    }
+                }
+            });
+        }
+
+        // Fonction pour initialiser les événements de clic sur les jours
+        function initDayClickEvents() {
+            document.querySelectorAll('.day').forEach(day => {
+                day.addEventListener('click', function() {
+                    const dateStr = this.getAttribute('data-date');
+                    if (dateStr) {
+                        // Vérifier si ce jour est un jour férié
+                        const holiday = holidays.find(h => {
+                            const holidayDate = new Date(h.date);
+                            const dayDate = new Date(dateStr);
+                            return holidayDate.toDateString() === dayDate.toDateString();
+                        });
+                        
+                        if (holiday) {
+                            openEditModal(holiday);
+                        }
+                    }
+                });
+            });
+        }
+
+        // Simuler le chargement du calendrier (à remplacer par votre vraie implémentation)
+        setTimeout(() => {
+            document.getElementById('months-container').innerHTML = `
+                <div class="month-container">
+                    <div class="month-header">
+                        <div class="month-name">Janvier 2023</div>
+                    </div>
+                    <div class="days-header">
+                        <div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div><div>D</div>
+                    </div>
+                    <div class="days-grid">
+                        ${Array.from({length: 31}, (_, i) => 
+                            `<div class="day" data-date="2023-01-${i+1 < 10 ? '0'+(i+1) : i+1}">${i+1}</div>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // Initialiser les événements de clic
+            initDayClickEvents();
+            
+            // Mettre à jour la visibilité du bouton après le chargement
+            updateAddHolidayButtonVisibility();
+        }, 1000);
+
+        // Gestion des boutons de navigation entre les années
+        document.getElementById('prev-year').addEventListener('click', function() {
+            const currentYear = parseInt(currentYearElement.textContent);
+            currentYearElement.textContent = currentYear - 1;
+            updateAddHolidayButtonVisibility();
+            // Ici vous devriez aussi recharger le calendrier pour la nouvelle année
+        });
+
+        document.getElementById('next-year').addEventListener('click', function() {
+            const currentYear = parseInt(currentYearElement.textContent);
+            currentYearElement.textContent = currentYear + 1;
+            updateAddHolidayButtonVisibility();
+            // Ici vous devriez aussi recharger le calendrier pour la nouvelle année
+        });
+      </script>
+</body>
+</html>

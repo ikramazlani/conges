@@ -2,10 +2,16 @@ package com.helloIftekhar.springJwt.service;
 
 import com.helloIftekhar.springJwt.dto.DemandeCongeRequestDTO;
 import com.helloIftekhar.springJwt.dto.DemandeCongeResponseDTO;
+import com.helloIftekhar.springJwt.dto.ServiceDepartementDTO;
+import com.helloIftekhar.springJwt.dto.ServiceDepartementMapper;
 import com.helloIftekhar.springJwt.model.DemandeConge;
 import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.repository.DemandeCongeRepository;
+import com.helloIftekhar.springJwt.repository.DepartementRepository;
+import com.helloIftekhar.springJwt.repository.ServiceDepartementRepository;
 import com.helloIftekhar.springJwt.repository.UserRepository;
+import jakarta.persistence.Access;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +28,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class DemandeCongeService {
 
+    @Autowired
+    public ServiceDepartementRepository serviceDepartementRepository;
     private final DemandeCongeRepository demandeCongeRepository;
     private final UserRepository userRepository;
+
 
     public DemandeCongeService(DemandeCongeRepository demandeCongeRepository,
                                UserRepository userRepository) {
@@ -60,6 +69,7 @@ public class DemandeCongeService {
         responseDTO.setStatut(demande.getStatut());
         responseDTO.setDuree(demande.getDuree());
         responseDTO.setRemplacerPar(demande.getRemplacerPar());
+
         return responseDTO;
     }
 
@@ -152,6 +162,23 @@ public class DemandeCongeService {
         }
 
         demandeCongeRepository.delete(demande);
+    }
+
+    public List<ServiceDepartementDTO> getAllServicesByDepartement(Long departementId) {
+        return serviceDepartementRepository.findByDepartementId(departementId)
+                .stream()
+                .map(ServiceDepartementMapper::toDto)
+                .collect(Collectors.toList());
+    }
+    public List<DemandeCongeResponseDTO> getAllDemandes() {
+        List<DemandeConge> demandes = demandeCongeRepository.findAll();
+        return demandes.stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<DemandeCongeResponseDTO> getAllDemandesWithEmployeeInfo() {
+        return demandeCongeRepository.findAllWithEmployeeInfo();
     }
 
 
