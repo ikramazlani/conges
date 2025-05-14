@@ -49,7 +49,8 @@
 </head>
 <body class="bg-gray-50 font-sans">
 <div class="min-h-screen flex flex-col">
-    <!-- Top Navigation -->
+
+
     <nav class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -66,39 +67,6 @@
                     </div>
                 </div>
                 <div class="flex items-center">
-                    <!-- Date Filter -->
-                    <div class="relative mr-4">
-                        <select id="dateFilter" class="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                            <option value="today">Aujourd'hui</option>
-                            <option value="week">Cette semaine</option>
-                            <option value="month" selected>Ce mois</option>
-                            <option value="year">Cette année</option>
-                            <option value="custom">Personnalisé</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Department Filter -->
-                    <div class="relative mr-4">
-                        <select id="departmentFilter" class="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                            <option value="all">Tous départements</option>
-                            <option value="1">RH</option>
-                            <option value="2">IT</option>
-                            <option value="3">Finance</option>
-                            <option value="4">Marketing</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- User Menu -->
                     <div class="relative">
                         <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
                             <span class="sr-only">Ouvrir le menu utilisateur</span>
@@ -114,8 +82,7 @@
                         </button>
                         <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
                             <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
-                            <a href="parametre.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Paramètres</a>
-                            <a href="index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
+                            <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
                         </div>
                     </div>
                 </div>
@@ -125,19 +92,31 @@
 
     <div class="flex flex-1">
         <!-- Sidebar -->
-        <div id="sidebar" class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+        <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
             <div class="h-full flex flex-col">
                 <nav class="flex-1 py-4 px-2 space-y-1">
-                    <a href="dashboard.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+
+                    <a href="dashbord.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="7" height="9"></rect>
-                            <rect x="14" y="3" width="7" height="5"></rect>
-                            <rect x="14" y="12" width="7" height="9"></rect>
-                            <rect x="3" y="16" width="7" height="5"></rect>
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
                         </svg>
                         Tableau de bord
                     </a>
-                    <a href="users.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+
+                    <a href="calendar-config.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Configuration du Calendrier
+                    </a>
+
+                    <a href="liste_users.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
@@ -146,7 +125,7 @@
                         </svg>
                         Gestion des utilisateurs
                     </a>
-                    <a href="leave-config.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <a href="leave-requests.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                             <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
@@ -154,61 +133,29 @@
                         </svg>
                         Demandes de Congés
                     </a>
-                    <a href="calendar-config.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                            <line x1="16" x2="16" y1="2" y2="6"></line>
-                            <line x1="8" x2="8" y1="2" y2="6"></line>
-                            <line x1="3" x2="21" y1="10" y2="10"></line>
-                        </svg>
-                        Configuration du calendrier
-                    </a>
+
                     <a href="departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M9 14l2 2 4-4"></path>
+                        </svg>
+                        Gestion des départements
+                    </a>
+
+                    <a href="services.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                        </svg>
+                        Gestion des Services
+                    </a>
+                    <a href="profile.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                             <polyline points="3.29 7 12 12 20.71 7"></polyline>
                             <line x1="12" y1="22" y2="12" x2="12"></line>
                         </svg>
-                        Gestion des départements
-                    </a>
-                    <a href="reports.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                        Rapports & Statistiques
-                    </a>
-                </nav>
-            </div>
-        </div>
-
-        <!-- Mobile Sidebar Toggle -->
-        <div class="md:hidden bg-white shadow-sm border-b border-gray-200 sticky top-16 z-10 w-full">
-            <button id="mobileSidebarToggle" class="px-4 py-3 flex items-center text-sm text-gray-500 w-full focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                Menu
-            </button>
-
-            <div id="mobileSidebar" class="hidden bg-white shadow-md absolute w-full border-b border-gray-200">
-                <nav class="py-2 space-y-1">
-                    <a href="dashboard.html" class="bg-primary-50 text-primary-700 block px-4 py-2 text-sm font-medium">
-                        Tableau de bord
-                    </a>
-                    <a href="users.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-4 py-2 text-sm font-medium">
-                        Gestion des utilisateurs
-                    </a>
-                    <a href="leave-config.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-4 py-2 text-sm font-medium">
-                        Configuration des congés
-                    </a>
-                    <a href="calendar-config.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-4 py-2 text-sm font-medium">
-                        Configuration du calendrier
-                    </a>
-                    <a href="departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-4 py-2 text-sm font-medium">
-                        Gestion des départements
-                    </a>
-                    <a href="reports.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 block px-4 py-2 text-sm font-medium">
-                        Rapports & Statistiques
+                        Mon Profil
                     </a>
                 </nav>
             </div>
@@ -247,7 +194,7 @@
                         </div>
                         <div class="bg-gray-50 px-4 py-4 sm:px-6">
                             <div class="text-sm">
-                                <a href="users.html" class="font-medium text-primary-700 hover:text-primary-600">
+                                <a href="liste_users.html" class="font-medium text-primary-700 hover:text-primary-600">
                                     Voir tous les utilisateurs
                                     <span class="sr-only"> utilisateurs</span>
                                 </a>
@@ -312,7 +259,7 @@
                         </div>
                         <div class="bg-gray-50 px-4 py-4 sm:px-6">
                             <div class="text-sm">
-                                <a href="leave-config.html" class="font-medium text-green-700 hover:text-green-600">
+                                <a href="leave-requests.html" class="font-medium text-green-700 hover:text-green-600">
                                     Voir les demandes
                                     <span class="sr-only"> congés approuvés</span>
                                 </a>
@@ -345,7 +292,7 @@
                         </div>
                         <div class="bg-gray-50 px-4 py-4 sm:px-6">
                             <div class="text-sm">
-                                <a href="leave-config.html" class="font-medium text-yellow-700 hover:text-yellow-600">
+                                <a href="leave-requests.html" class="font-medium text-yellow-700 hover:text-yellow-600">
                                     Voir les demandes
                                     <span class="sr-only"> congés en attente</span>
                                 </a>
@@ -356,21 +303,6 @@
 
                 <!-- Charts Section -->
                 <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Leaves by Department Chart -->
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Congés par département</h3>
-                        <div class="h-80">
-                            <canvas id="leavesByDepartmentChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Leaves Status Pie Chart -->
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Statut des demandes</h3>
-                        <div class="h-80">
-                            <canvas id="leavesStatusChart"></canvas>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Recent Leaves and Users -->
@@ -401,7 +333,7 @@
                         </div>
                         <div class="bg-gray-50 px-4 py-4 sm:px-6">
                             <div class="text-sm">
-                                <a href="leave-config.html" class="font-medium text-primary-700 hover:text-primary-600">
+                                <a href="leave-requests.html" class="font-medium text-primary-700 hover:text-primary-600">
                                     Voir toutes les demandes
                                 </a>
                             </div>
@@ -434,53 +366,9 @@
                         </div>
                         <div class="bg-gray-50 px-4 py-4 sm:px-6">
                             <div class="text-sm">
-                                <a href="users.html" class="font-medium text-primary-700 hover:text-primary-600">
+                                <a href="liste_users.html" class="font-medium text-primary-700 hover:text-primary-600">
                                     Voir tous les utilisateurs
                                 </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Department Overview -->
-                <div class="mt-8">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">Aperçu des départements</h3>
-                        <button id="refreshDataBtn" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                            Actualiser
-                        </button>
-                    </div>
-                    <div class="flex flex-col">
-                        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Département
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Employés
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Congés approuvés
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Taux d'occupation
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="departmentsTable" class="bg-white divide-y divide-gray-200">
-                                        <tr>
-                                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">Chargement des données...</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -489,8 +377,17 @@
         </div>
     </div>
 </div>
-
 <script>
+
+
+    // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('userRole');
+            window.location.href = '../user/index.html';
+        });
+
     // User menu toggle functionality
     const userMenuButton = document.getElementById('userMenuBtn');
     const userMenu = document.getElementById('userMenu');
@@ -574,16 +471,13 @@
         document.getElementById('totalDepartments').textContent = departments.length || '--';
 
         // Fetch leave statistics
-        const leavesStats = await makeAuthenticatedRequest('http://localhost:8080/api/demandes-conge/stats');
-        document.getElementById('approvedLeaves').textContent = leavesStats.APPROVED || '--';
-        document.getElementById('pendingLeaves').textContent = leavesStats.PENDING || '--';
+        const leavesStats = await makeAuthenticatedRequest('http://localhost:8080/api/demandes-conge/stats-globales');
+        document.getElementById('approvedLeaves').textContent = leavesStats.approuvees || '--';
+        document.getElementById('pendingLeaves').textContent = leavesStats.enAttente || '--';
 
-        // Fetch all leaves with employee info for charts
+
+         // Fetch all leaves with employee info for charts
         const allLeaves = await makeAuthenticatedRequest('http://localhost:8080/api/demandes-conge/all-with-employee-info');
-
-        // Prepare data for charts
-        const chartData = prepareChartData(departments, allLeaves);
-        updateCharts(chartData);
 
         // Fetch recent leaves
         const recentLeaves = allLeaves.slice(0, 5); // Get first 5 leaves
@@ -604,146 +498,8 @@
       }
     }
 
-    // Function to prepare chart data
-    function prepareChartData(departments, leaves) {
-      const result = {
-        departments: [],
-        approvedLeaves: 0,
-        pendingLeaves: 0,
-        rejectedLeaves: 0
-      };
 
-      // Count leaves by status
-      leaves.forEach(leave => {
-        if (leave.statut === 'APPROVED' || 'APPROUVÉ') result.approvedLeaves++;
-        else if (leave.statut === 'PENDING' || ' EN_ATTENTE') result.pendingLeaves++;
-        else if (leave.statut === 'REJECTED' || 'REFUSÉ') result.rejectedLeaves++;
-      });
 
-      // Prepare data for leaves by department chart
-      result.departments = departments.map(dept => {
-        const deptLeaves = leaves.filter(leave =>
-          leave.employee && leave.employee.departement &&
-          leave.employee.departement.id === dept.id
-        );
-
-        return {
-          name: dept.nom || 'N/A',
-          approvedLeaves: deptLeaves.filter(l => l.statut === 'APPROUVÉ' ).length,
-          pendingLeaves: deptLeaves.filter(l => l.statut === 'REFUSÉ').length,
-          employeeCount: 0 // Will be updated later
-        };
-      });
-
-      return result;
-    }
-
-    // Function to prepare departments overview
-    async function prepareDepartmentsOverview(departments, users, leaves) {
-      return departments.map(dept => {
-        const deptUsers = users.filter(user =>
-          user.departement && user.departement.id === dept.id
-        );
-
-        const deptLeaves = leaves.filter(leave =>
-          leave.employee && leave.employee.departement &&
-          leave.employee.departement.id === dept.id
-        );
-
-        const approvedLeaves = deptLeaves.filter(l => l.statut === 'APPROUVÉ').length;
-        const employeeCount = deptUsers.length;
-        const occupancyRate = employeeCount > 0 ?
-          Math.round((approvedLeaves / employeeCount) * 100) : 0;
-
-        return {
-          id: dept.id,
-          name: dept.nom || 'N/A',
-          employeeCount: employeeCount,
-          approvedLeaves: approvedLeaves,
-          occupancyRate: occupancyRate
-        };
-      });
-    }
-
-    // Function to update charts with new data
-    function updateCharts(chartData) {
-      // Leaves by Department Chart
-      const leavesByDepartmentCtx = document.getElementById('leavesByDepartmentChart').getContext('2d');
-
-      if (leavesByDepartmentChart) {
-        leavesByDepartmentChart.destroy();
-      }
-
-      leavesByDepartmentChart = new Chart(leavesByDepartmentCtx, {
-        type: 'bar',
-        data: {
-          labels: chartData.departments.map(dept => dept.name),
-          datasets: [{
-            label: 'Congés approuvés',
-            data: chartData.departments.map(dept => dept.approvedLeaves),
-            backgroundColor: 'rgba(59, 130, 246, 0.7)',
-            borderColor: 'rgba(59, 130, 246, 1)',
-            borderWidth: 1
-          }, {
-            label: 'Congés en attente',
-            data: chartData.departments.map(dept => dept.pendingLeaves),
-            backgroundColor: 'rgba(234, 179, 8, 0.7)',
-            borderColor: 'rgba(234, 179, 8, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      });
-
-      // Leaves Status Pie Chart
-      const leavesStatusCtx = document.getElementById('leavesStatusChart').getContext('2d');
-
-      if (leavesStatusChart) {
-        leavesStatusChart.destroy();
-      }
-
-      leavesStatusChart = new Chart(leavesStatusCtx, {
-        type: 'pie',
-        data: {
-          labels: ['Approuvés', 'En attente', 'Rejetés'],
-          datasets: [{
-            data: [
-              chartData.approvedLeaves || 0,
-              chartData.pendingLeaves || 0,
-              chartData.rejectedLeaves || 0
-            ],
-            backgroundColor: [
-              'rgba(16, 185, 129, 0.7)',
-              'rgba(234, 179, 8, 0.7)',
-              'rgba(239, 68, 68, 0.7)'
-            ],
-            borderColor: [
-              'rgba(16, 185, 129, 1)',
-              'rgba(234, 179, 8, 1)',
-              'rgba(239, 68, 68, 1)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom'
-            }
-          }
-        }
-      });
-    }
 
     // Function to populate recent leaves table
     function populateRecentLeaves(leaves) {
@@ -764,9 +520,9 @@
 
         // Determine status badge color
         let statusClass = '';
-        if (leave.statut === 'APPROVED') {
+        if (leave.statut === 'APPROUVÉ') {
           statusClass = 'bg-green-100 text-green-800';
-        } else if (leave.statut === 'PENDING') {
+        } else if (leave.statut === 'EN_ATTENTE') {
           statusClass = 'bg-yellow-100 text-yellow-800';
         } else {
           statusClass = 'bg-red-100 text-red-800';
@@ -779,11 +535,11 @@
           <td class="px-6 py-4 whitespace-nowrap">
             <div class="flex items-center">
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700">
-                ${employee.firstName ? employee.firstName.charAt(0) : ''}${employee.lastName ? employee.lastName.charAt(0) : ''}
+               // ${employee.firstName ? employee.firstName.charAt(0) : ''}${employee.lastName ? employee.lastName.charAt(0) : ''}
               </div>
               <div class="ml-4">
-                <div class="text-sm font-medium text-gray-900">${employee.firstName || 'N/A'} ${employee.lastName || 'N/A'}</div>
-                <div class="text-sm text-gray-500">${departement.nom || 'N/A'}</div>
+                <div class="text-sm font-medium text-gray-900">${leave.employeeName || 'N/A'} </div>
+                <div class="text-sm text-gray-500">${leave.departement || 'N/A'}</div>
               </div>
             </div>
           </td>
@@ -832,12 +588,21 @@
             </div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-900">${departement.nom || 'N/A'}</div>
+            <div class="text-sm text-gray-900">${departement.nomDepartement || 'N/A'}</div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">
-              ${user.role === 'ADMIN' ? 'Administrateur' : 'Employé'}
-            </span>
+             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+  ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' :
+    user.role === 'RH' ? 'bg-cyan-100 text-blue-800' :
+    user.role === 'CHEF_SERVICE' ? 'bg-yellow-100 text-yellow-800' :
+    user.role === 'CHEF_DEPARTEMENT' ? 'bg-pink-100 text-pink-800' :
+    'bg-green-100 text-green-800'}">
+  ${user.role === 'ADMIN' ? 'Administrateur' :
+    user.role === 'RH' ? 'Manager' :
+    user.role === 'CHEF_SERVICE' ? 'Chef de service' :
+    user.role === 'CHEF_DEPARTEMENT' ? 'Chef de département' :
+    'Utilisateur'}
+</span>
           </td>
         `;
         tableBody.appendChild(row);
@@ -863,7 +628,7 @@
 
         row.innerHTML = `
           <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm font-medium text-gray-900">${dept.name}</div>
+            <div class="text-sm font-medium text-gray-900">${dept.nomDepartement}</div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
             <div class="text-sm text-gray-900">${dept.employeeCount}</div>
@@ -901,26 +666,12 @@
       return statusMap[status] || status;
     }
 
-    // Refresh button functionality
-    document.getElementById('refreshDataBtn').addEventListener('click', fetchDashboardData);
-
-    // Date filter functionality
-    document.getElementById('dateFilter').addEventListener('change', function() {
-      // You would typically fetch new data based on the selected filter
-      fetchDashboardData();
-    });
-
-    // Department filter functionality
-    document.getElementById('departmentFilter').addEventListener('change', function() {
-      // You would typically fetch new data based on the selected department
-      fetchDashboardData();
-    });
 
     // Check authentication before loading data
     function checkAuthAndLoadData() {
       if (!getToken()) {
         // Redirect to login if no token found
-        window.location.href = '/login.html';
+        window.location.href = '../user/index.html';
       } else {
         // Initialize dashboard
         fetchDashboardData();

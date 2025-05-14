@@ -1,9 +1,6 @@
 package com.helloIftekhar.springJwt.service;
 
-import com.helloIftekhar.springJwt.dto.DemandeCongeRequestDTO;
-import com.helloIftekhar.springJwt.dto.DemandeCongeResponseDTO;
-import com.helloIftekhar.springJwt.dto.ServiceDepartementDTO;
-import com.helloIftekhar.springJwt.dto.ServiceDepartementMapper;
+import com.helloIftekhar.springJwt.dto.*;
 import com.helloIftekhar.springJwt.model.DemandeConge;
 import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.repository.DemandeCongeRepository;
@@ -84,26 +81,20 @@ public class DemandeCongeService {
                 .collect(Collectors.toList());
     }
 
-    public Map<String, Long> getDemandesStats(Long userId) {
-        List<DemandeCongeRepository.StatusCount> counts = demandeCongeRepository.countByStatus(userId);
+    public DemandeStatsDTO getGlobalDemandesStats() {
+        long approuvees = demandeCongeRepository.countApprouvees();
+        long refusees = demandeCongeRepository.countRefusees();
+        long enAttente = demandeCongeRepository.countEnAttente();
 
-        Map<String, Long> stats = new HashMap<>();
-        stats.put("approuvees", 0L);
-        stats.put("refusees", 0L);
-        stats.put("enAttente", 0L);
+        return new DemandeStatsDTO(approuvees, refusees, enAttente);
+    }
 
-        counts.forEach(sc -> {
-            String status = sc.getStatus().toUpperCase();
-            if (status.equals("APPROUVÉ") || status.equals("APPROUVE")) {
-                stats.put("approuvees", sc.getCount());
-            } else if (status.equals("REFUSÉ") || status.equals("REFUSE")) {
-                stats.put("refusees", sc.getCount());
-            } else if (status.equals("EN_ATTENTE") || status.equals("EN ATTENTE")) {
-                stats.put("enAttente", sc.getCount());
-            }
-        });
+    public DemandeStatsDTO getUserDemandesStats(Long userId) {
+        long approuvees = demandeCongeRepository.countApprouveesByUser(userId);
+        long refusees = demandeCongeRepository.countRefuseesByUser(userId);
+        long enAttente = demandeCongeRepository.countEnAttenteByUser(userId);
 
-        return stats;
+        return new DemandeStatsDTO(approuvees, refusees, enAttente);
     }
 
     public List<DemandeCongeResponseDTO> getDernieresDemandes(String username, int limit) {

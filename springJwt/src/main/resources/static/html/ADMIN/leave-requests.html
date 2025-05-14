@@ -117,7 +117,6 @@
                         </button>
                         <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
                             <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Paramètres</a>
                             <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
                         </div>
                     </div>
@@ -131,7 +130,7 @@
         <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
             <div class="h-full flex flex-col">
                 <nav class="flex-1 py-4 px-2 space-y-1">
-                    <a href="departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <a href="dashbord.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="3" width="7" height="9"></rect>
                             <rect x="14" y="3" width="7" height="5"></rect>
@@ -159,15 +158,15 @@
                         </svg>
                         Gestion des utilisateurs
                     </a>
-                    <a href="../ADMIN/leave-requests.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <a href="leave-requests.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                             <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                             <path d="M9 14l2 2 4-4"></path>
                         </svg>
                         Demandes de Congés
                     </a>
-                    <a href="../ADMIN/departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <a href="departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 00 2 0l7-4A2 2 0 0 0 21 16z"></path>
                             <polyline points="3.29 7 12 12 20.71 7"></polyline>
@@ -175,11 +174,13 @@
                         </svg>
                         Gestion des départements
                     </a>
-                    <a href="services.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+
+                    <a href="services.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
                         </svg>
-                        Demandes de Services
+                        Gestion de Services
                     </a>
                     <a href="profile.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -350,418 +351,417 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', async function() {
-        // Authentication check
-        const token = localStorage.getItem('token');
-        if (!token) {
-            window.location.href = 'index.html';
-            return;
-        }
+    document.addEventListener('DOMContentLoaded', function() {
+         const token = localStorage.getItem('token');
+         if (!token) {
+             window.location.href = '../user/index.html';
+             return;
+         }
 
-        // DOM Elements
-        const requestsTableBody = document.getElementById('requestsTableBody');
-        const searchInput = document.getElementById('searchInput');
-        const exportBtn = document.getElementById('exportBtn');
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        const requestDetailModal = document.getElementById('requestDetailModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const userMenuBtn = document.getElementById('userMenuBtn');
-        const userMenu = document.getElementById('userMenu');
-        const logoutBtn = document.getElementById('logoutBtn');
+         // DOM Elements
+         const requestsTableBody = document.getElementById('requestsTableBody');
+         const searchInput = document.getElementById('searchInput');
+         const exportBtn = document.getElementById('exportBtn');
+         const tabButtons = document.querySelectorAll('.tab-btn');
+         const requestDetailModal = document.getElementById('requestDetailModal');
+         const closeModalBtn = document.getElementById('closeModalBtn');
+         const userMenuBtn = document.getElementById('userMenuBtn');
+         const userMenu = document.getElementById('userMenu');
+         const logoutBtn = document.getElementById('logoutBtn');
 
-        // Pagination variables
-        let currentPage = 1;
-        const itemsPerPage = 10;
-        let allRequests = [];
-        let filteredRequests = [];
-        let employeesMap = new Map(); // Pour stocker les infos des employés
+         // Pagination variables
+         let currentPage = 1;
+         const itemsPerPage = 10;
+         let allRequests = [];
+         let filteredRequests = [];
+         let employeesMap = new Map(); // Pour stocker les infos des employés
 
-        // Initialize the page
-        async function init() {
-            await loadEmployees(); // Charger d'abord les employés
-            await loadRequests();
-            setupEventListeners();
-        }
+         // Initialize the page
+         async function init() {
+             await loadEmployees(); // Charger d'abord les employés
+             await loadRequests();
+             setupEventListeners();
+         }
 
-        // Charger les employés
-        async function loadEmployees() {
-            try {
-                const response = await fetch('http://localhost:8080/api/employees', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+         // Charger les employés
+         async function loadEmployees() {
+             try {
+                 const response = await fetch('http://localhost:8080/api/employees', {
+                     headers: {
+                         'Authorization': `Bearer ${token}`
+                     }
+                 });
 
-                if (!response.ok) {
-                    throw new Error('Erreur lors du chargement des employés');
-                }
+                 if (!response.ok) {
+                     throw new Error('Erreur lors du chargement des employés');
+                 }
 
-                const employees = await response.json();
-                employees.forEach(emp => {
-                    employeesMap.set(emp.id, emp);
-                });
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
+                 const employees = await response.json();
+                 employees.forEach(emp => {
+                     employeesMap.set(emp.id, emp);
+                 });
+             } catch (error) {
+                 console.error('Error:', error);
+             }
+         }
 
-        // Load requests from API
-        async function loadRequests() {
-            try {
-                const response = await fetch('http://localhost:8080/api/demandes-conge/all-with-employee-info', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+         // Load requests from API
+         async function loadRequests() {
+             try {
+                 const response = await fetch('http://localhost:8080/api/demandes-conge/all-with-employee-info', {
+                     headers: {
+                         'Authorization': `Bearer ${token}`
+                     }
+                 });
 
-                if (!response.ok) {
-                    throw new Error('Erreur lors du chargement des demandes');
-                }
+                 if (!response.ok) {
+                     throw new Error('Erreur lors du chargement des demandes');
+                 }
 
-                allRequests = await response.json();
+                 allRequests = await response.json();
 
-                // Filter to only show APPROUVÉ and REFUSÉ requests
-                allRequests = allRequests.filter(request =>
-                    request.statut === 'APPROUVÉ' || request.statut === 'REFUSÉ'
-                );
+                 // Filter to only show APPROUVÉ and REFUSÉ requests
+                 allRequests = allRequests.filter(request =>
+                     request.statut === 'APPROUVÉ' || request.statut === 'REFUSÉ' || request.statut==EN_ATTENTE
+                 );
 
-                // Ajouter les informations de l'employé à chaque demande
-                allRequests = allRequests.map(request => {
-                    const employee = employeesMap.get(request.employeeId);
-                    return {
-                        ...request,
-                        employeeNom: employee ? `${employee.prenom} ${employee.nom}` : 'Inconnu',
+                 // Ajouter les informations de l'employé à chaque demande
+                 allRequests = allRequests.map(request => {
+                     const employee = employeesMap.get(request.employeeId);
+                     return {
+                         ...request,
+                         employeeNom: employee ? `${employee.prenom} ${employee.nom}` : 'Inconnu',
 
-                    };
-                });
+                     };
+                 });
 
-                filteredRequests = [...allRequests];
-                renderRequests();
-                updatePagination();
-            } catch (error) {
-                console.error('Error:', error);
-                showError('Erreur lors du chargement des demandes');
-            }
-        }
+                 filteredRequests = [...allRequests];
+                 renderRequests();
+                 updatePagination();
+             } catch (error) {
+                 console.error('Error:', error);
+                 showError('Erreur lors du chargement des demandes');
+             }
+         }
 
-        // Render requests to the table
-        function renderRequests() {
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const paginatedRequests = filteredRequests.slice(startIndex, startIndex + itemsPerPage);
+         // Render requests to the table
+         function renderRequests() {
+             const startIndex = (currentPage - 1) * itemsPerPage;
+             const paginatedRequests = filteredRequests.slice(startIndex, startIndex + itemsPerPage);
 
-            requestsTableBody.innerHTML = paginatedRequests.map(request => `
-                <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                <span class="text-gray-600">${request.employeeNom ? request.employeeNom.charAt(0) : 'U'}</span>
-                            </div>
-                            <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">${request.employeeName || 'Non spécifié'}</div>
-                                <div class="text-sm text-gray-500">${request.employeeMatricule || ''}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${formatDate(request.dateDebut)} - ${formatDate(request.dateFin)}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${request.duree} jours</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${request.departement}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                            ${request.statut === 'APPROUVÉ' ? 'status-approved' : 'status-rejected'}">
-                            ${request.statut}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button class="text-primary-600 hover:text-primary-900 mr-3 view-btn" data-id="${request.id}">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
+             requestsTableBody.innerHTML = paginatedRequests.map(request => `
+                 <tr class="hover:bg-gray-50">
+                     <td class="px-6 py-4 whitespace-nowrap">
+                         <div class="flex items-center">
+                             <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                 <span class="text-gray-600">${request.employeeNom ? request.employeeNom.charAt(0) : 'U'}</span>
+                             </div>
+                             <div class="ml-4">
+                                 <div class="text-sm font-medium text-gray-900">${request.employeeName || 'Non spécifié'}</div>
+                                 <div class="text-sm text-gray-500">${request.employeeMatricule || ''}</div>
+                             </div>
+                         </div>
+                     </td>
+                     <td class="px-6 py-4 whitespace-nowrap">
+                         <div class="text-sm text-gray-900">${formatDate(request.dateDebut)} - ${formatDate(request.dateFin)}</div>
+                     </td>
+                     <td class="px-6 py-4 whitespace-nowrap">
+                         <div class="text-sm text-gray-900">${request.duree} jours</div>
+                     </td>
+                     <td class="px-6 py-4 whitespace-nowrap">
+                         <div class="text-sm text-gray-900">${request.departement}</div>
+                     </td>
+                     <td class="px-6 py-4 whitespace-nowrap">
+                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                             ${request.statut === 'APPROUVÉ' ? 'status-approved' : 'status-rejected'}">
+                             ${request.statut}
+                         </span>
+                     </td>
+                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                         <button class="text-primary-600 hover:text-primary-900 mr-3 view-btn" data-id="${request.id}">
+                             <i class="fas fa-eye"></i>
+                         </button>
+                     </td>
+                 </tr>
+             `).join('');
 
-            // Add event listeners to view buttons
-            document.querySelectorAll('.view-btn').forEach(btn => {
-                btn.addEventListener('click', () => showRequestDetails(btn.dataset.id));
-            });
-        }
+             // Add event listeners to view buttons
+             document.querySelectorAll('.view-btn').forEach(btn => {
+                 btn.addEventListener('click', () => showRequestDetails(btn.dataset.id));
+             });
+         }
 
-        // Show request details in modal
-        function showRequestDetails(requestId) {
-            const request = allRequests.find(req => req.id == requestId);
-            if (!request) return;
+         // Show request details in modal
+         function showRequestDetails(requestId) {
+             const request = allRequests.find(req => req.id == requestId);
+             if (!request) return;
 
-            document.getElementById('modalTitle').textContent = `Demande #${request.id}`;
-            document.getElementById('detailEmployee').textContent = request.employeeName || 'Non spécifié';
-            document.getElementById('detailDepartment').textContent = request.departement || 'Non spécifié';
-            document.getElementById('detailStartDate').textContent = formatDate(request.dateDebut);
-            document.getElementById('detailEndDate').textContent = formatDate(request.dateFin);
-            document.getElementById('detailDuration').textContent = `${request.duree} jours`;
-            document.getElementById('detailReason').textContent = request.motif || 'Non spécifié';
+             document.getElementById('modalTitle').textContent = `Demande #${request.id}`;
+             document.getElementById('detailEmployee').textContent = request.employeeName || 'Non spécifié';
+             document.getElementById('detailDepartment').textContent = request.departement || 'Non spécifié';
+             document.getElementById('detailStartDate').textContent = formatDate(request.dateDebut);
+             document.getElementById('detailEndDate').textContent = formatDate(request.dateFin);
+             document.getElementById('detailDuration').textContent = `${request.duree} jours`;
+             document.getElementById('detailReason').textContent = request.motif || 'Non spécifié';
 
-            const statusElement = document.getElementById('detailStatus');
-            statusElement.textContent = request.statut;
-            statusElement.className = 'mt-1 text-sm px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' +
-                (request.statut === 'APPROUVÉ' ? 'status-approved' : 'status-rejected');
+             const statusElement = document.getElementById('detailStatus');
+             statusElement.textContent = request.statut;
+             statusElement.className = 'mt-1 text-sm px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' +
+                 (request.statut === 'APPROUVÉ' ? 'status-approved' : 'status-rejected');
 
-            requestDetailModal.classList.remove('hidden');
-        }
+             requestDetailModal.classList.remove('hidden');
+         }
 
-        // Filter requests based on search and tab selection
-        function filterRequests() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const activeTab = document.querySelector('.tab-btn.border-primary-500')?.dataset.filter || 'all';
+         // Filter requests based on search and tab selection
+         function filterRequests() {
+             const searchTerm = searchInput.value.toLowerCase();
+             const activeTab = document.querySelector('.tab-btn.border-primary-500')?.dataset.filter || 'all';
 
-            filteredRequests = allRequests.filter(request => {
-                const matchesSearch =
-                    (request.employeeNom?.toLowerCase().includes(searchTerm)) ||
-                    (request.employeeMatricule?.toLowerCase().includes(searchTerm)) ||
-                    (request.motif?.toLowerCase().includes(searchTerm)) ||
-                    (formatDate(request.dateDebut).toLowerCase().includes(searchTerm)) ||
-                    (formatDate(request.dateFin).toLowerCase().includes(searchTerm)) ||
-                    (formatDate(request.dateCreation || request.dateDemande).toLowerCase().includes(searchTerm));
+             filteredRequests = allRequests.filter(request => {
+                 const matchesSearch =
+                     (request.employeeNom?.toLowerCase().includes(searchTerm)) ||
+                     (request.employeeMatricule?.toLowerCase().includes(searchTerm)) ||
+                     (request.motif?.toLowerCase().includes(searchTerm)) ||
+                     (formatDate(request.dateDebut).toLowerCase().includes(searchTerm)) ||
+                     (formatDate(request.dateFin).toLowerCase().includes(searchTerm)) ||
+                     (formatDate(request.dateCreation || request.dateDemande).toLowerCase().includes(searchTerm));
 
-                const matchesTab =
-                    activeTab === 'all' ||
-                    request.statut === activeTab;
+                 const matchesTab =
+                     activeTab === 'all' ||
+                     request.statut === activeTab;
 
-                return matchesSearch && matchesTab;
-            });
+                 return matchesSearch && matchesTab;
+             });
 
-            currentPage = 1;
-            renderRequests();
-            updatePagination();
-        }
+             currentPage = 1;
+             renderRequests();
+             updatePagination();
+         }
 
-        // Update pagination controls
-        function updatePagination() {
-            const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
-            const paginationInfo = document.getElementById('paginationInfo');
-            const pageNumbers = document.getElementById('pageNumbers');
-            const prevBtn = document.getElementById('prevPage');
-            const nextBtn = document.getElementById('nextPage');
+         // Update pagination controls
+         function updatePagination() {
+             const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+             const paginationInfo = document.getElementById('paginationInfo');
+             const pageNumbers = document.getElementById('pageNumbers');
+             const prevBtn = document.getElementById('prevPage');
+             const nextBtn = document.getElementById('nextPage');
 
-            const startItem = (currentPage - 1) * itemsPerPage + 1;
-            const endItem = Math.min(currentPage * itemsPerPage, filteredRequests.length);
+             const startItem = (currentPage - 1) * itemsPerPage + 1;
+             const endItem = Math.min(currentPage * itemsPerPage, filteredRequests.length);
 
-            paginationInfo.innerHTML = `
-                Affichage de <span class="font-medium">${startItem}</span> à <span class="font-medium">${endItem}</span>
-                sur <span class="font-medium">${filteredRequests.length}</span> résultats
-            `;
+             paginationInfo.innerHTML = `
+                 Affichage de <span class="font-medium">${startItem}</span> à <span class="font-medium">${endItem}</span>
+                 sur <span class="font-medium">${filteredRequests.length}</span> résultats
+             `;
 
-            pageNumbers.innerHTML = '';
+             pageNumbers.innerHTML = '';
 
-            // Afficher un maximum de 5 pages autour de la page courante
-            let startPage = Math.max(1, currentPage - 2);
-            let endPage = Math.min(totalPages, currentPage + 2);
+             // Afficher un maximum de 5 pages autour de la page courante
+             let startPage = Math.max(1, currentPage - 2);
+             let endPage = Math.min(totalPages, currentPage + 2);
 
-            if (currentPage <= 3) {
-                endPage = Math.min(5, totalPages);
-            }
-            if (currentPage >= totalPages - 2) {
-                startPage = Math.max(1, totalPages - 4);
-            }
+             if (currentPage <= 3) {
+                 endPage = Math.min(5, totalPages);
+             }
+             if (currentPage >= totalPages - 2) {
+                 startPage = Math.max(1, totalPages - 4);
+             }
 
-            // Bouton pour la première page
-            if (startPage > 1) {
-                const firstPageBtn = createPageButton(1);
-                pageNumbers.appendChild(firstPageBtn);
-                if (startPage > 2) {
-                    const ellipsis = document.createElement('span');
-                    ellipsis.className = 'relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700';
-                    ellipsis.textContent = '...';
-                    pageNumbers.appendChild(ellipsis);
-                }
-            }
+             // Bouton pour la première page
+             if (startPage > 1) {
+                 const firstPageBtn = createPageButton(1);
+                 pageNumbers.appendChild(firstPageBtn);
+                 if (startPage > 2) {
+                     const ellipsis = document.createElement('span');
+                     ellipsis.className = 'relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700';
+                     ellipsis.textContent = '...';
+                     pageNumbers.appendChild(ellipsis);
+                 }
+             }
 
-            // Boutons pour les pages autour de la page courante
-            for (let i = startPage; i <= endPage; i++) {
-                const pageBtn = createPageButton(i);
-                pageNumbers.appendChild(pageBtn);
-            }
+             // Boutons pour les pages autour de la page courante
+             for (let i = startPage; i <= endPage; i++) {
+                 const pageBtn = createPageButton(i);
+                 pageNumbers.appendChild(pageBtn);
+             }
 
-            // Bouton pour la dernière page
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) {
-                    const ellipsis = document.createElement('span');
-                    ellipsis.className = 'relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700';
-                    ellipsis.textContent = '...';
-                    pageNumbers.appendChild(ellipsis);
-                }
-                const lastPageBtn = createPageButton(totalPages);
-                pageNumbers.appendChild(lastPageBtn);
-            }
+             // Bouton pour la dernière page
+             if (endPage < totalPages) {
+                 if (endPage < totalPages - 1) {
+                     const ellipsis = document.createElement('span');
+                     ellipsis.className = 'relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700';
+                     ellipsis.textContent = '...';
+                     pageNumbers.appendChild(ellipsis);
+                 }
+                 const lastPageBtn = createPageButton(totalPages);
+                 pageNumbers.appendChild(lastPageBtn);
+             }
 
-            // Désactiver les boutons précédent/suivant si nécessaire
-            prevBtn.disabled = currentPage === 1;
-            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
-        }
+             // Désactiver les boutons précédent/suivant si nécessaire
+             prevBtn.disabled = currentPage === 1;
+             nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+         }
 
-        function createPageButton(pageNumber) {
-            const pageBtn = document.createElement('button');
-            pageBtn.className = `relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                pageNumber === currentPage
-                    ? 'border-primary-500 bg-primary-50 text-primary-600'
-                    : 'border-gray-300 bg-white text-gray-500 hover:bg-gray-50'
-            }`;
-            pageBtn.textContent = pageNumber;
-            pageBtn.addEventListener('click', () => {
-                currentPage = pageNumber;
-                renderRequests();
-                updatePagination();
-            });
-            return pageBtn;
-        }
+         function createPageButton(pageNumber) {
+             const pageBtn = document.createElement('button');
+             pageBtn.className = `relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                 pageNumber === currentPage
+                     ? 'border-primary-500 bg-primary-50 text-primary-600'
+                     : 'border-gray-300 bg-white text-gray-500 hover:bg-gray-50'
+             }`;
+             pageBtn.textContent = pageNumber;
+             pageBtn.addEventListener('click', () => {
+                 currentPage = pageNumber;
+                 renderRequests();
+                 updatePagination();
+             });
+             return pageBtn;
+         }
 
-        // Format date for display
-        function formatDate(dateString) {
-            if (!dateString) return 'Non spécifié';
-            try {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('fr-FR', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                });
-            } catch (e) {
-                return dateString; // Retourne la chaîne originale si le parsing échoue
-            }
-        }
+         // Format date for display
+         function formatDate(dateString) {
+             if (!dateString) return 'Non spécifié';
+             try {
+                 const date = new Date(dateString);
+                 return date.toLocaleDateString('fr-FR', {
+                     year: 'numeric',
+                     month: '2-digit',
+                     day: '2-digit'
+                 });
+             } catch (e) {
+                 return dateString; // Retourne la chaîne originale si le parsing échoue
+             }
+         }
 
-        // Export to Excel
-        async function exportToExcel() {
-            try {
-                // Charger la bibliothèque SheetJS dynamiquement
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
-                script.onload = async () => {
-                    // Préparer les données
-                    const data = filteredRequests.map(request => ({
-                        'ID': request.id,
-                        'Employé': request.employeeName,
-                        'remplacerPar': request.remplacerPar,
-                        'Département': request.departement,
-                        'Date Début': formatDate(request.dateDebut),
-                        'Date Fin': formatDate(request.dateFin),
-                        'Durée (jours)': request.duree,
+         // Export to Excel
+         async function exportToExcel() {
+             try {
+                 // Charger la bibliothèque SheetJS dynamiquement
+                 const script = document.createElement('script');
+                 script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+                 script.onload = async () => {
+                     // Préparer les données
+                     const data = filteredRequests.map(request => ({
+                         'ID': request.id,
+                         'Employé': request.employeeName,
+                         'remplacerPar': request.remplacerPar,
+                         'Département': request.departement,
+                         'Date Début': formatDate(request.dateDebut),
+                         'Date Fin': formatDate(request.dateFin),
+                         'Durée (jours)': request.duree,
 
-                        'Statut': request.statut,
-                        'Motif': request.motif
-                    }));
+                         'Statut': request.statut,
+                         'Motif': request.motif
+                     }));
 
-                    // Créer un workbook
-                    const wb = XLSX.utils.book_new();
-                    const ws = XLSX.utils.json_to_sheet(data);
-                    XLSX.utils.book_append_sheet(wb, ws, 'Demandes de Services');
+                     // Créer un workbook
+                     const wb = XLSX.utils.book_new();
+                     const ws = XLSX.utils.json_to_sheet(data);
+                     XLSX.utils.book_append_sheet(wb, ws, 'Demandes de Services');
 
-                    // Générer le fichier Excel
-                    const date = new Date().toISOString().slice(0, 10);
-                    XLSX.writeFile(wb, `Demandes_Services_${date}.xlsx`);
-                };
-                document.head.appendChild(script);
-            } catch (error) {
-                console.error('Erreur lors de l\'export:', error);
-                alert('Une erreur est survenue lors de l\'export');
-            }
-        }
+                     // Générer le fichier Excel
+                     const date = new Date().toISOString().slice(0, 10);
+                     XLSX.writeFile(wb, `Demandes_Services_${date}.xlsx`);
+                 };
+                 document.head.appendChild(script);
+             } catch (error) {
+                 console.error('Erreur lors de l\'export:', error);
+                 alert('Une erreur est survenue lors de l\'export');
+             }
+         }
 
-        // Show error message
-        function showError(message) {
-            requestsTableBody.innerHTML = `
-                <tr>
-                    <td colspan="6" class="px-6 py-4 text-center text-sm text-red-600">
-                        <i class="fas fa-exclamation-circle mr-2"></i> ${message}
-                    </td>
-                </tr>
-            `;
-        }
+         // Show error message
+         function showError(message) {
+             requestsTableBody.innerHTML = `
+                 <tr>
+                     <td colspan="6" class="px-6 py-4 text-center text-sm text-red-600">
+                         <i class="fas fa-exclamation-circle mr-2"></i> ${message}
+                     </td>
+                 </tr>
+             `;
+         }
 
-        // Setup event listeners
-        function setupEventListeners() {
-            // Tab buttons
-            tabButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    tabButtons.forEach(b => b.classList.remove('border-primary-500', 'text-primary-600'));
-                    tabButtons.forEach(b => b.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
+         // Setup event listeners
+         function setupEventListeners() {
+             // Tab buttons
+             tabButtons.forEach(btn => {
+                 btn.addEventListener('click', () => {
+                     tabButtons.forEach(b => b.classList.remove('border-primary-500', 'text-primary-600'));
+                     tabButtons.forEach(b => b.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
 
-                    btn.classList.add('border-primary-500', 'text-primary-600');
-                    btn.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                     btn.classList.add('border-primary-500', 'text-primary-600');
+                     btn.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
 
-                    filterRequests();
-                });
-            });
+                     filterRequests();
+                 });
+             });
 
-            // Search input
-            searchInput.addEventListener('input', debounce(filterRequests, 300));
+             // Search input
+             searchInput.addEventListener('input', debounce(filterRequests, 300));
 
-            // Export button
-            exportBtn.addEventListener('click', exportToExcel);
+             // Export button
+             exportBtn.addEventListener('click', exportToExcel);
 
-            // Close modal button
-            closeModalBtn.addEventListener('click', () => {
-                requestDetailModal.classList.add('hidden');
-            });
+             // Close modal button
+             closeModalBtn.addEventListener('click', () => {
+                 requestDetailModal.classList.add('hidden');
+             });
 
-            // User menu
-            userMenuBtn.addEventListener('click', () => {
-                const expanded = userMenuBtn.getAttribute('aria-expanded') === 'true';
-                userMenuBtn.setAttribute('aria-expanded', !expanded);
-                userMenu.classList.toggle('hidden');
-            });
+             // User menu
+             userMenuBtn.addEventListener('click', () => {
+                 const expanded = userMenuBtn.getAttribute('aria-expanded') === 'true';
+                 userMenuBtn.setAttribute('aria-expanded', !expanded);
+                 userMenu.classList.toggle('hidden');
+             });
 
-            // Logout button
-            logoutBtn.addEventListener('click', () => {
-                localStorage.removeItem('token');
-                window.location.href = '../user/index.html';
-            });
+             // Logout button
+             logoutBtn.addEventListener('click', () => {
+                 localStorage.removeItem('token');
+                 window.location.href = '../user/index.html';
+             });
 
-            // Close menu when clicking outside
-            document.addEventListener('click', (event) => {
-                if (!userMenuBtn.contains(event.target) && !userMenu.contains(event.target)) {
-                    userMenuBtn.setAttribute('aria-expanded', 'false');
-                    userMenu.classList.add('hidden');
-                }
-            });
+             // Close menu when clicking outside
+             document.addEventListener('click', (event) => {
+                 if (!userMenuBtn.contains(event.target) && !userMenu.contains(event.target)) {
+                     userMenuBtn.setAttribute('aria-expanded', 'false');
+                     userMenu.classList.add('hidden');
+                 }
+             });
 
-            // Pagination buttons
-            document.getElementById('prevPage').addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderRequests();
-                    updatePagination();
-                }
-            });
+             // Pagination buttons
+             document.getElementById('prevPage').addEventListener('click', () => {
+                 if (currentPage > 1) {
+                     currentPage--;
+                     renderRequests();
+                     updatePagination();
+                 }
+             });
 
-            document.getElementById('nextPage').addEventListener('click', () => {
-                const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    renderRequests();
-                    updatePagination();
-                }
-            });
-        }
+             document.getElementById('nextPage').addEventListener('click', () => {
+                 const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+                 if (currentPage < totalPages) {
+                     currentPage++;
+                     renderRequests();
+                     updatePagination();
+                 }
+             });
+         }
 
-        // Fonction debounce pour optimiser les recherches
-        function debounce(func, wait) {
-            let timeout;
-            return function() {
-                const context = this, args = arguments;
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    func.apply(context, args);
-                }, wait);
-            };
-        }
+         // Fonction debounce pour optimiser les recherches
+         function debounce(func, wait) {
+             let timeout;
+             return function() {
+                 const context = this, args = arguments;
+                 clearTimeout(timeout);
+                 timeout = setTimeout(() => {
+                     func.apply(context, args);
+                 }, wait);
+             };
+         }
 
-        // Initialize the page
-        init();
-    });
+         // Initialize the page
+         init();
+     });
 </script>
 </body>
 </html>

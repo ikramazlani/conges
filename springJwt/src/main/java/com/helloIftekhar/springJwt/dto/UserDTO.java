@@ -1,10 +1,6 @@
 package com.helloIftekhar.springJwt.dto;
 
-import com.helloIftekhar.springJwt.model.Role;
 import lombok.Data;
-
-
-import java.util.List;
 
 @Data
 public class UserDTO {

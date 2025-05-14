@@ -40,6 +40,26 @@ public interface DemandeCongeRepository extends JpaRepository<DemandeConge, Long
         Long getCount();
     }
 
+        // Pour les stats globales
+        @Query("SELECT COUNT(d) FROM DemandeConge d WHERE d.statut = 'APPROUVE' OR d.statut = 'APPROUVÉ'")
+        long countApprouvees();
+
+        @Query("SELECT COUNT(d) FROM DemandeConge d WHERE d.statut = 'REFUSE' OR d.statut = 'REFUSÉ'")
+        long countRefusees();
+
+        @Query("SELECT COUNT(d) FROM DemandeConge d WHERE d.statut = 'EN_ATTENTE' OR d.statut = 'EN ATTENTE'")
+        long countEnAttente();
+
+        // Pour les stats par utilisateur
+        @Query("SELECT COUNT(d) FROM DemandeConge d WHERE (d.statut = 'APPROUVE' OR d.statut = 'APPROUVÉ') AND d.idEmployee = :userId")
+        long countApprouveesByUser(Long userId);
+
+        @Query("SELECT COUNT(d) FROM DemandeConge d WHERE (d.statut = 'REFUSE' OR d.statut = 'REFUSÉ') AND d.idEmployee = :userId")
+        long countRefuseesByUser(Long userId);
+
+        @Query("SELECT COUNT(d) FROM DemandeConge d WHERE (d.statut = 'EN_ATTENTE' OR d.statut = 'EN ATTENTE') AND d.idEmployee = :userId")
+        long countEnAttenteByUser(Long userId);
+
 
     @Query("SELECT new com.helloIftekhar.springJwt.dto.DemandeCongeResponseDTO(" +
             "d.id, d.idEmployee, CONCAT(u.firstName, ' ', u.lastName), dep.nomDepartement, " +

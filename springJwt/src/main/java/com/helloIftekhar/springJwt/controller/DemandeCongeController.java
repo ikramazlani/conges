@@ -3,6 +3,7 @@ package com.helloIftekhar.springJwt.controller;
 
 import com.helloIftekhar.springJwt.dto.DemandeCongeRequestDTO;
 import com.helloIftekhar.springJwt.dto.DemandeCongeResponseDTO;
+import com.helloIftekhar.springJwt.dto.DemandeStatsDTO;
 import com.helloIftekhar.springJwt.model.DemandeConge;
 import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.repository.DemandeCongeRepository;
@@ -55,19 +56,6 @@ public class DemandeCongeController {
     }
 
 
-    @GetMapping("/stats")
-    public ResponseEntity<Map<String, Long>> getDemandesStats() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        // Appel direct au service
-        Map<String, Long> stats = demandeCongeService.getDemandesStats(Long.valueOf(user.getId()));
-
-        return ResponseEntity.ok(stats);
-    }
 
     @GetMapping("/dernieres-demandes")
     public ResponseEntity<List<DemandeCongeResponseDTO>> getDernieresDemandes() {
@@ -143,6 +131,29 @@ public class DemandeCongeController {
     public ResponseEntity<List<DemandeCongeResponseDTO>> getAllDemandesWithEmployeeInfo() {
         List<DemandeCongeResponseDTO> allDemandes = demandeCongeService.getAllDemandesWithEmployeeInfo();
         return ResponseEntity.ok(allDemandes);
+    }
+
+
+
+
+
+
+    @GetMapping("/stats-globales")
+    public ResponseEntity<DemandeStatsDTO> getGlobalStats() {
+        DemandeStatsDTO stats = demandeCongeService.getGlobalDemandesStats();
+        return ResponseEntity.ok(stats);
+    }
+
+    @GetMapping("/stats-utilisateur")
+    public ResponseEntity<DemandeStatsDTO> getUserStats() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        DemandeStatsDTO stats = demandeCongeService.getUserDemandesStats(Long.valueOf(user.getId()));
+        return ResponseEntity.ok(stats);
     }
 
 }

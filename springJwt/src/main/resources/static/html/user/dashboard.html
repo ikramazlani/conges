@@ -146,7 +146,7 @@
             const soldeData = await soldeResponse.json();
             document.getElementById('soldeAnneeCourante').textContent = soldeData.soldeAnneeCourante + ' jours';
 
-            const statsResponse = await fetch('http://localhost:8080/api/demandes-conge/stats', {
+            const statsResponse = await fetch('http://localhost:8080/api/demandes-conge/stats-utilisateur', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!statsResponse.ok) throw new Error('Erreur lors du chargement des stats');

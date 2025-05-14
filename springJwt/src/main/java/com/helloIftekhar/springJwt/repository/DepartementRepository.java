@@ -10,4 +10,6 @@ public interface DepartementRepository extends JpaRepository<Departement, Long> 
     boolean existsByNomDepartement(String nomDepartement);
     List<Departement> findAllByOrderByNomDepartementAsc();
 
+
+
 }
