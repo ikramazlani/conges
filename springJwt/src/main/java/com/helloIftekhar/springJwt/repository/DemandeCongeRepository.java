@@ -63,7 +63,7 @@ public interface DemandeCongeRepository extends JpaRepository<DemandeConge, Long
 
     @Query("SELECT new com.helloIftekhar.springJwt.dto.DemandeCongeResponseDTO(" +
             "d.id, d.idEmployee, CONCAT(u.firstName, ' ', u.lastName), dep.nomDepartement, " +
-            "d.dateCreation, d.dateDebut, d.dateFin, d.motif, d.statut, d.duree, d.remplacerPar) " +
+            "d.dateCreation, d.dateDebut, d.dateFin, d.motif, d.statut, d.duree, d.remplacerPar,u.role) " +
             "FROM DemandeConge d " +
             "JOIN User u ON d.idEmployee = u.id " +
             "LEFT JOIN u.departement dep")

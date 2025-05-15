@@ -10,4 +10,6 @@ public interface ServiceDepartementRepository extends JpaRepository<ServiceDepar
     List<ServiceDepartement> findByDepartementId(Long departementId);
 
     boolean existsByNomServiceAndDepartementId(String nomService, Long departementId);
+
+
 }

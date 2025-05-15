@@ -1329,9 +1329,33 @@
                             <button id="next-year">&gt;&gt;</button>
                         </div>
                     </div>
-            
-                    <button class="add-holiday-btn" id="add-holiday-btn" style="display: none;">Ajouter jours fériés</button>
-                    
+
+
+
+                      <button id="addReligiousHoliday" class="add-holiday-btn">+ Ajouter une fête religieuse</button>
+
+                      <!-- Modal pour l'ajout de fête religieuse -->
+                      <div id="religiousHolidayModal" class="modal">
+                          <div class="modal-content">
+                              <span class="close">&times;</span>
+                              <h2>Ajouter une fête religieuse</h2>
+                              <form id="religiousHolidayForm">
+                                  <div class="form-group">
+                                      <label for="holidayName">Nom de la fête :</label>
+                                      <input type="text" id="holidayName" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="holidayDate">Date :</label>
+                                      <input type="date" id="holidayDate" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="holidayDuration">Durée (en jours) :</label>
+                                      <input type="number" id="holidayDuration" min="1" value="1" required>
+                                  </div>
+                                  <button type="submit" class="submit-holiday-btn">Enregistrer</button>
+                              </form>
+                          </div>
+                      </div>
                     <div class="months-container" id="months-container">
                         <div class="loading">Chargement du calendrier...</div>
                     </div>

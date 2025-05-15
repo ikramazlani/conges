@@ -81,6 +81,13 @@
             background-color: #FEE2E2;
             color: #B91C1C;
         }
+
+        .status-pending {
+    background-color: #FEF3C7;
+    color: #92400E;
+
+}
+
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -222,12 +229,16 @@
                         Toutes les demandes
                     </button>
                     <button class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 text-sm font-medium"
-                            data-filter="APPROUVÉ">
+                            data-filter="APPROUVE">
                         Demandes approuvées
                     </button>
                     <button class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 text-sm font-medium"
-                            data-filter="REFUSÉ">
+                            data-filter="REFUSE">
                         Demandes refusées
+                    </button>
+                    <button class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 text-sm font-medium"
+                            data-filter="EN_ATTENTE">
+                        Demandes en attente
                     </button>
                 </nav>
             </div>
@@ -422,7 +433,7 @@
 
                  // Filter to only show APPROUVÉ and REFUSÉ requests
                  allRequests = allRequests.filter(request =>
-                     request.statut === 'APPROUVÉ' || request.statut === 'REFUSÉ' || request.statut==EN_ATTENTE
+                     request.statut === 'APPROUVE' || request.statut === 'REFUSE' || request.statut === 'EN_ATTENTE'
                  );
 
                  // Ajouter les informations de l'employé à chaque demande
@@ -458,7 +469,7 @@
                              </div>
                              <div class="ml-4">
                                  <div class="text-sm font-medium text-gray-900">${request.employeeName || 'Non spécifié'}</div>
-                                 <div class="text-sm text-gray-500">${request.employeeMatricule || ''}</div>
+                                 <div class="text-sm text-gray-500">${request.role || ''}</div>
                              </div>
                          </div>
                      </td>
@@ -473,9 +484,19 @@
                      </td>
                      <td class="px-6 py-4 whitespace-nowrap">
                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                             ${request.statut === 'APPROUVÉ' ? 'status-approved' : 'status-rejected'}">
-                             ${request.statut}
-                         </span>
+                ${(() => {
+                    if (request.statut === 'APPROUVE') {
+                        return 'status-approved';
+                    } else if (request.statut === 'REFUSE') {
+                        return 'status-rejected';
+                    } else if (request.statut === 'EN_ATTENTE') {
+                        return 'status-pending';
+                    } else {
+                        return 'bg-gray-100 text-gray-800';
+                    }
+                })()}">
+                ${request.statut === 'EN_ATTENTE' ? 'EN ATTENTE' : request.statut}
+            </span>
                      </td>
                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                          <button class="text-primary-600 hover:text-primary-900 mr-3 view-btn" data-id="${request.id}">
@@ -519,10 +540,11 @@
 
              filteredRequests = allRequests.filter(request => {
                  const matchesSearch =
-                     (request.employeeNom?.toLowerCase().includes(searchTerm)) ||
-                     (request.employeeMatricule?.toLowerCase().includes(searchTerm)) ||
-                     (request.motif?.toLowerCase().includes(searchTerm)) ||
+                     (request.employeeName?.toLowerCase().includes(searchTerm)) ||
+                     (request.role?.toLowerCase().includes(searchTerm)) ||
+                     (request.departement?.toLowerCase().includes(searchTerm)) ||
                      (formatDate(request.dateDebut).toLowerCase().includes(searchTerm)) ||
+                     (request.statut?.includes(searchTerm)) ||
                      (formatDate(request.dateFin).toLowerCase().includes(searchTerm)) ||
                      (formatDate(request.dateCreation || request.dateDemande).toLowerCase().includes(searchTerm));
 

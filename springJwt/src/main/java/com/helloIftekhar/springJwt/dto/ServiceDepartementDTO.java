@@ -7,5 +7,6 @@ public class ServiceDepartementDTO {
     private Long id;
     private String nomService;
     private Long departementId;
-    private String nomDepartement; // Optionnel pour l'affichage
+    private String nomDepartement;
+    private Long nombreUtilisateurs;
 }

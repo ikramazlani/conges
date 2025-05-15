@@ -6,6 +6,7 @@ import com.helloIftekhar.springJwt.model.Departement;
 import com.helloIftekhar.springJwt.model.ServiceDepartement;
 import com.helloIftekhar.springJwt.repository.DepartementRepository;
 import com.helloIftekhar.springJwt.repository.ServiceDepartementRepository;
+import com.helloIftekhar.springJwt.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +19,13 @@ public class ServiceDepartementService {
 
     private final ServiceDepartementRepository serviceRepository;
     private final DepartementRepository departementRepository;
+    private final UserRepository userRepository;
 
     public ServiceDepartementService(ServiceDepartementRepository serviceRepository,
-                                     DepartementRepository departementRepository) {
+                                     DepartementRepository departementRepository,UserRepository userRepository) {
         this.serviceRepository = serviceRepository;
         this.departementRepository = departementRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -39,14 +42,20 @@ public class ServiceDepartementService {
         return ServiceDepartementMapper.toDto(service);
     }
 
-    public List<ServiceDepartementDTO> getServicesByDepartement(Long departementId) {
+    public List<ServiceDepartementDTO> getAllServicesByDepartement(Long departementId) {
         return serviceRepository.findByDepartementId(departementId)
                 .stream()
-                .map(ServiceDepartementMapper::toDto)
+                .map(service -> {
+                    ServiceDepartementDTO dto = ServiceDepartementMapper.toDto(service);
+                    // Compter le nombre d'utilisateurs pour ce service
+                    Long count = userRepository.countByServiceId(service.getId());
+                    dto.setNombreUtilisateurs(count);
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
-    public List<ServiceDepartementDTO> getAllServicesByDepartement(Long departementId) {
+    public List<ServiceDepartementDTO> getServicesByDepartement(Long departementId) {
         return serviceRepository.findByDepartementId(departementId)
                 .stream()
                 .map(ServiceDepartementMapper::toDto)

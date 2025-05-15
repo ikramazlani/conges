@@ -138,10 +138,10 @@ document.addEventListener('DOMContentLoaded', function() {
   function updateYear() {
       currentYearElement.textContent = currentYear;
       monthsContainer.innerHTML = '<div class="loading">Chargement du calendrier...</div>';
-      
+
       // Fusionner les fêtes nationales, religieuses et celles ajoutées par l'utilisateur
       const allHolidays = {...nationalHolidays};
-      
+
       // Ajouter les fêtes religieuses uniquement pour les années avant 2025
       if (currentYear < 2025) {
           for (const [date, holiday] of Object.entries(religiousHolidays)) {
@@ -149,19 +149,19 @@ document.addEventListener('DOMContentLoaded', function() {
               const holidayYear = parseInt(dateParts[0]);
               const holidayMonth = dateParts[1];
               const holidayDay = dateParts[2];
-              
+
               if (holidayYear === currentYear) {
                   const key = `${holidayMonth}-${holidayDay}`;
                   allHolidays[key] = holiday;
               }
           }
       }
-      
+
       // Ajouter les jours fériés ajoutés par l'utilisateur pour l'année courante
       for (const [date, holiday] of Object.entries(userAddedHolidays)) {
           const dateParts = date.split('-');
           const holidayYear = parseInt(dateParts[0]);
-          
+
           if (holidayYear === currentYear) {
               const holidayMonth = dateParts[1];
               const holidayDay = dateParts[2];
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
               allHolidays[key] = holiday;
           }
       }
-      
+
       renderCalendar(allHolidays);
   }
   
@@ -387,69 +387,69 @@ document.addEventListener('DOMContentLoaded', function() {
       const span = document.getElementsByClassName('close')[0];
       const holidayForm = document.getElementById('holiday-form');
       const deleteBtn = document.getElementById('delete-holiday-btn');
-      
+
       btn.onclick = openAddModal;
-      
+
       span.onclick = function() {
           modal.style.display = 'none';
       };
-      
+
       window.onclick = function(event) {
           if (event.target === modal) {
               modal.style.display = 'none';
           }
       };
-      
+
       holidayForm.onsubmit = function(e) {
           e.preventDefault();
-          
+
           const holidayName = document.getElementById('holiday-name').value;
           const holidayDuration = parseInt(document.getElementById('holiday-duration').value);
           const holidayDate = document.getElementById('holiday-date').value;
-          
+
           if (!holidayName || !holidayDate) {
               alert('Veuillez remplir tous les champs');
               return;
           }
-          
+
           const dateObj = new Date(holidayDate);
           const year = dateObj.getFullYear();
           const month = String(dateObj.getMonth() + 1).padStart(2, '0');
           const day = String(dateObj.getDate()).padStart(2, '0');
-          
+
           // Si on est en mode édition, supprimer l'ancienne entrée
           if (currentEditingHoliday) {
               delete userAddedHolidays[currentEditingHoliday.date];
           }
-          
+
           // Ajouter chaque jour de vacances
           for (let i = 0; i < holidayDuration; i++) {
               const currentDate = new Date(dateObj);
               currentDate.setDate(dateObj.getDate() + i);
-              
+
               const currentYear = currentDate.getFullYear();
               const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
               const currentDay = String(currentDate.getDate()).padStart(2, '0');
-              
+
               const dateKey = `${currentYear}-${currentMonth}-${currentDay}`;
-              
+
               userAddedHolidays[dateKey] = {
                   name: holidayName,
                   type: 2 // Type 2 pour les fêtes religieuses (vert)
               };
           }
-          
+
           // Sauvegarder dans le localStorage
           localStorage.setItem('userAddedHolidays', JSON.stringify(userAddedHolidays));
-          
+
           // Mettre à jour le calendrier
           updateYear();
-          
+
           // Fermer le modal et réinitialiser le formulaire
           modal.style.display = 'none';
           holidayForm.reset();
       };
-      
+
       deleteBtn.onclick = function() {
           if (currentEditingHoliday && confirm("Voulez-vous vraiment supprimer ce jour férié ?")) {
               deleteHoliday(currentEditingHoliday.date);

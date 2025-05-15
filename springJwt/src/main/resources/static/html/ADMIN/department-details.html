@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détails du Département - Système de gestion des congés</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
     <script>
         tailwind.config = {
             theme: {
@@ -93,7 +98,7 @@
             <div class="h-full flex flex-col">
                 <nav class="flex-1 py-4 px-2 space-y-1">
                     <a href="dashbord.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md"   >
-                        <svg xmlns="http://www.w3.org/2000/svg"  class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" >
+                        <svg xmlns="http://www.w3.org/2000/svg"   class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"  >
                             <rect x="3" y="3" width="7" height="9"></rect>
                             <rect x="14" y="3" width="7" height="5"></rect>
                             <rect x="14" y="12" width="7" height="9"></rect>
@@ -129,7 +134,7 @@
                         Demandes de Congés
                     </a>
                     <a href="departments.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md" >
-                        <svg xmlns="http://www.w3.org/2000/svg"  class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" >
+                        <svg xmlns="http://www.w3.org/2000/svg"  class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" >
                             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                             <polyline points="3.29 7 12 12 20.71 7"></polyline>
                             <line x1="12" y1="22" y2="12" x2="12"></line>
@@ -318,33 +323,7 @@
             return;
         }
 
-        // Logout functionality
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('refresh_token');
-            localStorage.removeItem('userRole');
-            window.location.href = '../user/index.html';
-        });
 
-        // User menu toggle
-        const userMenuButton = document.getElementById('userMenuBtn');
-        const userMenu = document.getElementById('userMenu');
-
-        if (userMenuButton && userMenu) {
-            userMenuButton.addEventListener('click', () => {
-                const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
-                userMenuButton.setAttribute('aria-expanded', !expanded);
-                userMenu.classList.toggle('hidden');
-            });
-
-            // Close the menu when clicking outside
-            document.addEventListener('click', (event) => {
-                if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
-                    userMenuButton.setAttribute('aria-expanded', 'false');
-                    userMenu.classList.add('hidden');
-                }
-            });
-        }
 
         // Load department details and services
         loadDepartmentDetails(departmentId);
@@ -559,13 +538,31 @@
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(errorData.message || (id ? 'Erreur lors de la mise à jour du service' : 'Erreur lors de la création du service'));
+                }else {
+                await Swal.fire({
+            title: 'Succès',
+            text: 'Opération effectuée avec succès !',
+            icon: 'success',
+            confirmButtonColor: '#2563eb',
+            confirmButtonText: 'OK'
+        });
+
                 }
 
                 serviceModal.classList.add('hidden');
                 loadDepartmentServices(departmentId);
             } catch (error) {
-                console.error('Error:', error);
-                alert(error.message);
+                  await Swal.fire({
+            title: 'Erreur',
+            text: 'Ce Service existe déjà',
+            icon: 'error',
+            confirmButtonColor: '#ef4444',
+            confirmButtonText: 'Compris',
+            iconColor: '#ef4444',
+            customClass: {
+                confirmButton: 'px-4 py-2 rounded-md shadow-sm text-sm font-medium',
+            }
+        });
             } finally {
                 saveBtn.disabled = false;
                 saveBtn.innerHTML = 'Enregistrer';
@@ -691,6 +688,29 @@
             </tr>
         `).join('');
     }
+
+
+     if (userMenuBtn && userMenu) {
+            userMenuBtn.addEventListener('click', function() {
+                userMenu.classList.toggle('hidden');
+            });
+
+            // Fermer le menu quand on clique ailleurs
+            document.addEventListener('click', function(event) {
+                if (!userMenuBtn.contains(event.target) && !userMenu.contains(event.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
+        }
+
+
+     // Logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('userRole');
+        window.location.href = '../user/index.html';
+    });
 </script>
 
 </body>

@@ -11,6 +11,7 @@ public class ServiceDepartementMapper {
         dto.setNomService(service.getNomService());
         dto.setDepartementId(service.getDepartement().getId());
         dto.setNomDepartement(service.getDepartement().getNomDepartement());
+        dto.setNombreUtilisateurs(0L);
         return dto;
     }
 

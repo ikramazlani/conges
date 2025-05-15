@@ -302,9 +302,42 @@
                 </div>
 
                 <!-- Charts Section -->
-                <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                </div>
 
+                <!-- Charts Section -->
+                <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- User Roles Distribution -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Répartition des rôles</h3>
+                            <p class="mt-1 text-sm text-gray-500">Distribution des utilisateurs par rôle</p>
+                        </div>
+                        <div class="px-4 py-5 sm:p-6">
+                            <div id="rolesChart" class="h-80"></div>
+                        </div>
+                    </div>
+
+                    <!-- Department Users Distribution -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Utilisateurs par département</h3>
+                            <p class="mt-1 text-sm text-gray-500">Répartition des utilisateurs</p>
+                        </div>
+                        <div class="px-4 py-5 sm:p-6">
+                            <div id="departmentsChart" class="h-80"></div>
+                        </div>
+                    </div>
+
+                    <!-- Leave Status Distribution -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Statut des demandes</h3>
+                            <p class="mt-1 text-sm text-gray-500">Répartition des demandes de congé</p>
+                        </div>
+                        <div class="px-4 py-5 sm:p-6">
+                            <div id="leavesChart" class="h-80"></div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Recent Leaves and Users -->
                 <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Recent Leaves -->
@@ -461,42 +494,43 @@
 
     // Function to fetch dashboard data
     async function fetchDashboardData() {
-      try {
-        // Fetch user count
-        const userCount = await makeAuthenticatedRequest('http://localhost:8080/api/users/count');
-        document.getElementById('totalUsers').textContent = userCount || '--';
+    try {
+        // Fetch user statistics
+        const userStats = await makeAuthenticatedRequest('http://localhost:8080/api/users/statistics');
+        document.getElementById('totalUsers').textContent = userStats.totalUsers || '--';
 
-        // Fetch department count
-        const departments = await makeAuthenticatedRequest('http://localhost:8080/api/departements');
+        // Create roles distribution chart
+        createRolesChart(userStats);
+
+        // Fetch departments
+        const departments = await makeAuthenticatedRequest('http://localhost:8080/api/departements/details');
         document.getElementById('totalDepartments').textContent = departments.length || '--';
+
+        // Create departments distribution chart
+        createDepartmentsChart(departments);
 
         // Fetch leave statistics
         const leavesStats = await makeAuthenticatedRequest('http://localhost:8080/api/demandes-conge/stats-globales');
         document.getElementById('approvedLeaves').textContent = leavesStats.approuvees || '--';
         document.getElementById('pendingLeaves').textContent = leavesStats.enAttente || '--';
 
+        // Create leaves status distribution chart
+        createLeavesChart(leavesStats);
 
-         // Fetch all leaves with employee info for charts
+        // Fetch all leaves with employee info for recent leaves table
         const allLeaves = await makeAuthenticatedRequest('http://localhost:8080/api/demandes-conge/all-with-employee-info');
-
-        // Fetch recent leaves
-        const recentLeaves = allLeaves.slice(0, 5); // Get first 5 leaves
+        const recentLeaves = allLeaves.slice(0, 5);
         populateRecentLeaves(recentLeaves);
 
         // Fetch recent users
         const allUsers = await makeAuthenticatedRequest('http://localhost:8080/api/users/all');
-        const recentUsers = allUsers.slice(0, 5); // Get first 5 users
+        const recentUsers = allUsers.slice(0, 5);
         populateRecentUsers(recentUsers);
 
-        // Prepare departments overview
-        const departmentsOverview = await prepareDepartmentsOverview(departments, allUsers, allLeaves);
-        populateDepartmentsTable(departmentsOverview);
-
-      } catch (error) {
+    } catch (error) {
         console.error('Error fetching dashboard data:', error);
-        // Show error messages or retry logic can be added here
-      }
     }
+}
 
 
 
@@ -680,6 +714,158 @@
 
     // Initialize dashboard when page loads
     document.addEventListener('DOMContentLoaded', checkAuthAndLoadData);
+
+
+
+
+
+
+
+
+    // Function to create roles distribution chart
+function createRolesChart(data) {
+    const options = {
+        series: Object.values(data.usersByRole),
+        chart: {
+            type: 'donut',
+            height: 350,
+        },
+        labels: Object.keys(data.usersByRole).map(role => {
+            return role === 'ADMIN' ? 'Administrateur' :
+                   role === 'RH' ? 'Manager' :
+                   role === 'CHEF_SERVICE' ? 'Chef de service' :
+                   role === 'CHEF_DEPARTEMENT' ? 'Chef de département' :
+                   'Utilisateur';
+        }),
+        colors: ['#3B82F6', '#10B981', '#F59E0B', '#6366F1', '#EC4899'],
+        legend: {
+            position: 'bottom'
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }],
+        plotOptions: {
+            pie: {
+                donut: {
+                    labels: {
+                        show: true,
+                        total: {
+                            show: true,
+                            label: 'Total',
+                            color: '#6B7280',
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    const chart = new ApexCharts(document.querySelector("#rolesChart"), options);
+    chart.render();
+}
+
+// Function to create departments distribution chart
+function createDepartmentsChart(departmentsData) {
+    const labels = departmentsData.map(dept => dept.nomDepartement);
+    const series = departmentsData.map(dept => dept.nombreUtilisateurs);
+
+    const options = {
+        series: series,
+        chart: {
+            type: 'donut',
+            height: 350,
+        },
+        labels: labels,
+        colors: ['#3B82F6', '#10B981', '#F59E0B', '#6366F1', '#EC4899', '#8B5CF6'],
+        legend: {
+            position: 'bottom'
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }],
+        plotOptions: {
+            pie: {
+                donut: {
+                    labels: {
+                        show: true,
+                        total: {
+                            show: true,
+                            label: 'Total',
+                            color: '#6B7280',
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    const chart = new ApexCharts(document.querySelector("#departmentsChart"), options);
+    chart.render();
+}
+
+// Function to create leave status distribution chart
+function createLeavesChart(leavesStats) {
+    const options = {
+        series: [leavesStats.enAttente, leavesStats.refusees, leavesStats.approuvees],
+        chart: {
+            type: 'donut',
+            height: 350,
+        },
+        labels: ['En attente', 'Refusées', 'Approuvées'],
+        colors: ['#F59E0B', '#EF4444', '#10B981'],
+        legend: {
+            position: 'bottom'
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }],
+        plotOptions: {
+            pie: {
+                donut: {
+                    labels: {
+                        show: true,
+                        total: {
+                            show: true,
+                            label: 'Total',
+                            color: '#6B7280',
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    const chart = new ApexCharts(document.querySelector("#leavesChart"), options);
+    chart.render();
+}
+
+
+
+
 </script>
 </body>
 </html>

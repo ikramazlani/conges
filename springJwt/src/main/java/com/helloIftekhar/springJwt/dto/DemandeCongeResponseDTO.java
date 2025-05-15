@@ -17,13 +17,14 @@ public class DemandeCongeResponseDTO {
     private String remplacerPar;
     private String employeeName;
     private String departement;
+    private String role;
 
     public DemandeCongeResponseDTO() {
     }
 
     public DemandeCongeResponseDTO(Long id, Long idEmployee, String employeeName, String departement,
                                    Date dateCreation, Date dateDebut, Date dateFin,
-                                   String motif, String statut, int duree, String remplacerPar) {
+                                   String motif, String statut, int duree, String remplacerPar,String role) {
         this.id = id;
         this.idEmployee = idEmployee;
         this.employeeName = employeeName;
@@ -35,6 +36,7 @@ public class DemandeCongeResponseDTO {
         this.statut = statut;
         this.duree = duree;
         this.remplacerPar = remplacerPar;
+        this.role=role;
     }
     // Getters et Setters
     public Long getId() {
