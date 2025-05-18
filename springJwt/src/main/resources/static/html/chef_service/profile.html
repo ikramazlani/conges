@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Mon Profil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+<div class="min-h-screen flex flex-col">
+    <!-- Top Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                            <path d="m9 16 2 2 4-4"></path>
+                        </svg>
+                        <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                            <span class="sr-only">Ouvrir le menu utilisateur</span>
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                    A
+                                </div>
+                                <span class="ml-2 text-gray-700">Admin Utilisateur</span>
+                                <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+                            <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
+                            <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1">
+        <!-- Sidebar -->
+        <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+            <div class="h-full flex flex-col">
+                <nav class="flex-1 py-4 px-2 space-y-1">
+                    <a href="dashboard.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="9"></rect>
+                            <rect x="14" y="3" width="7" height="5"></rect>
+                            <rect x="14" y="12" width="7" height="9"></rect>
+                            <rect x="3" y="16" width="7" height="5"></rect>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                    <a href="calendar.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                        </svg>
+                        Configuration du Calendrier
+                    </a>
+
+                    <a href="leave-request.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M9 14l2 2 4-4"></path>
+                        </svg>
+                        Demandes de Congés
+                    </a>
+
+                    <a href="historique-conges.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M9 14l2 2 4-4"></path>
+                        </svg>
+                       Historique des Congés
+                    </a>
+
+                    <a href="profile.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        Mon Profil
+                    </a>
+                </nav>
+            </div>
+        </div>
+    <!-- Main content -->
+    <main class="flex-1 p-10">
+        <!-- Bandeau haut -->
+        <div class="relative mb-24">
+            <div class="h-32 bg-gradient-to-r from-blue-500 to-blue-700 rounded-t-lg"></div>
+            <div class="absolute top-16 left-6">
+                <div class="w-24 h-24 rounded-full border-4 border-white bg-gray-200 flex items-center justify-center text-4xl text-gray-600 shadow">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="absolute top-28 left-36">
+                <h2 id="userFullName" class="text-xl font-bold text-blue-700">Chargement...</h2>
+                <p id="userRole" class="text-gray-500"></p>
+            </div>
+            <div class="absolute top-28 right-6">
+                <button id="editProfileBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center">
+                    <i class="fas fa-edit mr-2"></i> Modifier le profil
+                </button>
+            </div>
+        </div>
+
+        <!-- Informations profil dynamiques -->
+        <div id="profileInfo" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Cartes dynamiques ajoutées par JS -->
+        </div>
+
+        <!-- Modal d'édition -->
+        <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                <div class="p-6">
+                    <div class="flex justify-between items-center border-b pb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Modifier mon profil</h3>
+                        <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <form id="profileForm" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Champs modifiables -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                            <input type="text" id="editFirstName" name="firstName"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                            <input type="text" id="editLastName" name="lastName"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="editEmail" name="email"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
+                            <input type="date" id="editDateNaissance" name="dateNaissance"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                            <textarea id="editAdresse" name="adresse" rows="3"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+
+                        <!-- Champs non modifiables (grisés) -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500 mb-1">Matricule</label>
+                            <input type="text" id="editMatricule" name="matricule" disabled
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500 mb-1">Grade</label>
+                            <input type="text" id="editGrade" name="grade" disabled
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500 mb-1">Échelle</label>
+                            <input type="text" id="editEchelle" name="echelle" disabled
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500 mb-1">Département</label>
+                            <input type="text" id="editDepartement" name="departement" disabled
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500 mb-1">Rôle</label>
+                            <input type="text" id="editRole" name="role" disabled
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500">
+                        </div>
+
+                        <div class="md:col-span-2 flex justify-end space-x-4 pt-4">
+                            <button type="button" id="cancelEditBtn"
+                                    class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                                Annuler
+                            </button>
+                            <button type="submit"
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                Enregistrer les modifications
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      const token = localStorage.getItem('token');
+      if (!token) return window.location.href = 'index.html';
+
+      // Gestion de la déconnexion
+      document.getElementById('logoutBtn').addEventListener('click', async () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        window.location.href = 'index.html';
+      });
+
+
+      // Gestion du modal d'édition
+      const editModal = document.getElementById('editModal');
+      const editProfileBtn = document.getElementById('editProfileBtn');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const cancelEditBtn = document.getElementById('cancelEditBtn');
+      const profileForm = document.getElementById('profileForm');
+
+      editProfileBtn.addEventListener('click', () => editModal.classList.remove('hidden'));
+      closeModalBtn.addEventListener('click', () => editModal.classList.add('hidden'));
+      cancelEditBtn.addEventListener('click', () => editModal.classList.add('hidden'));
+
+      // Chargement des données du profil
+      let currentUser = null;
+
+      try {
+        const response = await fetch('http://localhost:8080/api/users/me', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Erreur lors du chargement');
+
+        currentUser = await response.json();
+        displayProfile(currentUser);
+        populateEditForm(currentUser);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('profileInfo').innerHTML = `
+          <div class="bg-red-50 border-l-4 border-red-500 p-4 col-span-2">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <i class="fas fa-exclamation-circle text-red-500"></i>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-red-700">Erreur lors du chargement du profil: ${err.message}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Soumission du formulaire de modification
+      profileForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        try {
+          const updatedUser = {
+            firstName: document.getElementById('editFirstName').value,
+            lastName: document.getElementById('editLastName').value,
+            email: document.getElementById('editEmail').value,
+            dateNaissance: document.getElementById('editDateNaissance').value,
+            adresse: document.getElementById('editAdresse').value,
+            // On conserve les champs non modifiables
+            matricule: currentUser.matricule,
+            grade: currentUser.grade,
+            echelle: currentUser.echelle,
+            departement: currentUser.departement,
+            role: currentUser.role
+          };
+
+          const response = await fetch('http://localhost:8080/api/users/update-profile', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(updatedUser)
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Erreur lors de la mise à jour');
+          }
+
+
+          const updatedUserData = await response.json();
+          currentUser = updatedUserData;
+          displayProfile(currentUser);
+          editModal.classList.add('hidden');
+
+          // Afficher un message de succès
+          showAlert('Profil mis à jour avec succès!', 'success');
+        } catch (err) {
+          console.error(err);
+          showAlert(`Erreur: ${err.message}`, 'error');
+        }
+      });
+
+      function displayProfile(user) {
+        document.getElementById('userFullName').textContent = `${user.firstName} ${user.lastName}`;
+        document.getElementById('userRole').textContent = user.role;
+
+        const infoContainer = document.getElementById('profileInfo');
+        const fields = [
+          { label: 'Prénom', value: user.firstName, icon: 'user' },
+          { label: 'Nom', value: user.lastName, icon: 'user' },
+          { label: 'Email', value: user.email, icon: 'envelope' },
+          { label: 'Matricule', value: user.matricule, icon: 'id-card' },
+          { label: 'Date de naissance', value: user.dateNaissance, icon: 'calendar' },
+          { label: 'Adresse', value: user.adresse, icon: 'map-marker-alt' },
+          { label: 'Grade', value: user.grade, icon: 'graduation-cap' },
+          { label: 'Échelle', value: user.echelle, icon: 'sliders-h' },
+          { label: 'Département', value: user.departement?.nomDepartement, icon: 'building' },
+          { label: 'Rôle', value: user.role, icon: 'user-tag' }
+        ];
+
+        infoContainer.innerHTML = fields.map(f => `
+          <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex items-start">
+            <div class="bg-blue-100 p-3 rounded-full mr-4">
+              <i class="fas fa-${f.icon} text-blue-600"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm text-gray-500">${f.label}</p>
+              <p class="text-base font-semibold text-gray-800 mt-1">${f.value || 'Non renseigné'}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function populateEditForm(user) {
+        document.getElementById('editFirstName').value = user.firstName || '';
+        document.getElementById('editLastName').value = user.lastName || '';
+        document.getElementById('editEmail').value = user.email || '';
+        document.getElementById('editDateNaissance').value = user.dateNaissance || '';
+        document.getElementById('editAdresse').value = user.adresse || '';
+        document.getElementById('editMatricule').value = user.matricule || '';
+        document.getElementById('editGrade').value = user.grade || '';
+        document.getElementById('editEchelle').value = user.echelle || '';
+        document.getElementById('editDepartement').value = user.departement?.nomDepartement || '';
+        document.getElementById('editRole').value = user.role || '';
+      }
+
+      function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `fixed top-4 right-4 p-4 rounded-md shadow-lg z-50 ${
+          type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+        }`;
+        alertDiv.innerHTML = `
+          <div class="flex items-center">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+            <span>${message}</span>
+          </div>
+        `;
+
+        document.body.appendChild(alertDiv);
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+          alertDiv.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+          setTimeout(() => alertDiv.remove(), 500);
+        }, 5000);
+      }
+
+      // Add password change functionality
+      async function changePassword(currentPassword, newPassword) {
+        try {
+          const response = await fetch('http://localhost:8080/api/users/change-password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ currentPassword, newPassword })
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Erreur lors du changement de mot de passe');
+          }
+
+          showAlert('Mot de passe modifié avec succès!', 'success');
+          return true;
+        } catch (err) {
+          console.error(err);
+          showAlert(`Erreur: ${err.message}`, 'error');
+          return false;
+        }
+      }
+
+      // Add password change modal handling
+      const passwordModal = document.createElement('div');
+      passwordModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50';
+      passwordModal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+          <div class="flex justify-between items-center border-b pb-4">
+            <h3 class="text-xl font-bold text-gray-800">Changer le mot de passe</h3>
+            <button id="closePasswordModal" class="text-gray-500 hover:text-gray-700">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <form id="passwordForm" class="mt-6 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
+              <input type="password" id="currentPassword" required
+                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
+              <input type="password" id="newPassword" required minlength="8"
+                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Confirmer le nouveau mot de passe</label>
+              <input type="password" id="confirmPassword" required minlength="8"
+                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div class="flex justify-end space-x-4 pt-4">
+              <button type="button" id="cancelPasswordChange"
+                      class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                Annuler
+              </button>
+              <button type="submit"
+                      class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                Enregistrer
+              </button>
+            </div>
+          </form>
+        </div>
+      `;
+      document.body.appendChild(passwordModal);
+
+      // Add password change button to the profile info
+      const passwordChangeBtn = document.createElement('button');
+      passwordChangeBtn.className = 'mt-4 text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center';
+      passwordChangeBtn.innerHTML = '<i class="fas fa-key mr-2"></i> Changer le mot de passe';
+      passwordChangeBtn.addEventListener('click', () => {
+        document.getElementById('passwordForm').reset();
+        passwordModal.classList.remove('hidden');
+      });
+      document.querySelector('.absolute.top-28.right-6').appendChild(passwordChangeBtn);
+
+      // Handle password form submission
+      document.getElementById('passwordForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (newPassword !== confirmPassword) {
+          showAlert('Les nouveaux mots de passe ne correspondent pas', 'error');
+          return;
+        }
+
+        if (newPassword.length < 8) {
+          showAlert('Le nouveau mot de passe doit contenir au moins 8 caractères', 'error');
+          return;
+        }
+
+
+        const success = await changePassword(currentPassword, newPassword);
+        if (success) {
+          passwordModal.classList.add('hidden');
+        }
+      });
+
+      // Close password modal
+      document.getElementById('closePasswordModal')?.addEventListener('click', () => {
+        passwordModal.classList.add('hidden');
+      });
+
+      document.getElementById('cancelPasswordChange')?.addEventListener('click', () => {
+        passwordModal.classList.add('hidden');
+      });
+    });
+</script>
+</body>
+</html>

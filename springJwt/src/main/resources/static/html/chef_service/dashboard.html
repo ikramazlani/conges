@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tableau de bord</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="min-h-screen flex flex-col">
+
+
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                            <path d="m9 16 2 2 4-4"></path>
+                        </svg>
+                        <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                            <span class="sr-only">Ouvrir le menu utilisateur</span>
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                    A
+                                </div>
+                                <span class="ml-2 text-gray-700">Admin Utilisateur</span>
+                                <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+                            <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
+                            <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1">
+        <!-- Sidebar -->
+        <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+            <div class="h-full flex flex-col">
+                <nav class="flex-1 py-4 px-2 space-y-1">
+
+                    <a href="dashboard.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                        </svg>
+                        Tableau de bord
+                    </a>
+
+
+
+                    <a href="calendar.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Configuration du Calendrier
+                    </a>
+
+                    <a href="leave-request.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M9 14l2 2 4-4"></path>
+                        </svg>
+                        Demandes de Congés
+                    </a>
+
+                    <a href="historique-conges.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                        </svg>
+                        Historique des congees
+                    </a>
+                    <a href="profile.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                            <line x1="12" y1="22" y2="12" x2="12"></line>
+                        </svg>
+                        Mon Profil
+                    </a>
+                </nav>
+            </div>
+        </div>
+    <main class="flex-1 p-10">
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Tableau de bord</h1>
+            <h2 class="text-xl text-gray-600">Vue d'ensemble de vos congés</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700">Solde de congé</h3>
+                        <p id="soldeAnneeCourante" class="text-3xl font-bold text-blue-600">-- jours</p>
+                        <p class="text-gray-500">Année en cours</p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-calendar-alt text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700">Demandes approuvées</h3>
+                        <p id="demandesApprouvees" class="text-3xl font-bold text-green-600">--</p>
+                        <p class="text-gray-500">Cette année</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700">Demandes refusées</h3>
+                        <p id="demandesRefusees" class="text-3xl font-bold text-red-600">--</p>
+                        <p class="text-gray-500">Cette année</p>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700">Demandes en attente</h3>
+                        <p id="demandesEnAttente" class="text-3xl font-bold text-yellow-600">--</p>
+                        <p class="text-gray-500">En cours de traitement</p>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-hourglass-half text-yellow-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Mes demandes récentes</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date de création</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Période</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Motif</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durée</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="recentDemandesTable" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'index.html';
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = 'index.html';
+        });
+
+        try {
+            const soldeResponse = await fetch('http://localhost:8080/api/solde-conge/mon-solde', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!soldeResponse.ok) throw new Error('Erreur lors du chargement du solde');
+            const soldeData = await soldeResponse.json();
+            document.getElementById('soldeAnneeCourante').textContent = soldeData.soldeAnneeCourante + ' jours';
+
+            const statsResponse = await fetch('http://localhost:8080/api/demandes-conge/stats-utilisateur', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!statsResponse.ok) throw new Error('Erreur lors du chargement des stats');
+            const statsData = await statsResponse.json();
+            document.getElementById('demandesApprouvees').textContent = statsData.approuvees;
+            document.getElementById('demandesRefusees').textContent = statsData.refusees;
+            document.getElementById('demandesEnAttente').textContent = statsData.enAttente;
+
+            const demandesResponse = await fetch('http://localhost:8080/api/demandes-conge/historique', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!demandesResponse.ok) throw new Error('Erreur lors du chargement des demandes');
+            const demandesData = await demandesResponse.json();
+
+            const recentDemandes = demandesData
+                .sort((a, b) => new Date(b.dateCreation) - new Date(a.dateCreation))
+                .slice(0, 2);
+
+            const tableBody = document.getElementById('recentDemandesTable');
+
+            tableBody.innerHTML = recentDemandes.map(demande => {
+                const dateCreation = new Date(demande.dateCreation).toLocaleDateString('fr-FR');
+                const dateDebut = new Date(demande.dateDebut).toLocaleDateString('fr-FR');
+                const dateFin = new Date(demande.dateFin).toLocaleDateString('fr-FR');
+
+                let statutClass = '';
+                switch(demande.statut) {
+                    case 'APPROUVÉ':
+                    case 'APPROUVE':
+                        statutClass = 'text-green-600 bg-green-100';
+                        break;
+                    case 'REFUSÉ':
+                    case 'REFUSE':
+                        statutClass = 'text-red-600 bg-red-100';
+                        break;
+                    case 'EN_ATTENTE':
+                        statutClass = 'text-yellow-600 bg-yellow-100';
+                        break;
+                    default:
+                        statutClass = 'text-gray-600 bg-gray-100';
+                }
+
+                return `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${dateCreation}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${dateDebut} - ${dateFin}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${demande.motif}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${demande.duree} jours</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statutClass}">
+                                ${demande.statut}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <button onclick="openDemandeDetails(${demande.id})" class="text-blue-600 hover:text-blue-800">
+                                ${demande.statut === 'EN_ATTENTE' ? '<i class="fas fa-edit"></i> Modifier' : '<i class="fas fa-eye"></i> Détails'}
+                            </button>
+                            ${demande.statut === 'EN_ATTENTE' ?
+                                `<button onclick="deleteDemande(${demande.id})" class="ml-2 text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash"></i>
+                                </button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+        } catch (err) {
+            console.error(err);
+            document.getElementById('recentDemandesTable').innerHTML = `
+                <tr>
+                    <td colspan="6" class="px-6 py-4 text-center text-red-600">Erreur : ${err.message}</td>
+                </tr>
+            `;
+        }
+    });
+
+    function openDemandeDetails(demandeId) {
+        localStorage.setItem('currentDemandeId', demandeId);
+        window.location.href = 'demande-details.html';
+    }
+
+    async function deleteDemande(demandeId) {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'index.html';
+
+        if (!confirm('Êtes-vous sûr de vouloir supprimer cette demande ?')) return;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/demandes-conge/${demandeId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error('Erreur lors de la suppression');
+
+            alert('Demande supprimée avec succès');
+            window.location.reload();
+        } catch (err) {
+            console.error(err);
+            alert('Erreur: ' + err.message);
+        }
+    }
+
+
+     // Logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('userRole');
+        window.location.href = '../user/index.html';
+    });
+
+    // User menu toggle
+    const userMenuButton = document.getElementById('userMenuBtn');
+    const userMenu = document.getElementById('userMenu');
+
+    if (userMenuButton && userMenu) {
+        userMenuButton.addEventListener('click', () => {
+            const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+            userMenuButton.setAttribute('aria-expanded', !expanded);
+            userMenu.classList.toggle('hidden');
+        });
+
+        // Close the menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                userMenuButton.setAttribute('aria-expanded', 'false');
+                userMenu.classList.add('hidden');
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
