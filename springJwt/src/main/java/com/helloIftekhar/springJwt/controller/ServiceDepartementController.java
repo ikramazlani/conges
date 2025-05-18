@@ -1,6 +1,7 @@
 package com.helloIftekhar.springJwt.controller;
 
 import com.helloIftekhar.springJwt.dto.ServiceDepartementDTO;
+import com.helloIftekhar.springJwt.dto.UserDTO;
 import com.helloIftekhar.springJwt.service.ServiceDepartementService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -70,4 +71,11 @@ public class ServiceDepartementController {
         return ResponseEntity.ok(services);
     }
 
+    @GetMapping("/departement/{departementId}/service/{serviceId}/users")
+    public ResponseEntity<List<UserDTO>> getUsersByServiceAndDepartement(
+            @PathVariable Long departementId,
+            @PathVariable Long serviceId) {
+        List<UserDTO> users = service.getUsersByServiceAndDepartement(serviceId, departementId);
+        return ResponseEntity.ok(users);
+    }
 }
