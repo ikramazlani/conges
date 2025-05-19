@@ -1,5 +1,6 @@
 package com.helloIftekhar.springJwt.dto;
 
+import com.helloIftekhar.springJwt.model.User;
 import lombok.Data;
 
 @Data
@@ -17,5 +18,11 @@ public class UserDTO {
     private String role;
     private DepartementDTO departement; // Nested DTO
 
-    // Exclude sensitive fields like 'password' and 'tokens'
-}
+    // chef service
+    private Long serviceId;
+    private String serviceName;
+    private Long departementId;
+    private String departementName;
+    }
+
+

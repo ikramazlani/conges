@@ -4,6 +4,7 @@ import com.helloIftekhar.springJwt.dto.DtoMapper;
 import com.helloIftekhar.springJwt.dto.UserDTO;
 import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.service.AuthenticationService;
+import com.helloIftekhar.springJwt.service.ServiceDepartementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -148,6 +149,8 @@ public class UserController {
         Map<String, Object> stats = authenticationService.getUserStatistics();
         return ResponseEntity.ok(stats);
     }
+    // developé par chef service
+
 
 
 

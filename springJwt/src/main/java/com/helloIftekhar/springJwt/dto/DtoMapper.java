@@ -22,6 +22,11 @@ public class DtoMapper {
         userDTO.setDateNaissance(user.getDateNaissance());
         userDTO.setRole(user.getRole());
 
+        // Ajouter la gestion du service par chef service
+        if (user.getService() != null) {
+            userDTO.setServiceId(user.getService().getId());
+            userDTO.setServiceName(user.getService().getNomService());
+        }
         if (user.getDepartement() != null) {
             userDTO.setDepartement(convertToDepartementDTO(user.getDepartement()));
         }

@@ -1,15 +1,19 @@
 package com.helloIftekhar.springJwt.service;
 
+import com.helloIftekhar.springJwt.dto.DtoMapper;
 import com.helloIftekhar.springJwt.dto.ServiceDepartementDTO;
 import com.helloIftekhar.springJwt.dto.ServiceDepartementMapper;
+import com.helloIftekhar.springJwt.dto.UserDTO;
 import com.helloIftekhar.springJwt.model.Departement;
 import com.helloIftekhar.springJwt.model.ServiceDepartement;
+import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.repository.DepartementRepository;
 import com.helloIftekhar.springJwt.repository.ServiceDepartementRepository;
 import com.helloIftekhar.springJwt.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -104,6 +108,14 @@ public class ServiceDepartementService {
                 .map(ServiceDepartementMapper::toDto)
                 .collect(Collectors.toList());
     }
+    //developer par chef service
+    public List<UserDTO> getUsersByServiceAndDepartement(Long serviceId, Long departementId) {
 
+
+        List<User> users = userRepository.findByServiceAndDepartement(serviceId, departementId);
+        return users.stream()
+                .map(DtoMapper::convertToUserDTO)
+                .collect(Collectors.toList());
+    }
 }
 
