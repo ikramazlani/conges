@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier - Gestion des congés</title>
+
+    <!-- CSS Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- JS Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .calendar-day {
+            min-height: 100px;
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-day:hover {
+            background-color: #f8fafc;
+        }
+
+        .calendar-day.today {
+            background-color: #f0f9ff;
+            border-left: 4px solid #3B82F6;
+        }
+
+        .calendar-day.weekend {
+            background-color: #f9fafb;
+        }
+
+        .calendar-day.other-month {
+            background-color: #f9fafb;
+            color: #9ca3af;
+        }
+
+        .holiday-religious {
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            margin: 0.125rem 0;
+            font-size: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .holiday-religious:hover {
+            background-color: #2563eb;
+        }
+
+        .holiday-national {
+            background-color: #10b981;
+            color: white;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            margin: 0.125rem 0;
+            font-size: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .holiday-national:hover {
+            background-color: #059669;
+        }
+
+        .tab-active {
+            border-bottom: 2px solid #3b82f6;
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        .nav-item {
+            transition: all 0.2s ease;
+            border-radius: 0.375rem;
+        }
+
+        .nav-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .nav-item.active {
+            background-color: #EFF6FF;
+            color: #3B82F6;
+        }
+
+        .nav-item.active i {
+            color: #3B82F6;
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#EFF6FF',
+                            100: '#DBEAFE',
+                            200: '#BFDBFE',
+                            300: '#93C5FD',
+                            400: '#60A5FA',
+                            500: '#3B82F6',
+                            600: '#2563EB',
+                            700: '#1D4ED8',
+                            800: '#1E40AF',
+                            900: '#1E3A8A',
+                        },
+                        secondary: {
+                            50: '#F0FDFA',
+                            100: '#CCFBF1',
+                            200: '#99F6E4',
+                            300: '#5EEAD4',
+                            400: '#2DD4BF',
+                            500: '#14B8A6',
+                            600: '#0D9488',
+                            700: '#0F766E',
+                            800: '#115E59',
+                            900: '#134E4A',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="min-h-screen flex flex-col">
+    <!-- Top Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600 mr-2">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                            <path d="m9 16 2 2 4-4"></path>
+                        </svg>
+                        <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                            <span class="sr-only">Ouvrir le menu utilisateur</span>
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-primary-600 flex items-center justify-center text-white">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="ml-2 text-gray-700">Admin Utilisateur</span>
+                                <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+                            <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                <i class="fas fa-user-circle mr-2"></i>Votre profil
+                            </a>
+                            <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1">
+        <!-- Sidebar -->
+        <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+            <div class="h-full flex flex-col">
+                <nav class="flex-1 py-4 px-2 space-y-1">
+                    <a href="Dash_ChefDep.html" class="nav-item group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-tachometer-alt text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Tableau de bord
+                    </a>
+                    <a href="services.html" class="nav-item group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-cogs text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Gestion des Services
+                    </a>
+                    <a href="leave-request-chef.html" class="nav-item group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-file-alt text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Demandes de Congés
+                    </a>
+                    <a href="calendarChefDep.html" class="nav-item active group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-600 mr-3 h-5 w-5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                        </svg>
+                        Calendrier
+                    </a>
+                    <a href="historiqueChef.html" class="nav-item group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-history text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Historique
+                    </a>
+                    <a href="Profile_ChefDep.html" class="nav-item group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-id-card text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Mon Profil
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 min-w-0 overflow-auto">
+            <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                <!-- Header with title and controls -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <div>
+                        <h1 class="text-2xl font-semibold text-gray-900">Calendrier des jours fériés</h1>
+                        <p class="text-sm text-gray-500">Visualisez les jours fériés nationaux et religieux</p>
+                    </div>
+
+                    <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                        <div class="flex items-center space-x-2">
+                            <button id="prev-month" class="p-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button id="today" class="px-3 py-1.5 text-sm rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
+                                Aujourd'hui
+                            </button>
+                            <button id="next-month" class="p-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <select id="month-selector" class="pl-3 pr-8 py-1.5 text-sm rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-500">
+                            <option value="0">Janvier</option>
+                            <option value="1">Février</option>
+                            <option value="2">Mars</option>
+                            <option value="3">Avril</option>
+                            <option value="4" selected>Mai</option>
+                            <option value="5">Juin</option>
+                            <option value="6">Juillet</option>
+                            <option value="7">Août</option>
+                            <option value="8">Septembre</option>
+                            <option value="9">Octobre</option>
+                            <option value="10">Novembre</option>
+                            <option value="11">Décembre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="border-b border-gray-200 mb-6">
+                    <nav class="-mb-px flex space-x-8">
+                        <button id="calendar-tab" class="tab-active whitespace-nowrap py-4 px-1 text-sm font-medium">
+                            Vue calendrier
+                        </button>
+                        <button id="list-tab" class="whitespace-nowrap py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700">
+                            Liste des jours fériés
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Calendar View -->
+                <div id="calendar-view">
+                    <!-- Weekday Headers -->
+                    <div class="grid grid-cols-7 gap-1 mb-1 bg-gray-50 rounded-t-lg border border-gray-200">
+                        <div class="text-center font-medium text-gray-500 py-2">Lundi</div>
+                        <div class="text-center font-medium text-gray-500 py-2">Mardi</div>
+                        <div class="text-center font-medium text-gray-500 py-2">Mercredi</div>
+                        <div class="text-center font-medium text-gray-500 py-2">Jeudi</div>
+                        <div class="text-center font-medium text-gray-500 py-2">Vendredi</div>
+                        <div class="text-center font-medium text-red-500 py-2">Samedi</div>
+                        <div class="text-center font-medium text-red-500 py-2">Dimanche</div>
+                    </div>
+
+                    <!-- Calendar Grid -->
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-1 border-l border-gray-200">
+                        <!-- Calendar days will be inserted here by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- List View (Hidden by default) -->
+                <div id="list-view" class="hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Religious Holidays Card -->
+                        <div class="stat-card bg-white rounded-lg shadow overflow-hidden border-l-4 border-blue-500">
+                            <div class="bg-blue-600 text-white px-4 py-3">
+                                <h3 class="font-semibold flex items-center">
+                                    <i class="fas fa-mosque"></i>
+                                    Fêtes Religieuses
+                                </h3>
+                            </div>
+                            <div id="religious-holidays-list" class="divide-y divide-gray-200">
+                                <!-- Religious holidays will be inserted here by JavaScript -->
+                                <div class="p-4 text-center text-gray-500">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i>
+                                    Chargement des données...
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-2 border-t border-gray-200">
+                                <div class="text-sm text-gray-500">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    <span id="religious-count">0</span> fête(s) religieuse(s)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- National Holidays Card -->
+                        <div class="stat-card bg-white rounded-lg shadow overflow-hidden border-l-4 border-green-500">
+                            <div class="bg-green-600 text-white px-4 py-3">
+                                <h3 class="font-semibold flex items-center">
+                                    <i class="fas fa-flag mr-2"></i>
+                                    Fêtes Nationales
+                                </h3>
+                            </div>
+                            <div id="national-holidays-list" class="divide-y divide-gray-200">
+                                <!-- National holidays will be inserted here by JavaScript -->
+                                <div class="p-4 text-center text-gray-500">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i>
+                                    Chargement des données...
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-2 border-t border-gray-200">
+                                <div class="text-sm text-gray-500">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    <span id="national-count">0</span> fête(s) nationale(s)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Card -->
+                    <div class="mt-6 bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                            <h3 class="font-semibold text-gray-700">
+                                <i class="fas fa-calendar-check mr-2"></i>
+                                Résumé des jours fériés
+                            </h3>
+                        </div>
+                        <div class="px-4 py-3">
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-600">
+                                    Total des jours fériés cette année
+                                </div>
+                                <div id="total-count" class="px-3 py-1 bg-primary-100 text-primary-800 rounded-full text-sm font-medium">
+                                    0
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Global variables
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let currentMonth = currentDate.getMonth();
+    let holidaysData = {
+        religiousHolidays: [],
+        nationalHolidays: {}
+    };
+
+    // DOM Elements
+    const calendarGrid = document.getElementById('calendar-grid');
+    const prevMonthBtn = document.getElementById('prev-month');
+    const nextMonthBtn = document.getElementById('next-month');
+    const monthSelector = document.getElementById('month-selector');
+    const todayBtn = document.getElementById('today');
+    const calendarView = document.getElementById('calendar-view');
+    const listView = document.getElementById('list-view');
+    const calendarTab = document.getElementById('calendar-tab');
+    const listTab = document.getElementById('list-tab');
+    const religiousHolidaysList = document.getElementById('religious-holidays-list');
+    const nationalHolidaysList = document.getElementById('national-holidays-list');
+    const religiousCount = document.getElementById('religious-count');
+    const nationalCount = document.getElementById('national-count');
+    const totalCount = document.getElementById('total-count');
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchHolidays(currentYear);
+        renderCalendar(currentYear, currentMonth);
+        monthSelector.value = currentMonth;
+
+        // Force l'affichage du calendrier et active l'onglet correspondant
+        calendarView.classList.remove('hidden');
+        listView.classList.add('hidden');
+        calendarTab.classList.add('tab-active');
+        listTab.classList.remove('tab-active');
+    });
+
+    prevMonthBtn.addEventListener('click', () => {
+        if (currentMonth === 0) {
+            currentMonth = 11;
+            currentYear--;
+        } else {
+            currentMonth--;
+        }
+        monthSelector.value = currentMonth;
+        fetchHolidays(currentYear);
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+        if (currentMonth === 11) {
+            currentMonth = 0;
+            currentYear++;
+        } else {
+            currentMonth++;
+        }
+        monthSelector.value = currentMonth;
+        fetchHolidays(currentYear);
+    });
+
+    monthSelector.addEventListener('change', () => {
+        currentMonth = parseInt(monthSelector.value);
+        fetchHolidays(currentYear);
+    });
+
+    todayBtn.addEventListener('click', () => {
+        currentDate = new Date();
+        currentYear = currentDate.getFullYear();
+        currentMonth = currentDate.getMonth();
+        monthSelector.value = currentMonth;
+        fetchHolidays(currentYear);
+    });
+
+    function showCalendarView() {
+        calendarView.classList.remove('hidden');
+        listView.classList.add('hidden');
+        calendarTab.classList.add('tab-active');
+        calendarTab.classList.remove('text-gray-500', 'hover:text-gray-700');
+        listTab.classList.remove('tab-active');
+        listTab.classList.add('text-gray-500', 'hover:text-gray-700');
+    }
+
+    function showListView() {
+        calendarView.classList.add('hidden');
+        listView.classList.remove('hidden');
+        listTab.classList.add('tab-active');
+        listTab.classList.remove('text-gray-500', 'hover:text-gray-700');
+        calendarTab.classList.remove('tab-active');
+        calendarTab.classList.add('text-gray-500', 'hover:text-gray-700');
+    }
+
+    calendarTab.addEventListener('click', showCalendarView);
+    listTab.addEventListener('click', showListView);
+
+    // Helper Functions
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function formatDisplayDate(dateStr) {
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        return new Date(dateStr).toLocaleDateString('fr-FR', options);
+    }
+
+    async function fetchHolidays(year) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/calendar/${year}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Erreur lors du chargement des jours fériés');
+            }
+
+            const data = await response.json();
+            holidaysData = data;
+            renderCalendar(year, currentMonth);
+            updateHolidaysList();
+
+            // Update counters
+            religiousCount.textContent = data.religiousHolidays.length;
+            nationalCount.textContent = Object.keys(data.nationalHolidays).length;
+            totalCount.textContent = data.religiousHolidays.length + Object.keys(data.nationalHolidays).length;
+
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: 'Impossible de charger les jours fériés',
+                confirmButtonColor: '#3B82F6',
+            });
+        }
+    }
+
+    function renderCalendar(year, month) {
+        // Clear previous calendar
+        calendarGrid.innerHTML = '';
+
+        // Get first day of month and total days in month
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+        // Adjust first day (0 = Sunday, 1 = Monday, etc.)
+        let firstDayIndex = firstDay === 0 ? 6 : firstDay - 1;
+
+        // Add days from previous month
+        for (let i = firstDayIndex; i > 0; i--) {
+            const day = daysInPrevMonth - i + 1;
+            const date = new Date(year, month - 1, day);
+            const dayElement = createDayElement(day, date, true);
+            calendarGrid.appendChild(dayElement);
+        }
+
+        // Add days of current month
+        const today = new Date();
+        for (let i = 1; i <= daysInMonth; i++) {
+            const date = new Date(year, month, i);
+            const isToday =
+                date.getDate() === today.getDate() &&
+                date.getMonth() === today.getMonth() &&
+                date.getFullYear() === today.getFullYear();
+
+            const dayElement = createDayElement(i, date, false, isToday);
+            calendarGrid.appendChild(dayElement);
+        }
+
+        // Calculate remaining cells to fill the grid
+        const totalCells = Math.ceil((firstDayIndex + daysInMonth) / 7) * 7;
+        const remainingCells = totalCells - (firstDayIndex + daysInMonth);
+
+        // Add days from next month
+        for (let i = 1; i <= remainingCells; i++) {
+            const date = new Date(year, month + 1, i);
+            const dayElement = createDayElement(i, date, true);
+            calendarGrid.appendChild(dayElement);
+        }
+
+        // Add holidays to calendar
+        addHolidaysToCalendar();
+    }
+
+    function createDayElement(day, date, isOtherMonth = false, isToday = false) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'calendar-day bg-white border-r border-b border-gray-200';
+
+        if (isOtherMonth) {
+            dayElement.classList.add('other-month');
+        }
+
+        if (isToday) {
+            dayElement.classList.add('today');
+        }
+
+        // Check if it's a weekend (Saturday or Sunday)
+        const dayOfWeek = date.getDay();
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+            dayElement.classList.add('weekend');
+        }
+
+        const dayNumber = document.createElement('div');
+        dayNumber.className = 'font-semibold mb-1 text-sm';
+        dayNumber.textContent = day;
+        dayElement.appendChild(dayNumber);
+
+        return dayElement;
+    }
+
+    function addHolidaysToCalendar() {
+        // Add religious holidays
+        holidaysData.religiousHolidays.forEach(holiday => {
+            const startDate = new Date(holiday.startDate);
+            const endDate = new Date(holiday.endDate);
+            const holidayYear = startDate.getFullYear();
+            const holidayMonth = startDate.getMonth();
+
+            // Only add if it's the current month being displayed
+            if (holidayYear === currentYear && holidayMonth === currentMonth) {
+                const dayElements = document.querySelectorAll('.calendar-day:not(.other-month)');
+                const startDay = startDate.getDate();
+                const endDay = endDate.getDate();
+
+                for (let day = startDay; day <= endDay; day++) {
+                    if (day > 0 && day <= dayElements.length) {
+                        const holidayElement = document.createElement('div');
+                        holidayElement.className = 'holiday-religious';
+                        holidayElement.textContent = holiday.name;
+                        holidayElement.title = holiday.name;
+                        dayElements[day - 1].appendChild(holidayElement);
+                    }
+                }
+            }
+        });
+
+        // Add national holidays
+        Object.entries(holidaysData.nationalHolidays).forEach(([name, dateStr]) => {
+            const date = new Date(dateStr);
+            const holidayYear = date.getFullYear();
+            const holidayMonth = date.getMonth();
+            const holidayDay = date.getDate();
+
+            // Only add if it's the current month being displayed
+            if (holidayYear === currentYear && holidayMonth === currentMonth) {
+                const dayElements = document.querySelectorAll('.calendar-day:not(.other-month)');
+
+                if (holidayDay > 0 && holidayDay <= dayElements.length) {
+                    const holidayElement = document.createElement('div');
+                    holidayElement.className = 'holiday-national';
+                    holidayElement.textContent = name;
+                    holidayElement.title = name;
+                    dayElements[holidayDay - 1].appendChild(holidayElement);
+                }
+            }
+        });
+    }
+
+    function updateHolidaysList() {
+        // Clear previous lists
+        religiousHolidaysList.innerHTML = '';
+        nationalHolidaysList.innerHTML = '';
+
+        // Add religious holidays to list
+        holidaysData.religiousHolidays.forEach(holiday => {
+            const holidayElement = document.createElement('div');
+            holidayElement.className = 'p-4 hover:bg-gray-50';
+            holidayElement.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h4 class="font-medium text-gray-900">${holiday.name}</h4>
+                        <p class="text-sm text-gray-500">
+                            <i class="far fa-calendar-alt mr-1"></i>
+                            ${formatDisplayDate(holiday.startDate)} - ${formatDisplayDate(holiday.endDate)}
+                        </p>
+                    </div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        Religieuse
+                    </span>
+                </div>
+            `;
+            religiousHolidaysList.appendChild(holidayElement);
+        });
+
+        // Add national holidays to list (no edit/delete for national holidays)
+        Object.entries(holidaysData.nationalHolidays).forEach(([name, date]) => {
+            const holidayElement = document.createElement('div');
+            holidayElement.className = 'p-4 hover:bg-gray-50';
+            holidayElement.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h4 class="font-medium text-gray-900">${name}</h4>
+                        <p class="text-sm text-gray-500">
+                            <i class="far fa-calendar-alt mr-1"></i>
+                            ${formatDisplayDate(date)}
+                        </p>
+                    </div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Nationale
+                    </span>
+                </div>
+            `;
+            nationalHolidaysList.appendChild(holidayElement);
+        });
+    }
+
+    // Logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('userRole');
+        window.location.href = '../user/index.html';
+    });
+
+    // User menu toggle
+    const userMenuButton = document.getElementById('userMenuBtn');
+    const userMenu = document.getElementById('userMenu');
+
+    if (userMenuButton && userMenu) {
+        userMenuButton.addEventListener('click', () => {
+            const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+            userMenuButton.setAttribute('aria-expanded', !expanded);
+            userMenu.classList.toggle('hidden');
+        });
+
+        // Close the menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                userMenuButton.setAttribute('aria-expanded', 'false');
+                userMenu.classList.add('hidden');
+            }
+        });
+    }
+</script>
+</body>
+</html>

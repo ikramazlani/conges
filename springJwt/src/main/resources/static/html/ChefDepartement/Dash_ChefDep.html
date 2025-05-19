@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord Chef Département - Gestion des congés</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: {
+                  50: '#EFF6FF',
+                  100: '#DBEAFE',
+                  200: '#BFDBFE',
+                  300: '#93C5FD',
+                  400: '#60A5FA',
+                  500: '#3B82F6',
+                  600: '#2563EB',
+                  700: '#1D4ED8',
+                  800: '#1E40AF',
+                  900: '#1E3A8A',
+                },
+                secondary: {
+                  50: '#F0FDFA',
+                  100: '#CCFBF1',
+                  200: '#99F6E4',
+                  300: '#5EEAD4',
+                  400: '#2DD4BF',
+                  500: '#14B8A6',
+                  600: '#0D9488',
+                  700: '#0F766E',
+                  800: '#115E59',
+                  900: '#134E4A',
+                },
+              },
+              fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+              },
+            }
+          }
+        }
+    </script>
+    <style>
+        .stat-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .services-card {
+            border-left-color: #6366F1;
+        }
+        .approved-card {
+            border-left-color: #10B981;
+        }
+        .pending-card {
+            border-left-color: #F59E0B;
+        }
+        .rejected-card {
+            border-left-color: #EF4444;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                            <path d="m9 16 2 2 4-4"></path>
+                        </svg>
+                        <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="ml-2 text-gray-700">Chef Département</span>
+                                <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                            <a href="Profile_ChefDep.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user-circle mr-2"></i>Votre profil
+                            </a>
+                            <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1">
+        <!-- Sidebar - Utilisation du même design que dans la page de demande de congé -->
+        <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+            <div class="h-full flex flex-col">
+                <nav class="flex-1 py-4 px-2 space-y-1">
+                    <a href="Dash_ChefDep.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-tachometer-alt text-primary-700 mr-3"></i>
+                        Tableau de bord
+                    </a>
+
+                    <a href="services.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-cogs text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Gestion des Services
+                    </a>
+
+                    <a href="leave-request-chef.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-file-alt text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Demander un congé
+                    </a>
+
+                    <a href="calendarChefDep.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-calendar-alt text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Calendrier
+                    </a>
+
+                    <a href="historiqueChef.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-history text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Historique
+                    </a>
+
+                    <a href="Profile_ChefDep.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-id-card text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Mon Profil
+                    </a>
+                </nav>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="flex-1 min-w-0 overflow-auto">
+            <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-semibold text-gray-900">Tableau de bord</h1>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-calendar-alt mr-1"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Services du département -->
+                    <div class="stat-card services-card bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-indigo-100 rounded-full p-3">
+                                    <i class="fas fa-building text-indigo-600 text-xl"></i>
+                                </div>
+                                <div class="ml-5">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Services
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="totalServices" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:px-6">
+                            <div class="text-sm">
+                                <a href="services.html" class="font-medium text-indigo-600 hover:text-indigo-500 flex items-center">
+                                    <span>Voir les services</span>
+                                    <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Demandes approuvées -->
+                    <div class="stat-card approved-card bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-green-100 rounded-full p-3">
+                                    <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                                </div>
+                                <div class="ml-5">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Approuvées
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="approvedLeaves" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:px-6">
+                            <div class="text-sm">
+                                <a href="leave-requests.html?status=APPROUVÉ" class="font-medium text-green-600 hover:text-green-500 flex items-center">
+                                    <span>Voir les demandes</span>
+                                    <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Demandes en attente -->
+                    <div class="stat-card pending-card bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-yellow-100 rounded-full p-3">
+                                    <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                                </div>
+                                <div class="ml-5">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        En attente
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="pendingLeaves" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:px-6">
+                            <div class="text-sm">
+                                <a href="leave-requests.html?status=EN_ATTENTE" class="font-medium text-yellow-600 hover:text-yellow-500 flex items-center">
+                                    <span>Voir les demandes</span>
+                                    <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Demandes rejetées -->
+                    <div class="stat-card rejected-card bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-red-100 rounded-full p-3">
+                                    <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                                </div>
+                                <div class="ml-5">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Rejetées
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="rejectedLeaves" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:px-6">
+                            <div class="text-sm">
+                                <a href="leave-requests.html?status=REJETÉ" class="font-medium text-red-600 hover:text-red-500 flex items-center">
+                                    <span>Voir les demandes</span>
+                                    <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to get JWT token from localStorage
+    function getToken() {
+      return localStorage.getItem('token');
+    }
+
+    // Function to make authenticated requests
+    async function makeAuthenticatedRequest(url, method = 'GET', body = null) {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getToken()}`
+      };
+
+      const config = {
+        method: method,
+        headers: headers
+      };
+
+      if (body) {
+        config.body = JSON.stringify(body);
+      }
+
+      const response = await fetch(url, config);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return response.json();
+    }
+
+    // Format current date
+    function formatCurrentDate() {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const now = new Date();
+        return now.toLocaleDateString('fr-FR', options);
+    }
+
+    // Fetch dashboard data
+    async function fetchDashboardData() {
+        try {
+            // Set current date
+            document.getElementById('currentDate').textContent = formatCurrentDate();
+
+            // 1. Get current user to know department
+            const currentUser = await makeAuthenticatedRequest('http://localhost:8080/api/users/me');
+            const departementId = currentUser.departement?.id;
+
+            if (!departementId) {
+                throw new Error("User has no department assigned");
+            }
+
+            // 2. Get services count for department
+            const services = await makeAuthenticatedRequest(`http://localhost:8080/api/services-departement/departement/${departementId}/all`);
+            document.getElementById('totalServices').textContent = services.length || '0';
+
+            // 3. Get leave requests stats
+            const leavesStats = await makeAuthenticatedRequest('http://localhost:8080/api/demandes-conge/stats-utilisateur');
+            document.getElementById('approvedLeaves').textContent = leavesStats.approuvees || '0';
+            document.getElementById('pendingLeaves').textContent = leavesStats.enAttente || '0';
+            document.getElementById('rejectedLeaves').textContent = leavesStats.refusees || '0';
+
+        } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+            // Set default values on error
+            document.getElementById('totalServices').textContent = '0';
+            document.getElementById('approvedLeaves').textContent = '0';
+            document.getElementById('pendingLeaves').textContent = '0';
+            document.getElementById('rejectedLeaves').textContent = '0';
+
+            // Show error message
+            const errorElement = document.createElement('div');
+            errorElement.className = 'mt-4 p-3 bg-red-50 text-red-600 text-sm rounded border border-red-200';
+            errorElement.innerHTML = `
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                Erreur lors du chargement des données. Veuillez rafraîchir la page.
+            `;
+            document.querySelector('.max-w-7xl').appendChild(errorElement);
+        }
+    }
+
+    // Logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('userRole');
+        window.location.href = '../user/index.html';
+    });
+
+    // User menu toggle
+    const userMenuButton = document.getElementById('userMenuBtn');
+    const userMenu = document.getElementById('userMenu');
+
+    if (userMenuButton && userMenu) {
+      userMenuButton.addEventListener('click', () => {
+        const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+        userMenuButton.setAttribute('aria-expanded', !expanded);
+        userMenu.classList.toggle('hidden');
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', (event) => {
+        if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+          userMenuButton.setAttribute('aria-expanded', 'false');
+          userMenu.classList.add('hidden');
+        }
+      });
+    }
+
+    // Initialize dashboard when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!getToken()) {
+            window.location.href = '../user/index.html';
+        } else {
+            fetchDashboardData();
+        }
+    });
+</script>
+</body>
+</html>

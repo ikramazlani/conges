@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique Congés - Chef Département</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#EFF6FF',
+                            100: '#DBEAFE',
+                            200: '#BFDBFE',
+                            300: '#93C5FD',
+                            400: '#60A5FA',
+                            500: '#3B82F6',
+                            600: '#2563EB',
+                            700: '#1D4ED8',
+                            800: '#1E40AF',
+                            900: '#1E3A8A',
+                        },
+                        secondary: {
+                            50: '#F0FDFA',
+                            100: '#CCFBF1',
+                            200: '#99F6E4',
+                            300: '#5EEAD4',
+                            400: '#2DD4BF',
+                            500: '#14B8A6',
+                            600: '#0D9488',
+                            700: '#0F766E',
+                            800: '#115E59',
+                            900: '#134E4A',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .stat-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .solde-card {
+            border-left-color: #6366F1;
+        }
+        .approved-card {
+            border-left-color: #10B981;
+        }
+        .pending-card {
+            border-left-color: #F59E0B;
+        }
+        .rejected-card {
+            border-left-color: #EF4444;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="min-h-screen flex flex-col">
+    <!-- Top Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                            <path d="m9 16 2 2 4-4"></path>
+                        </svg>
+                        <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="ml-2 text-gray-700">Chef Département</span>
+                                <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                            <a href="Profile_ChefDep.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user-circle mr-2"></i>Votre profil
+                            </a>
+                            <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1">
+        <!-- Sidebar -->
+        <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+            <div class="h-full flex flex-col">
+                <nav class="flex-1 py-4 px-2 space-y-1">
+                    <a href="Dash_ChefDep.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-tachometer-alt text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Tableau de bord
+                    </a>
+
+                    <a href="services.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-cogs text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Gestion des Services
+                    </a>
+
+                    <a href="leave-request-chef.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-file-alt text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Demander un congé
+                    </a>
+
+                    <a href="calendarChefDep.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-calendar-alt text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Calendrier
+                    </a>
+
+                    <a href="historiqueChef.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-history text-primary-700 mr-3"></i>
+                        Historique
+                    </a>
+
+                    <a href="Profile_ChefDep.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-id-card text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                        Mon Profil
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8 overflow-y-auto">
+            <div class="max-w-7xl mx-auto">
+                <!-- Statistiques -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <!-- Solde de congé -->
+                    <div class="stat-card solde-card bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-indigo-100 rounded-full p-3">
+                                    <i class="fas fa-calendar-check text-indigo-600 text-xl"></i>
+                                </div>
+                                <div class="ml-5">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Solde de congé
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="soldeConges" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Demandes approuvées -->
+                    <div class="stat-card approved-card bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-green-100 rounded-full p-3">
+                                    <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                                </div>
+                                <div class="ml-5">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Approuvées
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="approvedLeaves" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Demandes en attente -->
+                    <div class="stat-card pending-card bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-yellow-100 rounded-full p-3">
+                                    <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                                </div>
+                                <div class="ml-5">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        En attente
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="pendingLeaves" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Demandes rejetées -->
+                    <div class="stat-card rejected-card bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-red-100 rounded-full p-3">
+                                    <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                                </div>
+                                <div class="ml-5">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Rejetées
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="rejectedLeaves" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tableau des demandes -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800">Historique des demandes</h1>
+                            <p class="text-gray-600">Toutes vos demandes de congé</p>
+                        </div>
+                        <div class="flex space-x-4">
+                            <div class="relative">
+                                <select id="statusFilter" class="appearance-none bg-white border border-gray-300 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                    <option value="TOUS">Tous les statuts</option>
+                                    <option value="EN_ATTENTE">En attente</option>
+                                    <option value="APPROUVÉ">Approuvé</option>
+                                    <option value="REFUSÉ">Refusé</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <input type="text" id="searchInput" placeholder="Rechercher..." class="pl-8 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-200">
+                            <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Référence</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Période</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durée</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Document</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="demandesTable" class="bg-white divide-y divide-gray-200">
+                            <!-- Les données seront chargées ici -->
+                            <tr>
+                                <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+                                    Chargement en cours...
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                        <div class="flex-1 flex justify-between sm:hidden">
+                            <button id="prevPageMobile" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                Précédent
+                            </button>
+                            <button id="nextPageMobile" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                Suivant
+                            </button>
+                        </div>
+                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                            <div>
+                                <p id="paginationInfo" class="text-sm text-gray-700">
+                                    Affichage de <span class="font-medium">0</span> à <span class="font-medium">0</span> sur <span class="font-medium">0</span> demandes
+                                </p>
+                            </div>
+                            <div>
+                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                    <button id="prevPage" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <span class="sr-only">Précédent</span>
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <div id="pageNumbers" class="flex">
+                                        <!-- Les numéros de page seront ajoutés ici -->
+                                    </div>
+                                    <button id="nextPage" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <span class="sr-only">Suivant</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" class="fixed top-4 right-4 hidden">
+    <div class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="toastMessage"></span>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '../user/index.html';
+            return;
+        }
+
+        // Variables de pagination
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let totalItems = 0;
+        let allDemandes = [];
+
+        // Éléments du DOM
+        const demandesTable = document.getElementById('demandesTable');
+        const statusFilter = document.getElementById('statusFilter');
+        const searchInput = document.getElementById('searchInput');
+        const paginationInfo = document.getElementById('paginationInfo');
+        const pageNumbers = document.getElementById('pageNumbers');
+        const prevPage = document.getElementById('prevPage');
+        const nextPage = document.getElementById('nextPage');
+        const prevPageMobile = document.getElementById('prevPageMobile');
+        const nextPageMobile = document.getElementById('nextPageMobile');
+
+        // Éléments des statistiques
+        const soldeConges = document.getElementById('soldeConges');
+        const approvedLeaves = document.getElementById('approvedLeaves');
+        const pendingLeaves = document.getElementById('pendingLeaves');
+        const rejectedLeaves = document.getElementById('rejectedLeaves');
+
+        // Charger les données initiales
+        loadDashboardData();
+        loadDemandes();
+
+        // Charger les statistiques du dashboard
+        async function loadDashboardData() {
+            try {
+                // Récupérer le solde de congé
+                const soldeResponse = await fetch('http://localhost:8080/api/solde-conge/mon-solde', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!soldeResponse.ok) throw new Error('Erreur lors du chargement du solde');
+
+                const soldeData = await soldeResponse.json();
+                soldeConges.textContent = soldeData.soldeGlobal || '0';
+
+                // Récupérer les stats des demandes
+                const statsResponse = await fetch('http://localhost:8080/api/demandes-conge/stats-utilisateur', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!statsResponse.ok) throw new Error('Erreur lors du chargement des stats');
+
+                const statsData = await statsResponse.json();
+                approvedLeaves.textContent = statsData.approuvees || '0';
+                pendingLeaves.textContent = statsData.enAttente || '0';
+                rejectedLeaves.textContent = statsData.refusees || '0';
+
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Erreur lors du chargement des statistiques', 'error');
+            }
+        }
+
+        // Charger les demandes
+        async function fetchDemandes() {
+    try {
+        console.log('Fetching demandes...');
+        const response = await fetch('http://localhost:8080/api/demandes-conge/mes-demandes', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log('Response status:', response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
+            throw new Error('Erreur lors de la récupération des demandes');
+        }
+
+        const data = await response.json();
+        console.log('Demandes reçues:', data);
+        return data.map(demande => ({
+            id: demande.id,
+            reference: demande.reference || `CONG-${demande.id.toString().padStart(3, '0')}`,
+            dateDebut: demande.dateDebut,
+            dateFin: demande.dateFin,
+            duree: demande.duree,
+            motif: demande.motif,
+            statut: demande.statut,
+            documentLink: demande.documentLink,
+            remplacerPar: demande.remplacerPar
+        }));
+    } catch (error) {
+        console.error('Error in fetchDemandes:', error);
+        throw error;
+    }
+}
+
+        // Récupérer les demandes depuis l'API
+        async function fetchDemandes() {
+            const response = await fetch('http://localhost:8080/api/demandes-conge/mes-demandes', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération des demandes');
+            }
+
+            const data = await response.json();
+            return data.map(demande => ({
+                id: demande.id,
+                reference: demande.reference || `CONG-${demande.id.toString().padStart(3, '0')}`,
+                dateDebut: demande.dateDebut,
+                dateFin: demande.dateFin,
+                duree: demande.duree,
+                motif: demande.motif,
+                statut: demande.statut,
+                documentLink: demande.documentLink,
+                remplacerPar: demande.remplacerPar
+            }));
+        }
+
+        // Filtrer les demandes
+        function filterDemandes() {
+            const status = statusFilter.value;
+            const searchTerm = searchInput.value.toLowerCase();
+
+            return allDemandes.filter(demande => {
+                const matchesStatus = status === 'TOUS' ||
+                                    (status === 'EN_ATTENTE' && demande.statut === 'EN_ATTENTE') ||
+                                    (status === 'APPROUVÉ' && (demande.statut === 'APPROUVÉ' || demande.statut === 'APPROUVE')) ||
+                                    (status === 'REFUSÉ' && (demande.statut === 'REFUSÉ' || demande.statut === 'REFUSE'));
+
+                const matchesSearch =
+                    (demande.reference && demande.reference.toLowerCase().includes(searchTerm)) ||
+                    (demande.motif && demande.motif.toLowerCase().includes(searchTerm)) ||
+                    (demande.remplacerPar && demande.remplacerPar.toLowerCase().includes(searchTerm));
+
+                return matchesStatus && matchesSearch;
+            });
+        }
+
+        // Afficher le tableau
+        function renderTable() {
+            const filteredDemandes = filterDemandes();
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const paginatedDemandes = filteredDemandes.slice(startIndex, startIndex + itemsPerPage);
+
+            if (paginatedDemandes.length === 0) {
+                demandesTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+                            Aucune demande trouvée
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            demandesTable.innerHTML = paginatedDemandes.map(demande => {
+                const dateDebut = new Date(demande.dateDebut).toLocaleDateString('fr-FR');
+                const dateFin = new Date(demande.dateFin).toLocaleDateString('fr-FR');
+
+                let statutClass = '';
+                let statutIcon = '';
+                let statutText = '';
+
+                switch(demande.statut) {
+                    case 'APPROUVÉ':
+                    case 'APPROUVE':
+                        statutClass = 'text-green-600 bg-green-100';
+                        statutIcon = '<i class="fas fa-check-circle mr-1"></i>';
+                        statutText = 'Approuvé';
+                        break;
+                    case 'REFUSÉ':
+                    case 'REFUSE':
+                        statutClass = 'text-red-600 bg-red-100';
+                        statutIcon = '<i class="fas fa-times-circle mr-1"></i>';
+                        statutText = 'Refusé';
+                        break;
+                    case 'EN_ATTENTE':
+                        statutClass = 'text-yellow-600 bg-yellow-100';
+                        statutIcon = '<i class="fas fa-clock mr-1"></i>';
+                        statutText = 'En attente';
+                        break;
+                    default:
+                        statutClass = 'text-gray-600 bg-gray-100';
+                        statutText = demande.statut;
+                }
+
+                return `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            ${demande.reference}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${dateDebut} - ${dateFin}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${demande.duree} jour(s)
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${demande.documentLink ?
+                                `<a href="${demande.documentLink}" class="text-blue-600 hover:underline" target="_blank">
+                                    <i class="far fa-eye"></i> Voir
+                                </a>` :
+                                'Aucun'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statutClass}">
+                                ${statutIcon} ${statutText}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button onclick="viewDemandeDetails(${demande.id})" class="text-primary-600 hover:text-primary-900 mr-3">
+                                <i class="fas fa-eye"></i> Voir
+                            </button>
+                            ${demande.statut === 'EN_ATTENTE' ? `
+                            <button onclick="editDemande(${demande.id})" class="text-blue-600 hover:text-blue-900 mr-3">
+                                <i class="fas fa-edit"></i> Modifier
+                            </button>
+                            <button onclick="deleteDemande(${demande.id})" class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Mettre à jour la pagination
+        function updatePagination() {
+            const filteredDemandes = filterDemandes();
+            const totalPages = Math.ceil(filteredDemandes.length / itemsPerPage);
+
+            // Mettre à jour les informations de pagination
+            const startItem = Math.min((currentPage - 1) * itemsPerPage + 1, filteredDemandes.length);
+            const endItem = Math.min(currentPage * itemsPerPage, filteredDemandes.length);
+
+            paginationInfo.innerHTML = `
+                Affichage de <span class="font-medium">${startItem}</span> à <span class="font-medium">${endItem}</span> sur <span class="font-medium">${filteredDemandes.length}</span> demandes
+            `;
+
+            // Mettre à jour les boutons de pagination
+            prevPage.disabled = currentPage === 1;
+            nextPage.disabled = currentPage === totalPages;
+            prevPageMobile.disabled = currentPage === 1;
+            nextPageMobile.disabled = currentPage === totalPages;
+
+            // Mettre à jour les numéros de page
+            pageNumbers.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `relative inline-flex items-center px-4 py-2 border text-sm font-medium ${i === currentPage ? 'bg-primary-50 border-primary-500 text-primary-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}`;
+                pageBtn.textContent = i;
+                pageBtn.addEventListener('click', () => {
+                    currentPage = i;
+                    renderTable();
+                    updatePagination();
+                });
+                pageNumbers.appendChild(pageBtn);
+            }
+        }
+
+        // Événements
+        statusFilter.addEventListener('change', () => {
+            currentPage = 1;
+            renderTable();
+            updatePagination();
+        });
+
+        searchInput.addEventListener('input', () => {
+            currentPage = 1;
+            renderTable();
+            updatePagination();
+        });
+
+        prevPage.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+                updatePagination();
+            }
+        });
+
+        nextPage.addEventListener('click', () => {
+            const filteredDemandes = filterDemandes();
+            const totalPages = Math.ceil(filteredDemandes.length / itemsPerPage);
+
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+                updatePagination();
+            }
+        });
+
+        prevPageMobile.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+                updatePagination();
+            }
+        });
+
+        nextPageMobile.addEventListener('click', () => {
+            const filteredDemandes = filterDemandes();
+            const totalPages = Math.ceil(filteredDemandes.length / itemsPerPage);
+
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+                updatePagination();
+            }
+        });
+
+        // User menu toggle
+        const userMenuButton = document.getElementById('userMenuBtn');
+        const userMenu = document.getElementById('userMenu');
+
+        if (userMenuButton && userMenu) {
+            userMenuButton.addEventListener('click', () => {
+                const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+                userMenuButton.setAttribute('aria-expanded', !expanded);
+                userMenu.classList.toggle('hidden');
+            });
+
+            // Close the menu when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                    userMenuButton.setAttribute('aria-expanded', 'false');
+                    userMenu.classList.add('hidden');
+                }
+            });
+        }
+
+        // Déconnexion
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = '../user/index.html';
+        });
+    });
+
+    // Fonctions globales
+    function viewDemandeDetails(demandeId) {
+        localStorage.setItem('currentDemandeId', demandeId);
+        window.location.href = 'demande-details-chef.html';
+    }
+
+    function editDemande(demandeId) {
+        localStorage.setItem('currentDemandeId', demandeId);
+        window.location.href = 'edit-demande-chef.html';
+    }
+
+    async function deleteDemande(demandeId) {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer cette demande ?')) return;
+
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8080/api/demandes-conge/${demandeId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error('Erreur lors de la suppression');
+
+            showToast('Demande supprimée avec succès');
+            setTimeout(() => window.location.reload(), 1000);
+        } catch (err) {
+            console.error(err);
+            showToast('Erreur lors de la suppression', 'error');
+        }
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+
+        toastMessage.textContent = message;
+        toast.classList.remove('bg-green-500', 'bg-red-500');
+        toast.classList.add(type === 'success' ? 'bg-green-500' : 'bg-red-500');
+        toast.classList.remove('hidden');
+
+        setTimeout(() => {
+            toast.classList.add('hidden');
+        }, 3000);
+    }
+</script>
+</body>
+</html>
