@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Historique des Congés</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .content-container {
+            flex: 1;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans h-full">
+
+<!-- Top Navigation -->
+<nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex">
+                <div class="flex-shrink-0 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                        <line x1="16" x2="16" y1="2" y2="6"></line>
+                        <line x1="8" x2="8" y1="2" y2="6"></line>
+                        <line x1="3" x2="21" y1="10" y2="10"></line>
+                        <path d="m9 16 2 2 4-4"/>
+                    </svg>
+                    <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                </div>
+            </div>
+            <div class="flex items-center">
+
+                <div class="relative">
+                    <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                        <span class="sr-only">Ouvrir le menu utilisateur</span>
+                        <div class="flex items-center">
+                            <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                A
+                            </div>
+                            <span class="ml-2 text-gray-700">Chef de Service</span>
+                            <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </button>
+                    <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+                        <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
+                        <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<div class="main-container">
+    <!-- Sidebar -->
+    <div class="bg-white shadow-sm border-r border-gray-200 w-64 flex-shrink-0 hidden md:block">
+        <div class="h-full flex flex-col">
+            <nav class="flex-1 py-4 px-2 space-y-1">
+                <a href="dashboard.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="9"/>
+                        <rect x="14" y="3" width="7" height="5"/>
+                        <rect x="14" y="12" width="7" height="9"/>
+                        <rect x="3" y="16" width="7" height="5"/>
+                    </svg>
+                    Tableau de bord
+                </a>
+
+                <a href="calendar.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                        <line x1="16" x2="16" y1="2" y2="6"/>
+                        <line x1="8" x2="8" y1="2" y2="6"/>
+                        <line x1="3" x2="21" y1="10" y2="10"/>
+                    </svg>
+                    Configuration du Calendrier
+                </a>
+
+                <a href="employees.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    voir les utilisateurs
+                </a>
+
+                <a href="historique-conges.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 00 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                        <line x1="12" y1="22" y2="12" x2="12"></line>
+                    </svg>
+                    Historique des congees
+                </a>
+                <a href="profile.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.29 7 12 12 20.71 7"/>
+                        <line x1="12" y1="22" y2="12" x2="12"/>
+                    </svg>
+                    Mon Profil
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="flex-1 min-w-0 overflow-auto">
+        <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Liste des employes</h1>
+                    <nav class="flex mt-2" aria-label="Breadcrumb">
+                        <ol class="flex items-center space-x-4">
+                            <li>
+                                <div>
+                                    <a href="rh-dash.html" class="text-gray-400 hover:text-gray-500">
+                                        <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                                        </svg>
+                                        <span class="sr-only">Accueil</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex items-center">
+                                    <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="ml-4 text-sm font-medium text-gray-500">employes</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div>
+                    <button id="exportExcelBtn" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5 text-gray-500" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" y2="3" x2="12"></line>
+                        </svg>
+                        Exporter Excel
+                    </button>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Filtres -->
+            <div class="mt-6 bg-white shadow overflow-hidden rounded-lg p-4">
+                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                    <div class="sm:col-span-6">
+                        <label for="search" class="block text-sm font-medium text-gray-700">Recherche</label>
+                        <input type="text" id="search" class="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full pl-3 pr-10 py-2 sm:text-sm border-gray-300 rounded-md" placeholder="Nom, prénom, matricule...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tableau des utilisateurs -->
+            <div class="mt-6 bg-white shadow overflow-hidden rounded-lg">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Matricule</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom & Prénom</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Département</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Données chargées dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                        <div>
+                            <p id="paginationInfo" class="text-sm text-gray-700">
+                                Affichage de <span class="font-medium">0</span> à <span class="font-medium">0</span> sur <span class="font-medium">0</span> résultats
+                            </p>
+                        </div>
+                        <div>
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                <button id="prevPage" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <span class="sr-only">Précédent</span>
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div id="pageNumbers" class="flex">
+                                    <!-- Les numéros de page seront générés ici -->
+                                </div>
+                                <button id="nextPage" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <span class="sr-only">Suivant</span>
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    //Configuration initiale
+    const token = localStorage.getItem('token');
+    if (!token) window.location.href = 'rh-dash.html';
+
+    // Éléments DOM
+    const elements = {
+        search: document.getElementById('search'),
+        usersTableBody: document.getElementById('usersTableBody'),
+        prevPageBtn: document.getElementById('prevPage'),
+        nextPageBtn: document.getElementById('nextPage'),
+        pageNumbers: document.getElementById('pageNumbers'),
+        paginationInfo: document.getElementById('paginationInfo'),
+        exportExcelBtn: document.getElementById('exportExcelBtn')
+    };
+
+    // État de l'application
+    let state = {
+        allUsers: [],
+        filteredUsers: [],
+        currentPage: 1,
+        itemsPerPage: 10,
+        currentUser: null
+    };
+
+    // Gestion des événements
+    function setupEventListeners() {
+        elements.search.addEventListener('input', filterUsers);
+        elements.prevPageBtn.addEventListener('click', previousPage);
+        elements.nextPageBtn.addEventListener('click', nextPage);
+        elements.exportExcelBtn.addEventListener('click', exportToExcel);
+    }
+
+    // Chargement initial
+    async function init() {
+        await loadUsers();
+        setupEventListeners();
+    }
+
+    // Chargement des utilisateurs
+    async function loadUsers() {
+        try {
+            // Récupérer l'utilisateur connecté
+            const currentUserResponse = await fetch('http://localhost:8080/api/users/me', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            state.currentUser = await currentUserResponse.json();
+
+            // Récupérer tous les utilisateurs
+            const allUsersResponse = await fetch('http://localhost:8080/api/users/all', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const allUsers = await allUsersResponse.json();
+
+            // Filtrer selon le rôle de l'utilisateur
+            if (state.currentUser.role === 'ADMIN' || state.currentUser.role === 'RH') {
+                // Les admins et RH voient tous les utilisateurs
+                state.allUsers = allUsers;
+            } else if (state.currentUser.role === 'CHEF_DEPARTEMENT') {
+                // Les chefs de département voient les utilisateurs de leur département
+                state.allUsers = allUsers.filter(user =>
+                    user.departement?.id === state.currentUser.departement?.id
+                );
+            } else if (state.currentUser.role === 'CHEF_SERVICE') {
+                // Les chefs de service voient les utilisateurs de leur service (sauf eux-mêmes)
+                state.allUsers = allUsers.filter(user =>
+                    user.serviceId === state.currentUser.serviceId &&
+                    user.id !== state.currentUser.id &&
+                    user.role !== 'CHEF_SERVICE'
+                );
+            } else {
+                // Les utilisateurs normaux ne voient que leur propre profil
+                state.allUsers = allUsers.filter(user =>
+                    user.id === state.currentUser.id
+                );
+            }
+
+            filterUsers();
+
+        } catch (error) {
+            console.error('Erreur chargement utilisateurs:', error);
+            alert('Erreur de chargement des utilisateurs');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: 'Échec du chargement des utilisateurs',
+                confirmButtonColor: '#2563eb'
+            });
+        }
+    }
+
+    // Filtrage des résultats
+    function filterUsers() {
+        const searchTerm = elements.search.value.toLowerCase();
+
+        state.filteredUsers = state.allUsers.filter(user => {
+            const matchesSearch = [
+                user.matricule,
+                user.firstName,
+                user.lastName,
+                user.email
+            ].some(value => value?.toLowerCase().includes(searchTerm));
+
+            return matchesSearch;
+        });
+
+        state.currentPage = 1;
+        updateTable();
+        updatePagination();
+    }
+
+    // Mise à jour du tableau
+    function updateTable() {
+        const start = (state.currentPage - 1) * state.itemsPerPage;
+        const end = start + state.itemsPerPage;
+        const users = state.filteredUsers.slice(start, end);
+
+        elements.usersTableBody.innerHTML = users.length > 0 ?
+            users.map(user => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${user.matricule}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.lastName} ${user.firstName}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.email}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${user.departement?.nomDepartement || 'Non assigné'}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${user.serviceName || 'Non assigné'}
+                     </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <a href="user-details.html?userId=${user.id}" class="text-primary-600 hover:text-primary-900">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+            `).join('') :
+            `<tr><td colspan="6" class="px-6 py-4 text-center">Aucun résultat trouvé</td></tr>`;
+    }
+
+    // Mettre à jour la pagination
+    function updatePagination() {
+        const totalPages = Math.ceil(state.filteredUsers.length / state.itemsPerPage);
+
+        elements.prevPageBtn.disabled = state.currentPage === 1;
+        elements.nextPageBtn.disabled = state.currentPage === totalPages || totalPages === 0;
+
+        const startItem = (state.currentPage - 1) * state.itemsPerPage + 1;
+        const endItem = Math.min(state.currentPage * state.itemsPerPage, state.filteredUsers.length);
+
+        elements.paginationInfo.innerHTML = `
+            Affichage de <span class="font-medium">${state.filteredUsers.length > 0 ? startItem : 0}</span> à
+            <span class="font-medium">${endItem}</span> sur
+            <span class="font-medium">${state.filteredUsers.length}</span> résultats
+        `;
+
+        elements.pageNumbers.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.textContent = i;
+            pageBtn.className = `relative inline-flex items-center px-4 py-2 border text-sm font-medium
+                ${i === state.currentPage ?
+                    'bg-primary-50 border-primary-500 text-primary-600 z-10' :
+                    'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}`;
+            pageBtn.addEventListener('click', () => {
+                changePage(i);
+            });
+            elements.pageNumbers.appendChild(pageBtn);
+        }
+    }
+
+    function changePage(page) {
+        state.currentPage = page;
+        updateTable();
+        updatePagination();
+    }
+
+    function previousPage() {
+        if (state.currentPage > 1) changePage(state.currentPage - 1);
+    }
+
+    function nextPage() {
+        if (state.currentPage < Math.ceil(state.filteredUsers.length / state.itemsPerPage)) {
+            changePage(state.currentPage + 1);
+        }
+    }
+
+    // Export Excel
+    async function exportToExcel() {
+        const { utils, writeFile } = await import('https://cdn.sheetjs.com/xlsx-0.20.0/package/xlsx.mjs');
+
+        const data = state.filteredUsers.map(user => ({
+            Matricule: user.matricule,
+            Nom: user.lastName,
+            Prénom: user.firstName,
+            Email: user.email,
+            Département: user.departement?.nomDepartement,
+            Service: user.service?.nomService
+        }));
+
+        const worksheet = utils.json_to_sheet(data);
+        const workbook = utils.book_new();
+        utils.book_append_sheet(workbook, worksheet, "Employés");
+        writeFile(workbook, `employes_${new Date().toISOString().slice(0,10)}.xlsx`);
+    }
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', init);
+
+
+     // Logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('userRole');
+        window.location.href = '../user/index.html';
+    });
+
+    // User menu toggle
+    const userMenuButton = document.getElementById('userMenuBtn');
+    const userMenu = document.getElementById('userMenu');
+
+    if (userMenuButton && userMenu) {
+        userMenuButton.addEventListener('click', () => {
+            const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+            userMenuButton.setAttribute('aria-expanded', !expanded);
+            userMenu.classList.toggle('hidden');
+        });
+
+        // Close the menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                userMenuButton.setAttribute('aria-expanded', 'false');
+                userMenu.classList.add('hidden');
+            }
+        });
+    }
+</script>
+</body>
+</html>
