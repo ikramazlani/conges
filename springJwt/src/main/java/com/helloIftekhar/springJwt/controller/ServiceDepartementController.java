@@ -70,7 +70,7 @@ public class ServiceDepartementController {
         List<ServiceDepartementDTO> services = service.getAllServices();
         return ResponseEntity.ok(services);
     }
-
+//developer par chef service
     @GetMapping("/departement/{departementId}/service/{serviceId}/users")
     public ResponseEntity<List<UserDTO>> getUsersByServiceAndDepartement(
             @PathVariable Long departementId,

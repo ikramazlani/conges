@@ -14,29 +14,12 @@
           theme: {
             extend: {
               colors: {
+
                 primary: {
-                  50: '#EFF6FF',
-                  100: '#DBEAFE',
-                  200: '#BFDBFE',
-                  300: '#93C5FD',
-                  400: '#60A5FA',
-                  500: '#3B82F6',
-                  600: '#2563EB',
-                  700: '#1D4ED8',
-                  800: '#1E40AF',
-                  900: '#1E3A8A',
+                  50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD', 400: '#60A5FA', 500: '#3B82F6', 600: '#2563EB', 700: '#1D4ED8', 800: '#1E40AF', 900: '#1E3A8A',
                 },
                 secondary: {
-                  50: '#F0FDFA',
-                  100: '#CCFBF1',
-                  200: '#99F6E4',
-                  300: '#5EEAD4',
-                  400: '#2DD4BF',
-                  500: '#14B8A6',
-                  600: '#0D9488',
-                  700: '#0F766E',
-                  800: '#115E59',
-                  900: '#134E4A',
+                  50: '#F0FDFA', 100: '#CCFBF1', 200: '#99F6E4', 300: '#5EEAD4', 400: '#2DD4BF', 500: '#14B8A6', 600: '#0D9488', 700: '#0F766E', 800: '#115E59', 900: '#134E4A',
                 },
               },
               fontFamily: {
@@ -49,14 +32,12 @@
 </head>
 <body class="bg-gray-50 font-sans">
 <div class="min-h-screen flex flex-col">
-
-
     <nav class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
-                <div class="flex">
+                <div class="flex items-center">
                     <div class="flex-shrink-0 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600 mr-2">
                             <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
                             <line x1="16" x2="16" y1="2" y2="6"></line>
                             <line x1="8" x2="8" y1="2" y2="6"></line>
@@ -71,31 +52,32 @@
                         <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
                             <span class="sr-only">Ouvrir le menu utilisateur</span>
                             <div class="flex items-center">
-                                <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
-                                    A
+                                <div class="h-8 w-8 rounded-full bg-primary-600 flex items-center justify-center text-white">
+                                    <i class="fas fa-user"></i>
                                 </div>
-                                <span class="ml-2 text-gray-700">Admin RH</span>
-                                <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <span class="ml-2 text-gray-700" id="headerRole">Chargement...</span>
+                                <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
                             </div>
                         </button>
-                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
-                            <a href="mon_profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
-                            <a href="" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                            <a href="mon_profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user-circle mr-2"></i> Votre profil
+                            </a>
+                            <a href="" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
-
     <div class="flex flex-1">
-        <!-- Sidebar -->
         <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
             <div class="h-full flex flex-col">
                 <nav class="flex-1 py-4 px-2 space-y-1">
-
                     <a href="rh-dash.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
@@ -105,9 +87,6 @@
                         </svg>
                         Tableau de bord
                     </a>
-
-
-
                     <a href="employes.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
@@ -115,7 +94,7 @@
                             <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                         </svg>
-                         employes
+                        employes
                     </a>
                     <a href="leave-requests.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -125,17 +104,14 @@
                         </svg>
                         Demandes de Congés
                     </a>
-
                     <a href="" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                             <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                             <path d="M9 14l2 2 4-4"></path>
                         </svg>
-                        historique
+                        calendear
                     </a>
-
-
                     <a href="mon_profile.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
@@ -147,168 +123,234 @@
                 </nav>
             </div>
         </div>
-
     </div>
 </div>
 
 <script>
-    // Logout functionality
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('refresh_token');
-            localStorage.removeItem('userRole');
-            window.location.href = '../user/index.html';
-        });
+    // Exécute le code lorsque le DOM est entièrement chargé
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Récupère le token JWT depuis le stockage local
+        const token = localStorage.getItem('token');
+        // Si aucun token n'est trouvé, redirige vers la page de connexion
+        if (!token) window.location.href = '../user/index.html';
 
-    // User menu toggle functionality
+        try {
+            // Effectue une requête pour obtenir les informations de l'utilisateur connecté
+            const response = await fetch('http://localhost:8080/api/users/me', {
+                headers: { 'Authorization': `Bearer ${token}` } // Ajoute le token dans l'en-tête Authorization
+            });
+
+            // Si la réponse n'est pas OK, lance une erreur
+            if (!response.ok) throw new Error('Erreur de chargement');
+            // Parse la réponse JSON pour obtenir les données utilisateur
+            const user = await response.json();
+            // Met à jour l'élément avec l'ID 'headerRole' avec le rôle formaté de l'utilisateur
+            document.getElementById('headerRole').textContent = formatRole(user.role);
+
+        } catch (error) {
+            // En cas d'erreur (e.g., token invalide ou expiré), affiche l'erreur et redirige vers la page de connexion
+            console.error('Erreur:', error);
+            window.location.href = '../user/index.html';
+        }
+    });
+
+    // Ajoute un écouteur d'événement sur le bouton de déconnexion
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        // Supprime le token et le refresh token du stockage local
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('userRole'); // Supprime également le rôle stocké localement
+        // Redirige l'utilisateur vers la page de connexion
+        window.location.href = '../user/index.html';
+    });
+
+    // Formate le rôle de l'utilisateur pour un affichage plus convivial
+    function formatRole(role) {
+        const roles = {
+            'ADMIN': 'Administrateur',
+            'RH': 'Ressources Humaines',
+            'CHEF_DEPARTEMENT': 'Chef de Département',
+            'CHEF_SERVICE': 'Chef de Service',
+            'EMPLOYEE': 'Employé'
+        };
+        // Retourne le rôle formaté ou le rôle original s'il n'est pas dans la map
+        return roles[role] || role;
+    }
+
+    // Fonctionnalité pour basculer l'affichage du menu utilisateur
     const userMenuButton = document.getElementById('userMenuBtn');
     const userMenu = document.getElementById('userMenu');
 
+    // Vérifie si les éléments du bouton et du menu existent
     if (userMenuButton && userMenu) {
-      userMenuButton.addEventListener('click', () => {
+      // Ajoute un écouteur d'événement au clic sur le bouton du menu utilisateur
+      userMenuButton.addEventListener('click', (event) => {
+        event.stopPropagation(); // Empêche la propagation de l'événement pour éviter que le document click ne ferme immédiatement le menu
+        // Vérifie l'état actuel de l'attribut aria-expanded
         const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+        // Inverse l'état de l'attribut aria-expanded
         userMenuButton.setAttribute('aria-expanded', !expanded);
+        // Bascule la classe 'hidden' sur le menu utilisateur pour l'afficher ou le masquer
         userMenu.classList.toggle('hidden');
       });
 
-      // Close the menu when clicking outside
+      // Ferme le menu lorsque l'utilisateur clique en dehors
       document.addEventListener('click', (event) => {
+        // Vérifie si le clic n'est ni sur le bouton ni sur le menu lui-même
         if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+          // Masque le menu et met à jour l'attribut aria-expanded
           userMenuButton.setAttribute('aria-expanded', 'false');
           userMenu.classList.add('hidden');
         }
       });
     }
 
-    // Mobile sidebar toggle functionality
+    // Fonctionnalité pour basculer l'affichage de la barre latérale mobile (si les éléments existent)
     const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
     const mobileSidebar = document.getElementById('mobileSidebar');
 
+    // Vérifie si les éléments de la barre latérale mobile existent
     if (mobileSidebarToggle && mobileSidebar) {
+      // Ajoute un écouteur d'événement au clic sur le bouton de bascule mobile
       mobileSidebarToggle.addEventListener('click', () => {
+        // Bascule la classe 'hidden' sur la barre latérale mobile
         mobileSidebar.classList.toggle('hidden');
       });
 
-      // Close the sidebar when clicking outside
+      // Ferme la barre latérale mobile lorsque l'utilisateur clique en dehors
       document.addEventListener('click', (event) => {
+        // Vérifie si le clic n'est ni sur le bouton de bascule ni sur la barre latérale elle-même
         if (!mobileSidebarToggle.contains(event.target) && !mobileSidebar.contains(event.target)) {
+          // Masque la barre latérale mobile
           mobileSidebar.classList.add('hidden');
         }
       });
     }
 
-    // Charts initialization
+    // Déclare les variables pour les instances de graphiques (initialisées plus tard)
     let leavesByDepartmentChart;
     let leavesStatusChart;
 
-    // Function to get JWT token from localStorage
+    // Fonction pour récupérer le token JWT depuis le stockage local
     function getToken() {
       return localStorage.getItem('token');
     }
 
-    // Function to make authenticated requests
+    // Fonction générique pour effectuer des requêtes API authentifiées
     async function makeAuthenticatedRequest(url, method = 'GET', body = null) {
+      // Définit les en-têtes de la requête, incluant le type de contenu et le token d'autorisation
       const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${getToken()}`
       };
 
+      // Configure les options de la requête (méthode, en-têtes)
       const config = {
         method: method,
         headers: headers
       };
 
+      // Si un corps de requête est fourni, l'ajoute à la configuration
       if (body) {
         config.body = JSON.stringify(body);
       }
 
+      // Effectue la requête fetch
       const response = await fetch(url, config);
 
+      // Si la réponse n'est pas OK (statut HTTP >= 400), lance une erreur
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      // Parse la réponse en JSON et la retourne
       return response.json();
     }
 
-    // Function to fetch dashboard data
+    // Fonction pour récupérer les données du tableau de bord et les afficher
     async function fetchDashboardData() {
     try {
-        // Fetch user statistics
+        // Récupère les statistiques des utilisateurs
         const userStats = await makeAuthenticatedRequest('http://localhost:8080/api/users/statistics');
+        // Met à jour l'affichage du nombre total d'utilisateurs
         document.getElementById('totalUsers').textContent = userStats.totalUsers || '--';
+        // Crée le graphique de distribution par rôles (commenté car l'élément HTML n'est pas présent)
+        // createRolesChart(userStats);
 
-        // Create roles distribution chart
-        createRolesChart(userStats);
-
-        // Fetch departments
+        // Récupère les informations détaillées des départements
         const departments = await makeAuthenticatedRequest('http://localhost:8080/api/departements/details');
+        // Met à jour l'affichage du nombre total de départements
         document.getElementById('totalDepartments').textContent = departments.length || '--';
+        // Crée le graphique de distribution par départements (commenté)
+        // createDepartmentsChart(departments);
 
-        // Create departments distribution chart
-        createDepartmentsChart(departments);
-
-        // Fetch leave statistics
+        // Récupère les statistiques globales des demandes de congés
         const leavesStats = await makeAuthenticatedRequest('http://localhost:8080/api/demandes-conge/stats-globales');
+        // Met à jour l'affichage du nombre de congés approuvés
         document.getElementById('approvedLeaves').textContent = leavesStats.approuvees || '--';
+        // Met à jour l'affichage du nombre de congés en attente
         document.getElementById('pendingLeaves').textContent = leavesStats.enAttente || '--';
+        // Crée le graphique de distribution par statut de congés (commenté)
+        // createLeavesChart(leavesStats);
 
-        // Create leaves status distribution chart
-        createLeavesChart(leavesStats);
-
-        // Fetch all leaves with employee info for recent leaves table
+        // Récupère toutes les demandes de congés avec les informations des employés
         const allLeaves = await makeAuthenticatedRequest('http://localhost:8080/api/demandes-conge/all-with-employee-info');
+        // Sélectionne les 5 dernières demandes pour les demandes récentes
         const recentLeaves = allLeaves.slice(0, 5);
+        // Rempli le tableau des demandes récentes avec les données
         populateRecentLeaves(recentLeaves);
 
-        // Fetch recent users
+        // Récupère tous les utilisateurs
         const allUsers = await makeAuthenticatedRequest('http://localhost:8080/api/users/all');
+        // Sélectionne les 5 derniers utilisateurs pour les utilisateurs récents
         const recentUsers = allUsers.slice(0, 5);
+        // Rempli le tableau des utilisateurs récents avec les données
         populateRecentUsers(recentUsers);
 
     } catch (error) {
+        // Affiche une erreur si la récupération des données échoue
         console.error('Error fetching dashboard data:', error);
     }
 }
 
-
-
-
-    // Function to populate recent leaves table
+    // Fonction pour remplir le tableau des demandes de congés récentes
     function populateRecentLeaves(leaves) {
       const tableBody = document.getElementById('recentLeavesTable');
+      // Vérifie si l'élément du tableau existe, sinon arrête la fonction
+      if (!tableBody) return;
+      // Vide le corps du tableau avant de le remplir
       tableBody.innerHTML = '';
 
+      // Si aucune demande n'est fournie ou si la liste est vide, affiche un message
       if (!leaves || leaves.length === 0) {
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="3" class="px-6 py-4 text-center text-gray-500">Aucune demande récente</td>
-          </tr>
-        `;
+        tableBody.innerHTML = `<tr><td colspan="3" class="px-6 py-4 text-center text-gray-500">Aucune demande récente</td></tr>`;
         return;
       }
 
+      // Parcourt chaque demande de congé
       leaves.forEach(leave => {
-        const row = document.createElement('tr');
-
-        // Determine status badge color
         let statusClass = '';
-        if (leave.statut === 'APPROUVÉ') {
+        // Détermine la classe CSS pour le badge de statut en fonction du statut du congé
+        if (leave.statut === 'APPROVED') {
           statusClass = 'bg-green-100 text-green-800';
-        } else if (leave.statut === 'EN_ATTENTE') {
+        } else if (leave.statut === 'PENDING') {
           statusClass = 'bg-yellow-100 text-yellow-800';
         } else {
           statusClass = 'bg-red-100 text-red-800';
         }
 
+        // Récupère les informations de l'employé et de son département (avec des valeurs par défaut)
         const employee = leave.employee || {};
         const departement = employee.departement || {};
 
+        // Crée une nouvelle ligne de tableau
+        const row = document.createElement('tr');
+        // Définit le contenu HTML de la ligne avec les données du congé
         row.innerHTML = `
           <td class="px-6 py-4 whitespace-nowrap">
             <div class="flex items-center">
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700">
-               // ${employee.firstName ? employee.firstName.charAt(0) : ''}${employee.lastName ? employee.lastName.charAt(0) : ''}
+                ${employee.firstName ? employee.firstName.charAt(0) : ''}${employee.lastName ? employee.lastName.charAt(0) : ''}
               </div>
               <div class="ml-4">
                 <div class="text-sm font-medium text-gray-900">${leave.employeeName || 'N/A'} </div>
@@ -326,28 +368,33 @@
             </span>
           </td>
         `;
+        // Ajoute la ligne au corps du tableau
         tableBody.appendChild(row);
       });
     }
 
-    // Function to populate recent users table
+    // Fonction pour remplir le tableau des utilisateurs récents
     function populateRecentUsers(users) {
       const tableBody = document.getElementById('recentUsersTable');
+       // Vérifie si l'élément du tableau existe, sinon arrête la fonction
+      if (!tableBody) return;
+      // Vide le corps du tableau avant de le remplir
       tableBody.innerHTML = '';
 
+      // Si aucun utilisateur n'est fourni ou si la liste est vide, affiche un message
       if (!users || users.length === 0) {
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="3" class="px-6 py-4 text-center text-gray-500">Aucun nouvel utilisateur</td>
-          </tr>
-        `;
+        tableBody.innerHTML = `<tr><td colspan="3" class="px-6 py-4 text-center text-gray-500">Aucun nouvel utilisateur</td></tr>`;
         return;
       }
 
+      // Parcourt chaque utilisateur
       users.forEach(user => {
-        const row = document.createElement('tr');
+        // Récupère les informations du département de l'utilisateur (avec valeur par défaut)
         const departement = user.departement || {};
 
+        // Crée une nouvelle ligne de tableau
+        const row = document.createElement('tr');
+         // Définit le contenu HTML de la ligne avec les données de l'utilisateur
         row.innerHTML = `
           <td class="px-6 py-4 whitespace-nowrap">
             <div class="flex items-center">
@@ -378,27 +425,30 @@
 </span>
           </td>
         `;
+        // Ajoute la ligne au corps du tableau
         tableBody.appendChild(row);
       });
     }
 
-    // Function to populate departments table
+    // Fonction pour remplir le tableau des départements (commenté car l'élément HTML n'est pas présent)
     function populateDepartmentsTable(departments) {
       const tableBody = document.getElementById('departmentsTable');
+       // Vérifie si l'élément du tableau existe, sinon arrête la fonction
+      if (!tableBody) return;
+      // Vide le corps du tableau avant de le remplir
       tableBody.innerHTML = '';
 
+       // Si aucun département n'est fourni ou si la liste est vide, affiche un message
       if (!departments || departments.length === 0) {
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="4" class="px-6 py-4 text-center text-gray-500">Aucun département trouvé</td>
-          </tr>
-        `;
+        tableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">Aucun département trouvé</td></tr>`;
         return;
       }
 
+      // Parcourt chaque département
       departments.forEach(dept => {
+        // Crée une nouvelle ligne de tableau
         const row = document.createElement('tr');
-
+        // Définit le contenu HTML de la ligne avec les données du département
         row.innerHTML = `
           <td class="px-6 py-4 whitespace-nowrap">
             <div class="text-sm font-medium text-gray-900">${dept.nomDepartement}</div>
@@ -418,193 +468,98 @@
             </div>
           </td>
         `;
+        // Ajoute la ligne au corps du tableau
         tableBody.appendChild(row);
       });
     }
 
-    // Helper function to format date
+    // Fonction utilitaire pour formater une chaîne de date en format lisible (fr-FR)
     function formatDate(dateString) {
-      if (!dateString) return 'N/A';
-      const date = new Date(dateString);
-      return date.toLocaleDateString('fr-FR');
+      if (!dateString) return 'N/A'; // Retourne 'N/A' si la chaîne est vide ou nulle
+      const date = new Date(dateString); // Crée un objet Date
+      return date.toLocaleDateString('fr-FR'); // Retourne la date formatée localement
     }
 
-    // Helper function to format status
+    // Fonction utilitaire pour formater le statut du congé en texte lisible en français
     function formatStatus(status) {
       const statusMap = {
         'PENDING': 'En attente',
         'APPROVED': 'Approuvé',
         'REJECTED': 'Rejeté'
       };
+      // Retourne le statut formaté ou le statut original si inconnu
       return statusMap[status] || status;
     }
 
-
-    // Check authentication before loading data
+    // Fonction pour vérifier l'authentification et charger les données du tableau de bord
     function checkAuthAndLoadData() {
+      // Vérifie si le token existe
       if (!getToken()) {
-        // Redirect to login if no token found
+        // Si non, redirige vers la page de connexion
         window.location.href = '../user/index.html';
       } else {
-        // Initialize dashboard
+        // Si oui, charge les données du tableau de bord
         fetchDashboardData();
       }
     }
 
-    // Initialize dashboard when page loads
+    // Appelle la fonction de vérification d'authentification et de chargement des données lorsque le DOM est entièrement chargé
     document.addEventListener('DOMContentLoaded', checkAuthAndLoadData);
 
+    // Fonctions pour la création de graphiques (commentées car les éléments HTML ne sont pas présents dans le snippet fourni)
+    /*
+    // Crée un graphique en forme de beignet pour la distribution des rôles
+    function createRolesChart(data) {
+        const options = {
+            series: Object.values(data.usersByRole), // Données des séries (nombre d'utilisateurs par rôle)
+            chart: { type: 'donut', height: 350, }, // Type de graphique (beignet) et hauteur
+            labels: Object.keys(data.usersByRole).map(role => { // Étiquettes pour chaque section (noms des rôles formatés)
+                return role === 'ADMIN' ? 'Administrateur' : role === 'RH' ? 'Manager' : role === 'CHEF_SERVICE' ? 'Chef de service' : role === 'CHEF_DEPARTEMENT' ? 'Chef de département' : 'Utilisateur';
+            }),
+            colors: ['#3B82F6', '#10B981', '#F59E0B', '#6366F1', '#EC4899'], // Couleurs des sections
+            legend: { position: 'bottom' }, // Position de la légende
+            responsive: [{ breakpoint: 480, options: { chart: { width: 200 }, legend: { position: 'bottom' } } }], // Options pour les écrans plus petits
+            plotOptions: { pie: { donut: { labels: { show: true, total: { show: true, label: 'Total', color: '#6B7280', } } } } } // Options spécifiques pour le beignet (affichage total)
+        };
+        // Crée et rend le graphique dans l'élément avec l'ID 'rolesChart'
+        const chart = new ApexCharts(document.querySelector("#rolesChart"), options);
+        chart.render();
+    }
 
+    // Crée un graphique en forme de beignet pour la distribution des départements
+    function createDepartmentsChart(departmentsData) {
+        const labels = departmentsData.map(dept => dept.nomDepartement); // Étiquettes (noms des départements)
+        const series = departmentsData.map(dept => dept.nombreUtilisateurs); // Données des séries (nombre d'utilisateurs par département)
+        const options = {
+            series: series,
+            chart: { type: 'donut', height: 350, },
+            labels: labels,
+            colors: ['#3B82F6', '#10B981', '#F59E0B', '#6366F1', '#EC4899', '#8B5CF6'],
+            legend: { position: 'bottom' },
+            responsive: [{ breakpoint: 480, options: { chart: { width: 200 }, legend: { position: 'bottom' } } }],
+            plotOptions: { pie: { donut: { labels: { show: true, total: { show: true, label: 'Total', color: '#6B7280', } } } } }
+        };
+         // Crée et rend le graphique dans l'élément avec l'ID 'departmentsChart'
+        const chart = new ApexCharts(document.querySelector("#departmentsChart"), options);
+        chart.render();
+    }
 
-
-
-
-
-
-    // Function to create roles distribution chart
-function createRolesChart(data) {
-    const options = {
-        series: Object.values(data.usersByRole),
-        chart: {
-            type: 'donut',
-            height: 350,
-        },
-        labels: Object.keys(data.usersByRole).map(role => {
-            return role === 'ADMIN' ? 'Administrateur' :
-                   role === 'RH' ? 'Manager' :
-                   role === 'CHEF_SERVICE' ? 'Chef de service' :
-                   role === 'CHEF_DEPARTEMENT' ? 'Chef de département' :
-                   'Utilisateur';
-        }),
-        colors: ['#3B82F6', '#10B981', '#F59E0B', '#6366F1', '#EC4899'],
-        legend: {
-            position: 'bottom'
-        },
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }],
-        plotOptions: {
-            pie: {
-                donut: {
-                    labels: {
-                        show: true,
-                        total: {
-                            show: true,
-                            label: 'Total',
-                            color: '#6B7280',
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    const chart = new ApexCharts(document.querySelector("#rolesChart"), options);
-    chart.render();
-}
-
-// Function to create departments distribution chart
-function createDepartmentsChart(departmentsData) {
-    const labels = departmentsData.map(dept => dept.nomDepartement);
-    const series = departmentsData.map(dept => dept.nombreUtilisateurs);
-
-    const options = {
-        series: series,
-        chart: {
-            type: 'donut',
-            height: 350,
-        },
-        labels: labels,
-        colors: ['#3B82F6', '#10B981', '#F59E0B', '#6366F1', '#EC4899', '#8B5CF6'],
-        legend: {
-            position: 'bottom'
-        },
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }],
-        plotOptions: {
-            pie: {
-                donut: {
-                    labels: {
-                        show: true,
-                        total: {
-                            show: true,
-                            label: 'Total',
-                            color: '#6B7280',
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    const chart = new ApexCharts(document.querySelector("#departmentsChart"), options);
-    chart.render();
-}
-
-// Function to create leave status distribution chart
-function createLeavesChart(leavesStats) {
-    const options = {
-        series: [leavesStats.enAttente, leavesStats.refusees, leavesStats.approuvees],
-        chart: {
-            type: 'donut',
-            height: 350,
-        },
-        labels: ['En attente', 'Refusées', 'Approuvées'],
-        colors: ['#F59E0B', '#EF4444', '#10B981'],
-        legend: {
-            position: 'bottom'
-        },
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }],
-        plotOptions: {
-            pie: {
-                donut: {
-                    labels: {
-                        show: true,
-                        total: {
-                            show: true,
-                            label: 'Total',
-                            color: '#6B7280',
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    const chart = new ApexCharts(document.querySelector("#leavesChart"), options);
-    chart.render();
-}
-
-
-
-
+    // Crée un graphique en forme de beignet pour la distribution des statuts de congés
+    function createLeavesChart(leavesStats) {
+        const options = {
+            series: [leavesStats.enAttente, leavesStats.refusees, leavesStats.approuvees], // Données des séries (nombre de congés par statut)
+            chart: { type: 'donut', height: 350, },
+            labels: ['En attente', 'Refusées', 'Approuvées'], // Étiquettes (statuts formatés)
+            colors: ['#F59E0B', '#EF4444', '#10B981'], // Couleurs
+            legend: { position: 'bottom' },
+            responsive: [{ breakpoint: 480, options: { chart: { width: 200 }, legend: { position: 'bottom' } } }],
+            plotOptions: { pie: { donut: { labels: { show: true, total: { show: true, label: 'Total', color: '#6B7280', } } } } }
+        };
+         // Crée et rend le graphique dans l'élément avec l'ID 'leavesChart'
+        const chart = new ApexCharts(document.querySelector("#leavesChart"), options);
+        chart.render();
+    }
+    */
 </script>
 </body>
 </html>

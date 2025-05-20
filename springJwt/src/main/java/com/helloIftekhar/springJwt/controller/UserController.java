@@ -149,7 +149,7 @@ public class UserController {
         Map<String, Object> stats = authenticationService.getUserStatistics();
         return ResponseEntity.ok(stats);
     }
-    // developé par chef service
+
 
 
 

@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demandes de Congés - Gestion des congés</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#EFF6FF',
+                            100: '#DBEAFE',
+                            200: '#BFDBFE',
+                            300: '#93C5FD',
+                            400: '#60A5FA',
+                            500: '#3B82F6',
+                            600: '#2563EB',
+                            700: '#1D4ED8',
+                            800: '#1E40AF',
+                            900: '#1E3A8A',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-scale {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .animate-scale:hover {
+            transform: scale(1.02);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c5c5c5;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
+        }
+
+        .status-approved {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-rejected {
+            background-color: #FEE2E2;
+            color: #B91C1C;
+        }
+
+        .status-pending {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        /* Styles for the new details card similar to image_c44bf0.png */
+        .request-detail-card {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            display: flex;
+            gap: 2rem;
+            max-width: 900px; /* Adjust as needed */
+            width: 100%;
+        }
+
+        .request-detail-card .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-right: 1.5rem;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .request-detail-card .right-section {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .request-detail-card .avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 9999px;
+            background-color: #3B82F6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .request-detail-card .section-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .request-detail-card .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .request-detail-card .detail-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .request-detail-card .detail-value {
+            color: #1f2937;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .request-detail-card .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .leave-balance-card {
+            background-color: #3B82F6; /* Primary 500 */
+            color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 1.5rem; /* Space from previous section */
+        }
+
+        .leave-balance-card .title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .leave-balance-card .balance-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .leave-balance-card .balance-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .leave-balance-card .balance-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .leave-balance-card .balance-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .leave-balance-card .balance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .leave-balance-card .balance-grid-item {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .leave-balance-card .balance-grid-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .leave-balance-card .balance-grid-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="min-h-screen flex flex-col">
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                            <path d="m9 16 2 2 4-4"></path>
+                        </svg>
+                        <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                            <span class="sr-only">Ouvrir le menu utilisateur</span>
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                    A
+                                </div>
+                                <span class="ml-2 text-gray-700">Admin Utilisateur</span>
+                                <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+                            <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
+                            <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1">
+        <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+            <div class="h-full flex flex-col">
+                <nav class="flex-1 py-4 px-2 space-y-1">
+                    <a href="dashbord.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="9"></rect>
+                            <rect x="14" y="3" width="7" height="5"></rect>
+                            <rect x="14" y="12" width="7" height="9"></rect>
+                            <rect x="3" y="16" width="7" height="5"></rect>
+                        </svg>
+                        Tableau de bord
+                    </a>
+
+                    <a href="calendar-config.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                        </svg>
+                        Configuration du Calendrier
+                    </a>
+                    <a href="liste_users.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Gestion des utilisateurs
+                    </a>
+                    <a href="leave-requests.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary-700 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M9 14l2 2 4-4"></path>
+                        </svg>
+                        Demandes de Congés
+                    </a>
+                    <a href="departments.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                            <line x1="12" y1="22" y2="12" x2="12"></line>
+                        </svg>
+                        Gestion des départements
+                    </a>
+
+
+                    <a href="services.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                        </svg>
+                        Gestion de Services
+                    </a>
+                    <a href="profile.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 group-hover:text-gray-600 mr-3 h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                            <line x1="12" y1="22" y2="12" x2="12"></line>
+                        </svg>
+                        Mon Profil
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <main class="flex-1 p-10">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-semibold text-gray-900">Demandes de Congés</h1>
+
+                <div class="flex space-x-3">
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Rechercher..."
+                               class="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <button id="exportBtn" class="flex items-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700">
+                        <i class="fas fa-file-export mr-2"></i> Exporter
+                    </button>
+                </div>
+            </div>
+
+            <div class="border-b border-gray-200 mb-6">
+                <nav class="-mb-px flex space-x-8">
+                    <button class="tab-btn border-b-2 border-primary-500 text-primary-600 whitespace-nowrap py-4 px-1 text-sm font-medium"
+                            data-filter="all">
+                        Toutes les demandes
+                    </button>
+                    <button class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 text-sm font-medium"
+                            data-filter="APPROUVE">
+                        Demandes approuvées
+                    </button>
+                    <button class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 text-sm font-medium"
+                            data-filter="REFUSE">
+                        Demandes refusées
+                    </button>
+                    <button class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 text-sm font-medium"
+                            data-filter="EN_COURT_DE_TRAITEMENT">
+                        Demandes en cours de traitement
+                    </button>
+                </nav>
+            </div>
+
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Employé
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Période
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Durée
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Statut
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="requestsTableBody" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between">
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700" id="paginationInfo">
+                            Affichage de <span class="font-medium">1</span> à <span class="font-medium">10</span> sur <span class="font-medium">20</span> résultats
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            <button id="prevPage" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <span class="sr-only">Précédent</span>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <div id="pageNumbers" class="flex">
+                            </div>
+                            <button id="nextPage" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <span class="sr-only">Suivant</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div id="requestDetailModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start w-full">
+                    <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTitle">
+                                Détails de la demande
+                            </h3>
+                            <button type="button" class="text-gray-400 hover:text-gray-500" id="closeModalBtn">
+                                <span class="sr-only">Fermer</span>
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="mt-4 request-detail-card">
+                            <div class="left-section">
+                                <div class="avatar" id="detailEmployeeAvatar">MB</div>
+                                <h4 class="text-lg font-semibold text-gray-900" id="detailEmployeeName">Michel Bernard</h4>
+                                <p class="text-sm text-gray-500" id="detailEmployeeRole">Comptable - Finance</p>
+                                <div class="mt-4 px-3 py-1 rounded-full bg-primary-100 text-primary-700 font-medium text-sm">
+                                    Solde: <span id="detailEmployeeBalance">8 jours</span>
+                                </div>
+                            </div>
+                            <div class="right-section">
+                                <p class="text-lg font-semibold text-gray-900 mb-4">Détails de la demande</p>
+
+                                <div class="detail-item">
+                                    <span class="detail-label">Statut</span>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" id="detailStatus">Non examiné</span>
+                                </div>
+                                <hr class="my-3 border-gray-200">
+                                <div class="detail-item">
+                                    <span class="detail-label">Période</span>
+                                    <span class="detail-value" id="detailPeriod">15/06/2025 au 30/06/2025</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Durée</span>
+                                    <span class="detail-value" id="detailDurationCard">16 jours</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Motif</span>
+                                    <span class="detail-value" id="detailReasonCard">Vacances d'été</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Remplacé par</span>
+                                    <span class="detail-value" id="detailRemplacerPar">N/A</span>
+                                </div>
+                                <div class="leave-balance-card">
+                                    <div class="title">Solde de Congé</div>
+                                    <div class="balance-info">
+                                        <div class="balance-item">
+                                            <div class="balance-value" id="detailGlobalBalance">22</div>
+                                            <div class="balance-label">Solde global</div>
+                                        </div>
+                                    </div>
+                                    <div class="balance-grid">
+                                        <div class="balance-grid-item">
+                                            <div class="balance-grid-value" id="detailCurrentYearBalance">22</div>
+                                            <div class="balance-grid-label">Année en cours</div>
+                                        </div>
+                                        <div class="balance-grid-item">
+                                            <div class="balance-grid-value" id="detailPreviousYearBalance">0</div>
+                                            <div class="balance-grid-label">Report année précédente</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button type="button" id="approveRequestBtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    Approuver
+                </button>
+                <button type="button" id="rejectRequestBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Refuser
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="rejectReasonModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Motif de refus</h3>
+                    <button type="button" class="text-gray-400 hover:text-gray-500" id="closeRejectReasonModalBtn">
+                        <span class="sr-only">Fermer</span>
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="mt-2">
+                    <p class="text-sm text-gray-500">Veuillez indiquer le motif du refus de la demande.</p>
+                    <textarea id="rejectReasonInput" class="mt-3 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" rows="4" placeholder="Motif du refus..."></textarea>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button type="button" id="confirmRejectBtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    Confirmer le refus
+                </button>
+                <button type="button" id="cancelRejectBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '../user/index.html';
+            return;
+        }
+
+        // DOM Elements
+        const requestsTableBody = document.getElementById('requestsTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const exportBtn = document.getElementById('exportBtn');
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const requestDetailModal = document.getElementById('requestDetailModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userMenu = document.getElementById('userMenu');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // New modal elements
+        const detailEmployeeAvatar = document.getElementById('detailEmployeeAvatar');
+        const detailEmployeeName = document.getElementById('detailEmployeeName');
+        const detailEmployeeRole = document.getElementById('detailEmployeeRole');
+        const detailEmployeeBalance = document.getElementById('detailEmployeeBalance');
+        const detailStatus = document.getElementById('detailStatus');
+        const detailPeriod = document.getElementById('detailPeriod');
+        const detailDurationCard = document.getElementById('detailDurationCard');
+        const detailReasonCard = document.getElementById('detailReasonCard');
+        const detailRemplacerPar = document.getElementById('detailRemplacerPar');
+        const detailGlobalBalance = document.getElementById('detailGlobalBalance');
+        const detailCurrentYearBalance = document.getElementById('detailCurrentYearBalance');
+        const detailPreviousYearBalance = document.getElementById('detailPreviousYearBalance');
+        const approveRequestBtn = document.getElementById('approveRequestBtn');
+        const rejectRequestBtn = document.getElementById('rejectRequestBtn');
+
+        // Reject reason modal elements
+        const rejectReasonModal = document.getElementById('rejectReasonModal');
+        const closeRejectReasonModalBtn = document.getElementById('closeRejectReasonModalBtn');
+        const rejectReasonInput = document.getElementById('rejectReasonInput');
+        const confirmRejectBtn = document.getElementById('confirmRejectBtn');
+        const cancelRejectBtn = document.getElementById('cancelRejectBtn');
+
+        let currentRequestId = null; // To store the ID of the request being viewed
+
+        // Pagination variables
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let allRequests = [];
+        let filteredRequests = [];
+        let employeesMap = new Map(); // Pour stocker les infos des employés
+
+        // Initialize the page
+        async function init() {
+            await loadEmployees(); // Charger d'abord les employés
+            await loadRequests();
+            setupEventListeners();
+        }
+
+        // Charger les employés
+        async function loadEmployees() {
+            try {
+                const response = await fetch('http://localhost:8080/api/employees', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des employés');
+                }
+
+                const employees = await response.json();
+                employees.forEach(emp => {
+                    employeesMap.set(emp.id, emp);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Load requests from API
+        async function loadRequests() {
+            try {
+                const response = await fetch('http://localhost:8080/api/demandes-conge/all-with-employee-info', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des demandes');
+                }
+
+                allRequests = await response.json();
+
+                // Filter to only show APPROUVÉ, REFUSÉ, and EN_COURT_DE_TRAITEMENT requests
+                allRequests = allRequests.filter(request =>
+                    request.statut === 'APPROUVE' || request.statut === 'REFUSE' || request.statut === 'EN_ATTENTE' || request.statut === 'EN_COURT_DE_TRAITEMENT'
+                );
+
+                // Ajouter les informations de l'employé à chaque demande
+                allRequests = allRequests.map(request => {
+                    const employee = employeesMap.get(request.idEmployee); // Use idEmployee to link
+                    return {
+                        ...request,
+                        employeeName: employee ? `${employee.prenom} ${employee.nom}` : 'Inconnu',
+                        employeeRole: employee ? employee.role : '',
+                        employeeBalance: employee ? employee.solde : 'N/A' // Assuming employee object has a 'solde' field
+                    };
+                });
+
+                filteredRequests = [...allRequests];
+                renderRequests();
+                updatePagination();
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Erreur lors du chargement des demandes');
+            }
+        }
+
+        // Render requests to the table
+        function renderRequests() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const paginatedRequests = filteredRequests.slice(startIndex, startIndex + itemsPerPage);
+
+            requestsTableBody.innerHTML = paginatedRequests.map(request => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                <span class="text-gray-600">${request.employeeName ? request.employeeName.charAt(0) : 'U'}</span>
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">${request.employeeName || 'Non spécifié'}</div>
+                                <div class="text-sm text-gray-500">${request.employeeRole || ''}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${formatDate(request.dateDebut)} - ${formatDate(request.dateFin)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${request.duree} jours</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+               ${(() => {
+                   if (request.statut === 'APPROUVE') {
+                       return 'status-approved';
+                   } else if (request.statut === 'REFUSE') {
+                       return 'status-rejected';
+                   } else if (request.statut === 'EN_ATTENTE' || request.statut === 'EN_COURT_DE_TRAITEMENT') {
+                       return 'status-pending';
+                   } else {
+                       return 'bg-gray-100 text-gray-800';
+                   }
+               })()}">
+               ${request.statut === 'EN_ATTENTE' ? 'EN COURS DE TRAITEMENT' : (request.statut === 'EN_COURT_DE_TRAITEMENT' ? 'EN COURS DE TRAITEMENT' : request.statut)}
+           </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="text-primary-600 hover:text-primary-900 mr-3 view-btn" data-id="${request.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Add event listeners to view buttons
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', () => showRequestDetails(btn.dataset.id));
+            });
+        }
+
+        // Show request details in modal
+        async function showRequestDetails(requestId) {
+            currentRequestId = requestId;
+            const request = allRequests.find(req => req.id == requestId);
+            if (!request) return;
+
+            // Fetch global leave balance for the employee
+            let globalBalance = { soldeGlobal: 'N/A', soldeAnneeCourante: 'N/A', soldeAnneePrecedente: 'N/A' };
+            try {
+                const balanceResponse = await fetch(`http://localhost:8080/api/solde-conge/mon-solde?employeeId=${request.idEmployee}`, { // Assuming this endpoint accepts employeeId
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (balanceResponse.ok) {
+                    globalBalance = await balanceResponse.json();
+                } else {
+                    console.warn('Could not fetch global balance for employee:', request.idEmployee);
+                }
+            } catch (error) {
+                console.error('Error fetching global balance:', error);
+            }
+
+            detailEmployeeAvatar.textContent = request.employeeName ? request.employeeName.charAt(0) : 'U';
+            detailEmployeeName.textContent = request.employeeName || 'Non spécifié';
+            detailEmployeeRole.textContent = request.employeeRole || 'Non spécifié';
+            detailEmployeeBalance.textContent = `${request.employeeBalance} jours` || 'N/A'; // Assuming employee has a balance
+
+            detailPeriod.textContent = `${formatDate(request.dateDebut)} au ${formatDate(request.dateFin)}`;
+            detailDurationCard.textContent = `${request.duree} jours`;
+            detailReasonCard.textContent = request.motif || 'Non spécifié';
+            detailRemplacerPar.textContent = request.remplacerPar || 'Non spécifié';
+
+            detailGlobalBalance.textContent = globalBalance.soldeGlobal;
+            detailCurrentYearBalance.textContent = globalBalance.soldeAnneeCourante;
+            detailPreviousYearBalance.textContent = globalBalance.soldeAnneePrecedente;
+
+
+            const statusElement = detailStatus;
+            statusElement.textContent = request.statut === 'EN_ATTENTE' ? 'EN COURS DE TRAITEMENT' : (request.statut === 'EN_COURT_DE_TRAITEMENT' ? 'EN COURS DE TRAITEMENT' : request.statut);
+            statusElement.className = 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' +
+                (request.statut === 'APPROUVE' ? 'status-approved' : (request.statut === 'REFUSE' ? 'status-rejected' : 'status-pending'));
+
+
+            requestDetailModal.classList.remove('hidden');
+
+            // Set visibility of action buttons based on status
+            if (request.statut === 'EN_ATTENTE' || request.statut === 'EN_COURT_DE_TRAITEMENT') {
+                approveRequestBtn.classList.remove('hidden');
+                rejectRequestBtn.classList.remove('hidden');
+            } else {
+                approveRequestBtn.classList.add('hidden');
+                rejectRequestBtn.classList.add('hidden');
+            }
+        }
+
+        // Filter requests based on search and tab selection
+        function filterRequests() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeTab = document.querySelector('.tab-btn.border-primary-500')?.dataset.filter || 'all';
+
+            filteredRequests = allRequests.filter(request => {
+                const matchesSearch =
+                    (request.employeeName?.toLowerCase().includes(searchTerm)) ||
+                    (request.employeeRole?.toLowerCase().includes(searchTerm)) ||
+                    (formatDate(request.dateDebut).toLowerCase().includes(searchTerm)) ||
+                    (request.statut?.toLowerCase().includes(searchTerm)) ||
+                    (formatDate(request.dateFin).toLowerCase().includes(searchTerm));
+
+                const matchesTab =
+                    activeTab === 'all' ||
+                    (activeTab === 'EN_COURT_DE_TRAITEMENT' && (request.statut === 'EN_ATTENTE' || request.statut === 'EN_COURT_DE_TRAITEMENT')) ||
+                    request.statut === activeTab;
+
+                return matchesSearch && matchesTab;
+            });
+
+            currentPage = 1;
+            renderRequests();
+            updatePagination();
+        }
+
+        // Update pagination controls
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+            const paginationInfo = document.getElementById('paginationInfo');
+            const pageNumbers = document.getElementById('pageNumbers');
+            const prevBtn = document.getElementById('prevPage');
+            const nextBtn = document.getElementById('nextPage');
+
+            const startItem = (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, filteredRequests.length);
+
+            paginationInfo.innerHTML = `
+                Affichage de <span class="font-medium">${startItem}</span> à <span class="font-medium">${endItem}</span>
+                sur <span class="font-medium">${filteredRequests.length}</span> résultats
+            `;
+
+            pageNumbers.innerHTML = '';
+
+            // Afficher un maximum de 5 pages autour de la page courante
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+
+            if (currentPage <= 3) {
+                endPage = Math.min(5, totalPages);
+            }
+            if (currentPage >= totalPages - 2) {
+                startPage = Math.max(1, totalPages - 4);
+            }
+
+            // Bouton pour la première page
+            if (startPage > 1) {
+                const firstPageBtn = createPageButton(1);
+                pageNumbers.appendChild(firstPageBtn);
+                if (startPage > 2) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.className = 'relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700';
+                    ellipsis.textContent = '...';
+                    pageNumbers.appendChild(ellipsis);
+                }
+            }
+
+            // Boutons pour les pages autour de la page courante
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = createPageButton(i);
+                pageNumbers.appendChild(pageBtn);
+            }
+
+            // Bouton pour la dernière page
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.className = 'relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700';
+                    ellipsis.textContent = '...';
+                    pageNumbers.appendChild(ellipsis);
+                }
+                const lastPageBtn = createPageButton(totalPages);
+                pageNumbers.appendChild(lastPageBtn);
+            }
+
+            // Désactiver les boutons précédent/suivant si nécessaire
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+        }
+
+        function createPageButton(pageNumber) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                pageNumber === currentPage
+                    ? 'border-primary-500 bg-primary-50 text-primary-600'
+                    : 'border-gray-300 bg-white text-gray-500 hover:bg-gray-50'
+            }`;
+            pageBtn.textContent = pageNumber;
+            pageBtn.addEventListener('click', () => {
+                currentPage = pageNumber;
+                renderRequests();
+                updatePagination();
+            });
+            return pageBtn;
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            if (!dateString) return 'Non spécifié';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('fr-FR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                });
+            } catch (e) {
+                return dateString; // Retourne la chaîne originale si le parsing échoue
+            }
+        }
+
+        // Export to Excel
+        async function exportToExcel() {
+            try {
+                // Charger la bibliothèque SheetJS dynamiquement
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+                script.onload = async () => {
+                    // Préparer les données
+                    const data = filteredRequests.map(request => ({
+                        'ID': request.id,
+                        'Employé': request.employeeName,
+                        'Remplacé par': request.remplacerPar,
+                        'Date Début': formatDate(request.dateDebut),
+                        'Date Fin': formatDate(request.dateFin),
+                        'Durée (jours)': request.duree,
+                        'Statut': request.statut === 'EN_ATTENTE' ? 'EN COURS DE TRAITEMENT' : request.statut,
+                        'Motif': request.motif
+                    }));
+
+                    // Créer un workbook
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.json_to_sheet(data);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Demandes de Congés');
+
+                    // Générer le fichier Excel
+                    const date = new Date().toISOString().slice(0, 10);
+                    XLSX.writeFile(wb, `Demandes_Conges_${date}.xlsx`);
+                };
+                document.head.appendChild(script);
+            } catch (error) {
+                console.error('Erreur lors de l\'export:', error);
+                alert('Une erreur est survenue lors de l\'export');
+            }
+        }
+
+        // Approve/Reject Request
+        async function updateRequestStatus(status, reason = null) {
+            if (!currentRequestId) return;
+
+            const requestBody = {
+                statut: status,
+                motifRefus: reason // Only applicable for rejection
+            };
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/demandes-conge/${currentRequestId}/statut`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la mise à jour du statut de la demande');
+                }
+
+                alert(`Demande ${status === 'APPROUVE' ? 'approuvée' : 'refusée'} avec succès!`);
+                requestDetailModal.classList.add('hidden');
+                rejectReasonModal.classList.add('hidden');
+                await loadRequests(); // Reload requests to update the table
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Erreur: ${error.message}`);
+            }
+        }
+
+
+        // Show error message
+        function showError(message) {
+            requestsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="px-6 py-4 text-center text-sm text-red-600">
+                        <i class="fas fa-exclamation-circle mr-2"></i> ${message}
+                    </td>
+                </tr>
+            `;
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Tab buttons
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabButtons.forEach(b => b.classList.remove('border-primary-500', 'text-primary-600'));
+                    tabButtons.forEach(b => b.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
+
+                    btn.classList.add('border-primary-500', 'text-primary-600');
+                    btn.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+
+                    filterRequests();
+                });
+            });
+
+            // Search input
+            searchInput.addEventListener('input', debounce(filterRequests, 300));
+
+            // Export button
+            exportBtn.addEventListener('click', exportToExcel);
+
+            // Close request detail modal button
+            closeModalBtn.addEventListener('click', () => {
+                requestDetailModal.classList.add('hidden');
+            });
+
+            // User menu
+            userMenuBtn.addEventListener('click', () => {
+                const expanded = userMenuBtn.getAttribute('aria-expanded') === 'true';
+                userMenuBtn.setAttribute('aria-expanded', !expanded);
+                userMenu.classList.toggle('hidden');
+            });
+
+            // Logout button
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                window.location.href = '../user/index.html';
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!userMenuBtn.contains(event.target) && !userMenu.contains(event.target)) {
+                    userMenuBtn.setAttribute('aria-expanded', 'false');
+                    userMenu.classList.add('hidden');
+                }
+            });
+
+            // Pagination buttons
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderRequests();
+                    updatePagination();
+                }
+            });
+
+            document.getElementById('nextPage').addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderRequests();
+                    updatePagination();
+                }
+            });
+
+            // Approve and Reject buttons in detail modal
+            approveRequestBtn.addEventListener('click', () => {
+                if (confirm('Êtes-vous sûr de vouloir approuver cette demande ?')) {
+                    updateRequestStatus('APPROUVE');
+                }
+            });
+
+            rejectRequestBtn.addEventListener('click', () => {
+                requestDetailModal.classList.add('hidden'); // Hide detail modal first
+                rejectReasonModal.classList.remove('hidden'); // Show reject reason modal
+                rejectReasonInput.value = ''; // Clear previous reason
+            });
+
+            // Reject reason modal buttons
+            closeRejectReasonModalBtn.addEventListener('click', () => {
+                rejectReasonModal.classList.add('hidden');
+            });
+
+            cancelRejectBtn.addEventListener('click', () => {
+                rejectReasonModal.classList.add('hidden');
+                // Optionally re-show the detail modal if needed
+                // requestDetailModal.classList.remove('hidden');
+            });
+
+            confirmRejectBtn.addEventListener('click', () => {
+                const reason = rejectReasonInput.value.trim();
+                if (reason) {
+                    updateRequestStatus('REFUSE', reason);
+                } else {
+                    alert('Veuillez entrer un motif de refus.');
+                }
+            });
+        }
+
+        // Fonction debounce pour optimiser les recherches
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                const context = this, args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    func.apply(context, args);
+                }, wait);
+            };
+        }
+
+        // Initialize the page
+        init();
+    });
+</script>
+</body>
+</html>
