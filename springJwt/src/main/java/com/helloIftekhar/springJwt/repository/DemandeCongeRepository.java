@@ -40,6 +40,14 @@ public interface DemandeCongeRepository extends JpaRepository<DemandeConge, Long
         Long getCount();
     }
 
+
+
+
+    //affihcer les departement de chef de service
+
+
+
+
         // Pour les stats globales
         @Query("SELECT COUNT(d) FROM DemandeConge d WHERE d.statut = 'APPROUVE' OR d.statut = 'APPROUVÉ'")
         long countApprouvees();
@@ -61,14 +69,22 @@ public interface DemandeCongeRepository extends JpaRepository<DemandeConge, Long
         long countEnAttenteByUser(Long userId);
 
 
+
+    @Modifying
+    @Query("UPDATE DemandeConge d SET d.statut = :statut, d.motifRefus = :motifRefus WHERE d.id = :id")
+    void updateStatutAndMotifRefus(@Param("id") Long id,
+                                   @Param("statut") String statut,
+                                   @Param("motifRefus") String motifRefus);
+
+
     @Query("SELECT new com.helloIftekhar.springJwt.dto.DemandeCongeResponseDTO(" +
             "d.id, d.idEmployee, CONCAT(u.firstName, ' ', u.lastName), dep.nomDepartement, " +
-            "d.dateCreation, d.dateDebut, d.dateFin, d.motif, d.statut, d.duree, d.remplacerPar,u.role) " +
+            "d.dateCreation, d.dateDebut, d.dateFin, d.motif, d.statut, d.duree, d.remplacerPar, u.role, s.nomService) " +
             "FROM DemandeConge d " +
             "JOIN User u ON d.idEmployee = u.id " +
-            "LEFT JOIN u.departement dep")
+            "LEFT JOIN u.departement dep " +
+            "LEFT JOIN u.service s")
     List<DemandeCongeResponseDTO> findAllWithEmployeeInfo();
-
     Optional<DemandeConge> findByIdAndIdEmployee(Long id, Long idEmployee);
 
     // Dans DemandeCongeRepository.java

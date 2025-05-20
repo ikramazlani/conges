@@ -12,6 +12,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
 
+
+    //add chef service codes
+
+
+    List<User> findByDepartementIdAndServiceId(Integer departementId, Integer serviceId);
+
+
     List<User> findByRole(String role);
 
     // Trouver par matricule

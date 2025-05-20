@@ -66,6 +66,7 @@ public class DemandeCongeService {
         responseDTO.setStatut(demande.getStatut());
         responseDTO.setDuree(demande.getDuree());
         responseDTO.setRemplacerPar(demande.getRemplacerPar());
+        responseDTO.setMotifRefus(demande.getMotifRefus());
 
         return responseDTO;
     }
@@ -171,6 +172,22 @@ public class DemandeCongeService {
     public List<DemandeCongeResponseDTO> getAllDemandesWithEmployeeInfo() {
         return demandeCongeRepository.findAllWithEmployeeInfo();
     }
+
+
+    // Dans DemandeCongeService.java
+    @Transactional
+    public void updateStatutDemande(Long id, String statut, String motifRefus) {
+        // Si le statut est "REFUSE" et qu'il n'y a pas de motif de refus
+        if ("REFUSE".equals(statut) && (motifRefus == null || motifRefus.isEmpty())) {
+            throw new RuntimeException("Un motif de refus est obligatoire pour rejeter une demande");
+        }
+
+        // Si le statut n'est pas "REFUSE", on ne garde pas le motif de refus
+        String finalMotifRefus = "REFUSE".equals(statut) ? motifRefus : null;
+
+        demandeCongeRepository.updateStatutAndMotifRefus(id, statut, finalMotifRefus);
+    }
+
 
 
 }

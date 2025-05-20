@@ -300,6 +300,13 @@ public class AuthenticationService {
     }
 
 
+
+    // add chef de service
+
+    public List<User> getUsersByDepartementAndService(Integer departementId, Integer serviceId) {
+        return repository.findByDepartementIdAndServiceId(departementId, serviceId);
+    }
+
 }
 
 

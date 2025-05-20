@@ -1,8 +1,11 @@
 package com.helloIftekhar.springJwt.dto;
 
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class DemandeCongeRequestDTO {
     private Date dateDebut;
     private Date dateFin;
@@ -10,6 +13,7 @@ public class DemandeCongeRequestDTO {
     private int duree;
     private String remplacerPar;
     private long idEmployee;
+    private String motifRefus;
 
     // Getters et Setters
     public Date getDateDebut() {

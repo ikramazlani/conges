@@ -4,6 +4,7 @@ package com.helloIftekhar.springJwt.controller;
 import com.helloIftekhar.springJwt.dto.DemandeCongeRequestDTO;
 import com.helloIftekhar.springJwt.dto.DemandeCongeResponseDTO;
 import com.helloIftekhar.springJwt.dto.DemandeStatsDTO;
+import com.helloIftekhar.springJwt.dto.UpdateStatutDTO;
 import com.helloIftekhar.springJwt.model.DemandeConge;
 import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.repository.DemandeCongeRepository;
@@ -155,5 +156,18 @@ public class DemandeCongeController {
         DemandeStatsDTO stats = demandeCongeService.getUserDemandesStats(Long.valueOf(user.getId()));
         return ResponseEntity.ok(stats);
     }
+
+
+
+
+    @PatchMapping("/{id}/statut")
+    public ResponseEntity<Void> updateStatutDemande(
+            @PathVariable Long id,
+            @RequestBody UpdateStatutDTO updateStatutDTO) {
+
+        demandeCongeService.updateStatutDemande(id, updateStatutDTO.getStatut(), updateStatutDTO.getMotifRefus());
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
