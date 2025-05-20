@@ -299,7 +299,29 @@ public class AuthenticationService {
         return stats;
     }
 
+//change de mot de passe
 
+    public void changePassword(String username, String currentPassword, String newPassword) {
+        User user = repository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Vérification du mot de passe actuel
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        // Validation du nouveau mot de passe
+        if (newPassword == null || newPassword.length() < 8) {
+            throw new RuntimeException("New password must be at least 8 characters");
+        }
+
+        // Mise à jour du mot de passe
+        user.setPassword(passwordEncoder.encode(newPassword));
+        repository.save(user);
+
+        // Révoquer tous les tokens
+        revokeAllTokenByUser(user);
+    }
 }
 
 
