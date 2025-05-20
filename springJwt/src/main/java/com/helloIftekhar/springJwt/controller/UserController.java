@@ -95,8 +95,6 @@ public class UserController {
     }
 
 
-
-
     @PutMapping("/{username}")
     public ResponseEntity<User> updateUser(@PathVariable String username, @RequestBody User user) {
         // Vérifier que l'username dans le path correspond à l'username dans le body
@@ -105,7 +103,6 @@ public class UserController {
         }
         return ResponseEntity.ok(authenticationService.updateUser(user));
     }
-
 
 
     @PutMapping("/update/{username}")
@@ -124,7 +121,6 @@ public class UserController {
 
         return ResponseEntity.ok(DtoMapper.convertToUserDTO(savedUser));
     }
-
 
 
     @DeleteMapping("/{username}")
@@ -149,10 +145,24 @@ public class UserController {
         Map<String, Object> stats = authenticationService.getUserStatistics();
         return ResponseEntity.ok(stats);
     }
-    // developé par chef service
 
 
 
 
-
+    //change mot de passe
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(
+            @RequestBody Map<String, String> request
+    ) {
+        try {
+            authenticationService.changePassword(
+                    SecurityContextHolder.getContext().getAuthentication().getName(),
+                    request.get("currentPassword"),
+                    request.get("newPassword")
+            );
+            return ResponseEntity.ok().body(Map.of("message", "Password changed successfully"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
 }

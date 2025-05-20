@@ -354,7 +354,7 @@
         const modalMessage = document.getElementById('modalMessage');
         const confirmActionBtn = document.getElementById('confirmActionBtn');
         const cancelActionBtn = document.getElementById('cancelActionBtn');
-
+        
         const rejectReasonModal = document.getElementById('rejectReasonModal');
         const confirmRejectBtn = document.getElementById('confirmRejectBtn');
         const cancelRejectBtn = document.getElementById('cancelRejectBtn');
@@ -561,8 +561,7 @@
             }
 
             rejectReasonModal.classList.add('hidden');
-
-                       try {
+                try {
                 const response = await fetch(`http://localhost:8080/api/demandes-conge/${currentDemandeId}/statut`, {
                     method: 'PATCH',
                     headers: {

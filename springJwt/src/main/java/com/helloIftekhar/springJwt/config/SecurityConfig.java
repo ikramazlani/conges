@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/login/**", "/register/**", "/refresh_token/**")
                         .permitAll()
+                        .requestMatchers("/api/users/change-password").authenticated()
                         .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/users/me").authenticated()
                         .requestMatchers("/api/users/**").authenticated()
