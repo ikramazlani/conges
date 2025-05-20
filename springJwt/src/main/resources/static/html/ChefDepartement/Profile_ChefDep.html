@@ -193,7 +193,7 @@
                         Gestion des Services
                     </a>
 
-                    <a href="leave-request-chef.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <a href="leave-requests.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <i class="fas fa-file-alt text-gray-500 group-hover:text-gray-600 mr-3"></i>
                         Demandes de Congés
                     </a>
@@ -629,48 +629,62 @@
 
         // Password form submission
         passwordForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    e.preventDefault();
 
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (newPassword !== confirmPassword) {
-                showAlert('Les nouveaux mots de passe ne correspondent pas', 'error');
-                return;
-            }
-
-            if (newPassword.length < 8) {
-                showAlert('Le mot de passe doit contenir au moins 8 caractères', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch('http://localhost:8080/api/users/change-password', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        oldPassword: currentPassword,
-                        newPassword: newPassword
-                    })
-                });
-
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.message || 'Erreur lors du changement de mot de passe');
-                }
-
-                passwordModal.classList.add('hidden');
-                passwordForm.reset();
-                showAlert('Mot de passe modifié avec succès!', 'success');
-            } catch (err) {
-                console.error(err);
-                showAlert(`Erreur: ${err.message}`, 'error');
-            }
+    try {
+        const response = await fetch('http://localhost:8080/api/users/change-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                currentPassword: document.getElementById('currentPassword').value,
+                newPassword: document.getElementById('newPassword').value
+            })
         });
+
+        // Vérifiez d'abord si la réponse est OK
+        if (!response.ok) {
+            // Essayez de lire le message d'erreur
+            let errorMsg = 'Erreur lors du changement de mot de passe';
+            try {
+                const errorData = await response.json();
+                errorMsg = errorData.error || errorData.message || errorMsg;
+            } catch (e) {
+                // Si le parsing JSON échoue, utilisez le texte brut
+                errorMsg = await response.text() || errorMsg;
+            }
+            throw new Error(errorMsg);
+        }
+
+        // Essayez de parser la réponse JSON seulement si le contenu existe
+        let result = { message: 'Mot de passe modifié avec succès' };
+        try {
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                result = await response.json();
+            }
+        } catch (e) {
+            console.warn('La réponse ne contient pas de JSON valide');
+        }
+
+        passwordModal.classList.add('hidden');
+        passwordForm.reset();
+        showAlert(result.message, 'success');
+
+        // Déconnexion forcée après changement de mot de passe
+        setTimeout(() => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = '../user/index.html';
+        }, 2000);
+
+    } catch (err) {
+        console.error('Erreur:', err);
+        showAlert(`Erreur: ${err.message}`, 'error');
+    }
+});
 
         // Helper Functions
         function displayProfile(user) {
@@ -759,6 +773,62 @@
             }
         }
     });
+
+
+passwordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    // Validation côté client
+    if (newPassword !== confirmPassword) {
+        showAlert("Les nouveaux mots de passe ne correspondent pas", "error");
+        return;
+    }
+
+    if (newPassword.length < 8) {
+        showAlert("Le nouveau mot de passe doit contenir au moins 8 caractères", "error");
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:8080/api/users/change-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Erreur lors du changement de mot de passe");
+        }
+
+        const result = await response.json();
+        passwordModal.classList.add('hidden');
+        passwordForm.reset();
+        showAlert(result.message || "Mot de passe modifié avec succès", "success");
+
+        // Déconnexion forcée après changement de mot de passe
+        setTimeout(() => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = '../user/index.html';
+        }, 2000);
+
+    } catch (err) {
+        console.error('Erreur:', err);
+        showAlert(`Erreur: ${err.message}`, "error");
+    }
+});
+
 </script>
 </body>
 </html>

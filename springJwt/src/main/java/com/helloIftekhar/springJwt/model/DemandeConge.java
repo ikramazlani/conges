@@ -1,9 +1,12 @@
 package com.helloIftekhar.springJwt.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 
+
+@Data
 @Entity
 @Table(name = "demande_conge")
 public class DemandeConge {
@@ -37,6 +40,9 @@ public class DemandeConge {
     @Column(name = "remplacer_par", columnDefinition = "VARCHAR(255) DEFAULT 'CCCC'")
     private String remplacerPar = "CCCC";
 
+    @Column(name = "motif_refus", nullable = true)
+    private String motifRefus;
+
     @Lob
     @Column(name = "document_pdf", nullable = true) // PDF optionnel
     private byte[] documentPdf;
@@ -49,7 +55,7 @@ public class DemandeConge {
     }
 
     public DemandeConge(Long idEmployee, Date dateCreation, Date dateDebut, Date dateFin,
-                        String motif, String statut, int duree, String remplacerPar) {
+                        String motif, String statut, int duree, String remplacerPar, String motifRefus) {
         this.idEmployee = idEmployee;
         this.dateCreation = dateCreation;
         this.dateDebut = dateDebut;
@@ -58,6 +64,7 @@ public class DemandeConge {
         this.statut = statut;
         this.duree = duree;
         this.remplacerPar = remplacerPar;
+        this.motifRefus = motifRefus;
     }
 
     // Getters et Setters
