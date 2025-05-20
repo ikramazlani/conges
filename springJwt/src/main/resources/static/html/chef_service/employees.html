@@ -74,10 +74,10 @@
                     <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
                         <span class="sr-only">Ouvrir le menu utilisateur</span>
                         <div class="flex items-center">
-                            <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
-                                A
+                            <div class="h-8 w-8 rounded-full bg-primary-600 flex items-center justify-center text-white">
+                                <i class="fas fa-user"></i>
                             </div>
-                            <span class="ml-2 text-gray-700">Admin Utilisateur</span>
+                            <span class="ml-2 text-gray-700">Chef de Service</span>
                             <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
                             </svg>
@@ -390,7 +390,7 @@ async function loadUsers() {
                         ${user.serviceName || 'Non assigné'}
                      </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="user-details.html?userId=${user.id}" class="text-primary-600 hover:text-primary-900">
+                        <a href="user-details.html?username=${user.username}" class="text-primary-600 hover:text-primary-900">
                             <i class="fas fa-eye"></i>
                         </a>
                     </td>
@@ -468,6 +468,36 @@ async function loadUsers() {
 
     // Initialisation
     document.addEventListener('DOMContentLoaded', init);
+
+
+    // Logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('userRole');
+        window.location.href = '../user/index.html';
+    });
+
+    // User menu toggle
+    const userMenuButton = document.getElementById('userMenuBtn');
+    const userMenu = document.getElementById('userMenu');
+
+    if (userMenuButton && userMenu) {
+        userMenuButton.addEventListener('click', () => {
+            const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+            userMenuButton.setAttribute('aria-expanded', !expanded);
+            userMenu.classList.toggle('hidden');
+        });
+
+        // Close the menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                userMenuButton.setAttribute('aria-expanded', 'false');
+                userMenu.classList.add('hidden');
+            }
+        });
+    }
+
 </script>
 </body>
 </html>
