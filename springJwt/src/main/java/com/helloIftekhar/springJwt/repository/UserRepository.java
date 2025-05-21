@@ -45,11 +45,17 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.service.id = :serviceId")
     Long countByServiceId(@Param("serviceId") Long serviceId);
+
     // developer par  chef service
     @Query("SELECT u FROM User u WHERE u.service.id = :serviceId AND u.service.departement.id = :departementId")
     List<User> findByServiceAndDepartement(
             @Param("serviceId") Long serviceId,
             @Param("departementId") Long departementId);
 
-}
+//reccupere chef serviice
 
+    // Correction dans UserRepository.java
+    @Query("SELECT u FROM User u WHERE u.departement.id = :departementId AND u.role = 'CHEF_SERVICE'")
+    List<User> findChefsServiceByDepartementId(@Param("departementId") Long departementId);
+
+}

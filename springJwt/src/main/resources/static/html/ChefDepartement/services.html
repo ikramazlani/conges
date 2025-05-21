@@ -58,6 +58,14 @@
             transform: translateY(-1px);
             box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
         }
+        .chef-service-item {
+            transition: all 0.2s ease;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+        }
+        .chef-service-item:hover {
+            background-color: #f1f5f9;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -209,6 +217,21 @@
                             </div>
                         </div>
 
+                        <!-- Chefs de Service Card -->
+                        <div id="chefsServiceCard" class="manager-card rounded-lg shadow-sm border border-gray-200 p-6">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                                    <i class="fas fa-users text-xl"></i>
+                                </div>
+                                <div class="ml-4 w-full">
+                                    <h3 class="text-lg font-medium text-gray-900">Chefs de Service</h3>
+                                    <div id="chefsServiceList" class="mt-3 space-y-3 max-h-60 overflow-y-auto pr-2">
+                                        <p class="text-sm text-gray-500">Chargement des chefs de service...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Service Details Card -->
                         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                             <div class="bg-indigo-600 text-white px-6 py-4">
@@ -284,7 +307,8 @@
         currentService: null,
         chart: null,
         currentDepartmentId: null,
-        departmentChef: null
+        departmentChef: null,
+        chefsService: []
     };
 
     // Auth Service
@@ -367,6 +391,21 @@
             }
         },
 
+        fetchChefsServiceByDepartement: async (departmentId) => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/users/departement/${departmentId}/chefs-service`, {
+                    headers: {
+                        'Authorization': `Bearer ${AuthService.getToken()}`
+                    }
+                });
+                if (!response.ok) return [];
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching chefs service:', error);
+                return [];
+            }
+        },
+
         assignServiceChef: async (serviceId, username) => {
             try {
                 const response = await fetch(`http://localhost:8080/api/services/${serviceId}/assign-chef/${username}`, {
@@ -412,6 +451,10 @@
                     document.getElementById('deptManagerPhone').textContent = AppState.departmentChef.phone || 'Non spécifié';
                 }
 
+                // Fetch chefs de service
+                AppState.chefsService = await ApiService.fetchChefsServiceByDepartement(AppState.currentDepartmentId);
+                UIService.renderChefsService(AppState.chefsService);
+
                 // Fetch services
                 const services = await ApiService.fetchServices(AppState.currentDepartmentId);
 
@@ -439,6 +482,29 @@
             }
         },
 
+        renderChefsService: (chefs) => {
+            const chefsList = document.getElementById('chefsServiceList');
+
+            if (chefs.length === 0) {
+                chefsList.innerHTML = '<p class="text-sm text-gray-500">Aucun chef de service dans ce département</p>';
+                return;
+            }
+
+            chefsList.innerHTML = chefs.map(chef => `
+                <div class="chef-service-item">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="font-medium text-sm">${chef.firstName || ''} ${chef.lastName || ''}</span>
+                            <p class="text-gray-500 text-xs truncate">${chef.email || ''}</p>
+                        </div>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded whitespace-nowrap">
+                            ${chef.service?.nomService || 'Service non spécifié'}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        },
+
         showError: (message) => {
             const errorElement = document.createElement('div');
             errorElement.className = 'bg-red-50 border-l-4 border-red-500 p-4 mb-6';
@@ -453,6 +519,23 @@
                 </div>
             `;
             document.querySelector('main').prepend(errorElement);
+        },
+
+        showSuccess: (message) => {
+            const successElement = document.createElement('div');
+            successElement.className = 'bg-green-50 border-l-4 border-green-500 p-4 mb-6';
+            successElement.innerHTML = `
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-green-700">${message}</p>
+                    </div>
+                </div>
+            `;
+            document.querySelector('main').prepend(successElement);
+            setTimeout(() => successElement.remove(), 3000);
         },
 
         setupUserMenu: () => {
@@ -593,6 +676,10 @@
                         ServiceDetailsUI.render(service, updatedManager);
                         document.getElementById('assignChefInput').value = '';
                         UIService.showSuccess("Chef de service assigné avec succès");
+
+                        // Refresh chefs service list
+                        AppState.chefsService = await ApiService.fetchChefsServiceByDepartement(AppState.currentDepartmentId);
+                        UIService.renderChefsService(AppState.chefsService);
                     } catch (error) {
                         UIService.showError("Erreur lors de l'assignation: " + error.message);
                     }

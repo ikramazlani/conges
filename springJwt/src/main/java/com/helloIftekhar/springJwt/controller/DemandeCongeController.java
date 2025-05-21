@@ -13,6 +13,7 @@ import com.helloIftekhar.springJwt.service.DemandeCongeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.AccessType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -169,5 +170,17 @@ public class DemandeCongeController {
         return ResponseEntity.noContent().build();
     }
 
+
+
+    // ========== NOUVELLES FONCTIONNALITÉS ==========
+
+    @GetMapping("/departement/{departementId}/chefs-demandes/stats")
+    @PreAuthorize("hasRole('CHEF_DEPARTEMENT')")
+    public ResponseEntity<DemandeStatsDTO> getStatsDemandesChefsByDepartement(
+            @PathVariable Long departementId) {
+
+        DemandeStatsDTO stats = demandeCongeService.getStatsDemandesChefsByDepartement(departementId);
+        return ResponseEntity.ok(stats);
+    }
 
 }

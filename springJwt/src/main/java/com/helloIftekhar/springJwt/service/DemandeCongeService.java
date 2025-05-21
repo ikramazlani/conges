@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,6 +187,91 @@ public class DemandeCongeService {
         String finalMotifRefus = "REFUSE".equals(statut) ? motifRefus : null;
 
         demandeCongeRepository.updateStatutAndMotifRefus(id, statut, finalMotifRefus);
+    }
+
+
+
+
+
+
+
+
+
+
+
+// ========== NOUVELLES FONCTIONNALITÉS ==========
+
+    // Ajoutez cette méthode pour récupérer les demandes des chefs de service
+    public List<DemandeCongeResponseDTO> getDemandesChefsByDepartement(Long departementId) {
+        // 1. Récupérer tous les chefs de service du département
+        List<User> chefs = userRepository.findChefsServiceByDepartementId(departementId);
+
+        if (chefs.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // 2. Récupérer leurs IDs
+        List<Long> chefsIds = chefs.stream()
+                .map(User::getId)
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+
+        // 3. Récupérer les demandes de ces chefs
+        List<DemandeConge> demandes = demandeCongeRepository.findByIdEmployeeIn(chefsIds);
+
+        // 4. Créer un map pour retrouver facilement les chefs par leur ID
+        Map<Long, User> chefsMap = chefs.stream()
+                .collect(Collectors.toMap(
+                        chef -> Long.valueOf(chef.getId()),
+                        chef -> chef
+                ));
+
+        // 5. Convertir en DTO et enrichir avec les infos utilisateur
+        return demandes.stream()
+                .map(demande -> {
+                    DemandeCongeResponseDTO dto = new DemandeCongeResponseDTO();
+                    dto.setId(demande.getId());
+                    dto.setIdEmployee(demande.getIdEmployee());
+                    dto.setDateCreation(demande.getDateCreation());
+                    dto.setDateDebut(demande.getDateDebut());
+                    dto.setDateFin(demande.getDateFin());
+                    dto.setMotif(demande.getMotif());
+                    dto.setStatut(demande.getStatut());
+                    dto.setDuree(demande.getDuree());
+                    dto.setRemplacerPar(demande.getRemplacerPar());
+                    dto.setMotifRefus(demande.getMotifRefus());
+
+                    User chef = chefsMap.get(demande.getIdEmployee());
+                    if (chef != null) {
+                        dto.setEmployeeName(chef.getFirstName() + " " + chef.getLastName());
+                        dto.setDepartement(chef.getDepartement() != null ?
+                                chef.getDepartement().getNomDepartement() : "Non spécifié");
+                        dto.setServiceName(chef.getService() != null ?
+                                chef.getService().getNomService() : "Non spécifié");
+                        dto.setRole(chef.getRole());
+                    }
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // Ajoutez cette méthode pour les statistiques
+    public DemandeStatsDTO getStatsDemandesChefsByDepartement(Long departementId) {
+        List<DemandeCongeResponseDTO> demandes = getDemandesChefsByDepartement(departementId);
+
+        long approuvees = demandes.stream()
+                .filter(d -> "APPROUVE".equals(d.getStatut()))
+                .count();
+
+        long refusees = demandes.stream()
+                .filter(d -> "REFUSE".equals(d.getStatut()))
+                .count();
+
+        long enAttente = demandes.stream()
+                .filter(d -> "EN_ATTENTE".equals(d.getStatut()))
+                .count();
+
+        return new DemandeStatsDTO(approuvees, refusees, enAttente);
     }
 
 

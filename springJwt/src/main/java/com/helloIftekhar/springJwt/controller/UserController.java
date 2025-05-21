@@ -3,6 +3,7 @@ package com.helloIftekhar.springJwt.controller;
 import com.helloIftekhar.springJwt.dto.DtoMapper;
 import com.helloIftekhar.springJwt.dto.UserDTO;
 import com.helloIftekhar.springJwt.model.User;
+import com.helloIftekhar.springJwt.repository.UserRepository;
 import com.helloIftekhar.springJwt.service.AuthenticationService;
 import com.helloIftekhar.springJwt.service.ServiceDepartementService;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,9 +22,11 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final AuthenticationService authenticationService;
+    private final UserRepository userRepository;
 
-    public UserController(AuthenticationService authenticationService) {
+    public UserController(AuthenticationService authenticationService, UserRepository userRepository) {
         this.authenticationService = authenticationService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/me")
@@ -164,8 +168,18 @@ public class UserController {
     }
 
 
+//reccupere chef serviice
 
-
-
-
+    @GetMapping("/departement/{departementId}/chefs-service")
+    @PreAuthorize("hasRole('CHEF_DEPARTEMENT')")
+    public ResponseEntity<List<UserDTO>> getChefsServiceByDepartement(@PathVariable Long departementId) {
+        List<User> chefs = userRepository.findChefsServiceByDepartementId(departementId);
+        if (chefs.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+        return ResponseEntity.ok(chefs.stream()
+                .map(DtoMapper::convertToUserDTO)
+                .collect(Collectors.toList()));
+    }
 }
+

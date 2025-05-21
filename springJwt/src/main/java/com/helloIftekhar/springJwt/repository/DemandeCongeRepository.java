@@ -97,5 +97,13 @@ public interface DemandeCongeRepository extends JpaRepository<DemandeConge, Long
                       @Param("motif") String motif,
                       @Param("duree") int duree,
                       @Param("remplacerPar") String remplacerPar);
+
+
+/// ////////////////////////////
+@Query("SELECT d FROM DemandeConge d WHERE d.idEmployee IN :employeeIds ORDER BY d.dateCreation DESC")
+List<DemandeConge> findByIdEmployeeIn(@Param("employeeIds") List<Long> employeeIds);
+
+
+
 }
 
