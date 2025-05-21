@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Validation des Demandes de Congé</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .content-container {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .status-pending {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        .status-approved {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+        .status-rejected {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+        .status-processing {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        .tab-active {
+            border-bottom: 2px solid #0ea5e9;
+            color: #0ea5e9;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans h-full">
+
+<!-- Top Navigation -->
+<nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex">
+                <div class="flex-shrink-0 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                        <line x1="16" x2="16" y1="2" y2="6"></line>
+                        <line x1="8" x2="8" y1="2" y2="6"></line>
+                        <line x1="3" x2="21" y1="10" y2="10"></line>
+                        <path d="m9 16 2 2 4-4"/>
+                    </svg>
+                    <span class="text-xl font-semibold text-gray-900">Gestion des congés</span>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <div class="relative">
+                    <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
+                        <span class="sr-only">Ouvrir le menu utilisateur</span>
+                        <div class="flex items-center">
+                            <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                A
+                            </div>
+                            <span class="ml-2 text-gray-700">Admin Utilisateur</span>
+                            <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </button>
+                    <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu">
+                        <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Votre profil</a>
+                        <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Déconnexion</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="main-container">
+    <!-- Sidebar -->
+    <!-- Sidebar - Utilisation du même design que dans la page de demande de congé -->
+    <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
+        <div class="h-full flex flex-col">
+            <nav class="flex-1 py-4 px-2 space-y-1">
+                <a href="Dash_ChefDep.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <i class="fas fa-tachometer-alt text-primary-700 mr-3"></i>
+                    Tableau de bord
+                </a>
+
+                <a href="services.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <i class="fas fa-cogs text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                    Gestion des Services
+                </a>
+
+                <!-- Nouvelle entrée pour la gestion des demandes -->
+                <a href="leave-requests-chef-service.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <i class="fas fa-file-signature text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                    Demandes Chef Service
+                </a>
+
+                <a href="leave-request-chef.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <i class="fas fa-file-alt text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                    Demander un congé
+                </a>
+
+                <a href="calendarChefDep.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <i class="fas fa-calendar-alt text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                    Calendrier
+                </a>
+
+                <a href="historiqueChef.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <i class="fas fa-history text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                    Historique
+                </a>
+
+                <a href="Profile_ChefDep.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <i class="fas fa-id-card text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                    Mon Profil
+                </a>
+            </nav>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="content-container">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-bold text-gray-900">Validation des demandes de congé</h1>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                        <span class="text-sm text-gray-600">En attente</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+                        <span class="text-sm text-gray-600">En traitement</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                        <span class="text-sm text-gray-600">Approuvé</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                        <span class="text-sm text-gray-600">Refusé</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onglets pour basculer entre les vues -->
+            <div class="mb-6 border-b border-gray-200">
+                <div class="flex space-x-8">
+                    <button id="tabChefsService" class="tab-active py-4 px-1 text-sm font-medium">
+                        Chefs de service
+                    </button>
+                    <button id="tabDemandes" class="py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700">
+                        Demandes de congé
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vue des chefs de service -->
+            <div id="chefsServiceView" class="bg-white shadow rounded-lg overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-medium text-gray-900">Chefs de service du département</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Demandes en attente</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="chefsServiceTable" class="bg-white divide-y divide-gray-200">
+                        <!-- Les données seront chargées ici via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="loadingChefs" class="p-8 text-center">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary-500 border-t-transparent"></div>
+                    <p class="mt-2 text-gray-600">Chargement des chefs de service...</p>
+                </div>
+                <div id="noChefsResults" class="p-8 text-center hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Aucun chef de service trouvé</h3>
+                    <p class="mt-1 text-sm text-gray-500">Il n'y a actuellement aucun chef de service dans ce département.</p>
+                </div>
+            </div>
+
+            <!-- Vue des demandes de congé (cachée par défaut) -->
+            <div id="demandesView" class="bg-white shadow rounded-lg overflow-hidden hidden">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-lg font-medium text-gray-900">Demandes en attente de validation</h2>
+                        <div class="relative">
+                            <select id="filterStatus" class="appearance-none bg-white border border-gray-300 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                                <option value="all">Tous les statuts</option>
+                                <option value="EN_ATTENTE" selected>En attente</option>
+                                <option value="EN_COURS_DE_TRAITEMENT">En traitement</option>
+                                <option value="APPROUVE">Approuvé</option>
+                                <option value="REFUSE">Refusé</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employé</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Période</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durée</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Motif</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Remplaçant</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="demandesTable" class="bg-white divide-y divide-gray-200">
+                        <!-- Les données seront chargées ici via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="loading" class="p-8 text-center">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary-500 border-t-transparent"></div>
+                    <p class="mt-2 text-gray-600">Chargement des demandes...</p>
+                </div>
+                <div id="noResults" class="p-8 text-center hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Aucune demande trouvée</h3>
+                    <p class="mt-1 text-sm text-gray-500">Il n'y a actuellement aucune demande correspondant à vos critères.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation -->
+<div id="confirmationModal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <div>
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+                    <svg class="h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div class="mt-3 text-center sm:mt-5">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTitle">Confirmer l'action</h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500" id="modalMessage">Êtes-vous sûr de vouloir effectuer cette action ?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                <button type="button" id="confirmActionBtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:col-start-2 sm:text-sm">
+                    Confirmer
+                </button>
+                <button type="button" id="cancelActionBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:col-start-1 sm:text-sm">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de motif de refus -->
+<div id="rejectReasonModal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <div>
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                    <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div class="mt-3 text-center sm:mt-5">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="rejectModalTitle">Motif du refus</h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">Veuillez indiquer le motif du refus de cette demande de congé.</p>
+                        <textarea id="rejectReason" rows="4" class="mt-2 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" placeholder="Entrez le motif du refus..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                <button type="button" id="confirmRejectBtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:col-start-2 sm:text-sm">
+                    Confirmer le refus
+                </button>
+                <button type="button" id="cancelRejectBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:col-start-1 sm:text-sm">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour voir les demandes d'un chef de service -->
+<div id="chefDemandesModal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-primary-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <svg class="h-6 w-6 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="chefModalTitle">Demandes de congé du chef de service</h3>
+                        <div class="mt-2">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Période</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durée</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Motif</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="chefDemandesTable" class="bg-white divide-y divide-gray-200">
+                                    <!-- Les données seront chargées ici via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="loadingChefDemandes" class="p-4 text-center">
+                                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary-500 border-t-transparent"></div>
+                                <p class="mt-2 text-gray-600">Chargement des demandes...</p>
+                            </div>
+                            <div id="noChefDemandesResults" class="p-4 text-center hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <h3 class="mt-2 text-sm font-medium text-gray-900">Aucune demande trouvée</h3>
+                                <p class="mt-1 text-sm text-gray-500">Ce chef de service n'a actuellement aucune demande de congé.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button type="button" id="closeChefModalBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'index.html';
+
+        // Gestion du menu utilisateur
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userMenu = document.getElementById('userMenu');
+
+        userMenuBtn.addEventListener('click', () => {
+            const isExpanded = userMenuBtn.getAttribute('aria-expanded') === 'true';
+            userMenuBtn.setAttribute('aria-expanded', !isExpanded);
+            userMenu.classList.toggle('hidden');
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = 'index.html';
+        });
+
+        // Gestion des onglets
+        const tabChefsService = document.getElementById('tabChefsService');
+        const tabDemandes = document.getElementById('tabDemandes');
+        const chefsServiceView = document.getElementById('chefsServiceView');
+        const demandesView = document.getElementById('demandesView');
+
+        tabChefsService.addEventListener('click', () => {
+            tabChefsService.classList.add('tab-active');
+            tabChefsService.classList.remove('text-gray-500');
+            tabDemandes.classList.remove('tab-active');
+            tabDemandes.classList.add('text-gray-500');
+            chefsServiceView.classList.remove('hidden');
+            demandesView.classList.add('hidden');
+        });
+
+        tabDemandes.addEventListener('click', () => {
+            tabDemandes.classList.add('tab-active');
+            tabDemandes.classList.remove('text-gray-500');
+            tabChefsService.classList.remove('tab-active');
+            tabChefsService.classList.add('text-gray-500');
+            demandesView.classList.remove('hidden');
+            chefsServiceView.classList.add('hidden');
+        });
+
+        // Variables pour stocker les données
+        let currentUser = null;
+        let demandes = [];
+        let chefsService = [];
+        let currentDemandeId = null;
+        let currentAction = null;
+        let currentChefId = null;
+
+        // Éléments du DOM
+        const demandesTable = document.getElementById('demandesTable');
+        const chefsServiceTable = document.getElementById('chefsServiceTable');
+        const chefDemandesTable = document.getElementById('chefDemandesTable');
+        const loadingElement = document.getElementById('loading');
+        const noResultsElement = document.getElementById('noResults');
+        const loadingChefsElement = document.getElementById('loadingChefs');
+        const noChefsResultsElement = document.getElementById('noChefsResults');
+        const loadingChefDemandesElement = document.getElementById('loadingChefDemandes');
+        const noChefDemandesResultsElement = document.getElementById('noChefDemandesResults');
+        const filterStatus = document.getElementById('filterStatus');
+
+        // Éléments des modals
+        const confirmationModal = document.getElementById('confirmationModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const confirmActionBtn = document.getElementById('confirmActionBtn');
+        const cancelActionBtn = document.getElementById('cancelActionBtn');
+        
+        const rejectReasonModal = document.getElementById('rejectReasonModal');
+        const confirmRejectBtn = document.getElementById('confirmRejectBtn');
+        const cancelRejectBtn = document.getElementById('cancelRejectBtn');
+        
+        const chefDemandesModal = document.getElementById('chefDemandesModal');
+        const chefModalTitle = document.getElementById('chefModalTitle');
+        const closeChefModalBtn = document.getElementById('closeChefModalBtn');
+
+        // Charger les données de l'utilisateur
+        try {
+            const userResponse = await fetch('http://localhost:8080/api/users/me', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!userResponse.ok) throw new Error('Erreur lors du chargement des informations utilisateur');
+
+            currentUser = await userResponse.json();
+        } catch (err) {
+            console.error(err);
+            showError("Erreur lors du chargement des informations utilisateur");
+            return;
+        }
+
+        // Charger les chefs de service du département
+        async function loadChefsService() {
+            try {
+                loadingChefsElement.classList.remove('hidden');
+                noChefsResultsElement.classList.add('hidden');
+                chefsServiceTable.innerHTML = '';
+
+                const response = await fetch(`http://localhost:8080/api/users/departement/${currentUser.departement.id}/chefs-service`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error('Erreur lors du chargement des chefs de service');
+
+                chefsService = await response.json();
+
+                renderChefsService();
+            } catch (err) {
+                console.error(err);
+                showError("Erreur lors du chargement des chefs de service");
+            } finally {
+                loadingChefsElement.classList.add('hidden');
+            }
+        }
+
+        // Afficher les chefs de service dans le tableau
+        function renderChefsService() {
+            if (chefsService.length === 0) {
+                noChefsResultsElement.classList.remove('hidden');
+                chefsServiceTable.innerHTML = '';
+                return;
+            }
+
+            noChefsResultsElement.classList.add('hidden');
+
+            chefsServiceTable.innerHTML = chefsService.map(chef => {
+                // Compter les demandes en attente pour ce chef
+                const pendingDemandes = demandes.filter(d => 
+                    d.employeeId === chef.id && 
+                    d.statut === 'EN_ATTENTE'
+                ).length;
+
+                return `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-800 font-medium">
+                                    ${chef.nom.charAt(0)}${chef.prenom.charAt(0)}
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">${chef.prenom} ${chef.nom}</div>
+                                    <div class="text-sm text-gray-500">${chef.email}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${chef.serviceName}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${chef.email}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${pendingDemandes > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}">
+                                ${pendingDemandes} en attente
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="showChefDemandesModal(${chef.id}, '${chef.prenom} ${chef.nom}')" class="text-primary-600 hover:text-primary-900">
+                                <i class="fas fa-eye mr-1"></i> Voir demandes
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Charger les demandes d'un chef de service spécifique
+        window.showChefDemandesModal = async function(chefId, chefName) {
+            currentChefId = chefId;
+            chefModalTitle.textContent = `Demandes de congé de ${chefName}`;
+            chefDemandesModal.classList.remove('hidden');
+            
+            try {
+                loadingChefDemandesElement.classList.remove('hidden');
+                noChefDemandesResultsElement.classList.add('hidden');
+                chefDemandesTable.innerHTML = '';
+
+                const response = await fetch(`http://localhost:8080/api/demandes-conge/employee/${chefId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error('Erreur lors du chargement des demandes du chef');
+
+                const chefDemandes = await response.json();
+                renderChefDemandes(chefDemandes);
+            } catch (err) {
+                console.error(err);
+                showError("Erreur lors du chargement des demandes du chef");
+            } finally {
+                loadingChefDemandesElement.classList.add('hidden');
+            }
+        };
+
+        // Afficher les demandes d'un chef dans le modal
+        function renderChefDemandes(demandes) {
+            if (demandes.length === 0) {
+                noChefDemandesResultsElement.classList.remove('hidden');
+                chefDemandesTable.innerHTML = '';
+                return;
+            }
+
+            noChefDemandesResultsElement.classList.add('hidden');
+
+            chefDemandesTable.innerHTML = demandes.map(demande => {
+                const dateDebut = new Date(demande.dateDebut).toLocaleDateString('fr-FR');
+                const dateFin = new Date(demande.dateFin).toLocaleDateString('fr-FR');
+
+                let statusClass = '';
+                let statusText = '';
+
+                switch(demande.statut) {
+                    case 'EN_ATTENTE':
+                        statusClass = 'status-pending';
+                        statusText = 'En attente';
+                        break;
+                    case 'EN_COURS_DE_TRAITEMENT':
+                        statusClass = 'status-processing';
+                        statusText = 'En traitement';
+                        break;
+                    case 'APPROUVE':
+                        statusClass = 'status-approved';
+                        statusText = 'Approuvé';
+                        break;
+                    case 'REFUSE':
+                        statusClass = 'status-rejected';
+                        statusText = 'Refusé';
+                        break;
+                    default:
+                        statusClass = 'bg-gray-100 text-gray-800';
+                        statusText = demande.statut;
+                }
+
+                return `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${dateDebut} - ${dateFin}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${demande.duree} jour(s)
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate" title="${demande.motif || 'Non spécifié'}${demande.motifRefus ? ` (Motif refus: ${demande.motifRefus})` : ''}">
+                            ${demande.motif || 'Non spécifié'}
+                            ${demande.motifRefus ? `<br><span class="text-red-500">Motif refus: ${demande.motifRefus}</span>` : ''}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                                ${statusText}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Fermer le modal des demandes du chef
+        closeChefModalBtn.addEventListener('click', () => {
+            chefDemandesModal.classList.add('hidden');
+        });
+
+        // Charger les demandes
+        async function loadDemandes() {
+            try {
+                loadingElement.classList.remove('hidden');
+                noResultsElement.classList.add('hidden');
+                demandesTable.innerHTML = '';
+
+                const response = await fetch('http://localhost:8080/api/demandes-conge/all-with-employee-info', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error('Erreur lors du chargement des demandes');
+
+                const allDemandes = await response.json();
+
+                // Filtrer les demandes: seulement celles du même département et service que l'utilisateur
+                demandes = allDemandes.filter(demande =>
+                    demande.departement === currentUser.departement.nomDepartement &&
+                    demande.serviceName === currentUser.serviceName
+                );
+
+                renderDemandes();
+            } catch (err) {
+                console.error(err);
+                showError("Erreur lors du chargement des demandes");
+            } finally {
+                loadingElement.classList.add('hidden');
+            }
+        }
+
+        // Afficher les demandes dans le tableau
+        function renderDemandes() {
+            const statusFilter = filterStatus.value;
+            let filteredDemandes = demandes;
+
+            if (statusFilter !== 'all') {
+                filteredDemandes = demandes.filter(demande => demande.statut === statusFilter);
+            }
+
+            if (filteredDemandes.length === 0) {
+                noResultsElement.classList.remove('hidden');
+                demandesTable.innerHTML = '';
+                return;
+            }
+
+            noResultsElement.classList.add('hidden');
+
+            demandesTable.innerHTML = filteredDemandes.map(demande => {
+                const dateDebut = new Date(demande.dateDebut).toLocaleDateString('fr-FR');
+                const dateFin = new Date(demande.dateFin).toLocaleDateString('fr-FR');
+
+                let statusClass = '';
+                let statusText = '';
+
+                switch(demande.statut) {
+                    case 'EN_ATTENTE':
+                        statusClass = 'status-pending';
+                        statusText = 'En attente';
+                        break;
+                    case 'EN_COURS_DE_TRAITEMENT':
+                        statusClass = 'status-processing';
+                        statusText = 'En traitement';
+                        break;
+                    case 'APPROUVE':
+                        statusClass = 'status-approved';
+                        statusText = 'Approuvé';
+                        break;
+                    case 'REFUSE':
+                        statusClass = 'status-rejected';
+                        statusText = 'Refusé';
+                        break;
+                    default:
+                        statusClass = 'bg-gray-100 text-gray-800';
+                        statusText = demande.statut;
+                }
+
+                const actions = demande.statut === 'EN_ATTENTE' ? `
+                    <button onclick="showConfirmationModal(${demande.id}, 'approve')" class="text-green-600 hover:text-green-800 mr-2">
+                        <i class="fas fa-check-circle"></i> Valider
+                    </button>
+                    <button onclick="showConfirmationModal(${demande.id}, 'reject')" class="text-red-600 hover:text-red-800">
+                        <i class="fas fa-times-circle"></i> Refuser
+                    </button>
+                ` : `
+                    <span class="text-gray-400">Action non disponible</span>
+                `;
+
+                return `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-800 font-medium">
+                                    ${demande.employeeName.charAt(0)}
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">${demande.employeeName}</div>
+                                    <div class="text-sm text-gray-500">${demande.departement}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${demande.serviceName}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${dateDebut} - ${dateFin}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${demande.duree} jour(s)
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate" title="${demande.motif || 'Non spécifié'}${demande.motifRefus ? ` (Motif refus: ${demande.motifRefus})` : ''}">
+                            ${demande.motif || 'Non spécifié'}
+                            ${demande.motifRefus ? `<br><span class="text-red-500">Motif refus: ${demande.motifRefus}</span>` : ''}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${demande.remplacerPar || 'Non spécifié'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                                ${statusText}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            ${actions}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Afficher le modal de confirmation ou de motif de refus
+        window.showConfirmationModal = function(demandeId, action) {
+            currentDemandeId = demandeId;
+            currentAction = action;
+            const demande = demandes.find(d => d.id === demandeId);
+            if (!demande) return;
+
+            if (action === 'approve') {
+                modalTitle.textContent = 'Confirmer la validation';
+                modalMessage.textContent = `Êtes-vous sûr de vouloir valider la demande de congé de ${demande.employeeName} du ${new Date(demande.dateDebut).toLocaleDateString('fr-FR')} au ${new Date(demande.dateFin).toLocaleDateString('fr-FR')} ?`;
+                confirmationModal.classList.remove('hidden');
+            } else {
+                // Pour le refus, on affiche le modal de motif
+                document.getElementById('rejectModalTitle').textContent = `Motif du refus pour ${demande.employeeName}`;
+                document.getElementById('rejectReason').value = '';
+                rejectReasonModal.classList.remove('hidden');
+            }
+        };
+
+        // Confirmer l'action de validation
+        confirmActionBtn.addEventListener('click', async () => {
+            confirmationModal.classList.add('hidden');
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/demandes-conge/${currentDemandeId}/statut`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ statut: 'EN_COURS_DE_TRAITEMENT' })
+                });
+
+                if (!response.ok) throw new Error('Erreur lors de la validation de la demande');
+
+                // Mettre à jour localement la demande
+                const updatedDemandeIndex = demandes.findIndex(d => d.id === currentDemandeId);
+                if (updatedDemandeIndex !== -1) {
+                    demandes[updatedDemandeIndex].statut = 'EN_COURS_DE_TRAITEMENT';
+                    renderDemandes();
+                }
+
+                showSuccess('La demande a été validée avec succès');
+            } catch (err) {
+                console.error(err);
+                showError('Erreur lors de la validation de la demande');
+            }
+        });
+
+        // Confirmer le refus avec motif
+        confirmRejectBtn.addEventListener('click', async () => {
+            const rejectReason = document.getElementById('rejectReason').value.trim();
+            if (!rejectReason) {
+                alert('Veuillez entrer un motif de refus');
+                return;
+            }
+
+            rejectReasonModal.classList.add('hidden');
+                try {
+                const response = await fetch(`http://localhost:8080/api/demandes-conge/${currentDemandeId}/statut`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        statut: 'REFUSE',
+                        motifRefus: rejectReason
+                    })
+                });
+
+                if (!response.ok) throw new Error('Erreur lors du refus de la demande');
+
+                // Mettre à jour localement la demande
+                const updatedDemandeIndex = demandes.findIndex(d => d.id === currentDemandeId);
+                if (updatedDemandeIndex !== -1) {
+                    demandes[updatedDemandeIndex].statut = 'REFUSE';
+                    demandes[updatedDemandeIndex].motifRefus = rejectReason;
+                    renderDemandes();
+                }
+
+                showSuccess('La demande a été refusée avec succès');
+            } catch (err) {
+                console.error(err);
+                showError('Erreur lors du refus de la demande');
+            }
+        });
+
+        // Annuler l'action dans le modal de confirmation
+        cancelActionBtn.addEventListener('click', () => {
+            confirmationModal.classList.add('hidden');
+        });
+
+        // Annuler le refus dans le modal de motif
+        cancelRejectBtn.addEventListener('click', () => {
+            rejectReasonModal.classList.add('hidden');
+        });
+
+        // Filtrer les demandes par statut
+        filterStatus.addEventListener('change', renderDemandes);
+
+        // Fonctions d'affichage des messages
+        function showSuccess(message) {
+            // Créer une notification de succès
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 z-50 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-lg';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <svg class="h-6 w-6 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>${message}</span>
+                </div>
+            `;
+            document.body.appendChild(notification);
+
+            // Supprimer la notification après 3 secondes
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function showError(message) {
+            // Créer une notification d'erreur
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 z-50 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-lg';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <svg class="h-6 w-6 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span>${message}</span>
+                </div>
+            `;
+            document.body.appendChild(notification);
+
+            // Supprimer la notification après 3 secondes
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Fermer les modals en cliquant à l'extérieur
+        window.addEventListener('click', (event) => {
+            if (event.target === confirmationModal) {
+                confirmationModal.classList.add('hidden');
+            }
+            if (event.target === rejectReasonModal) {
+                rejectReasonModal.classList.add('hidden');
+            }
+            if (event.target === chefDemandesModal) {
+                chefDemandesModal.classList.add('hidden');
+            }
+        });
+
+                // Fermer les modals avec la touche Escape
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                confirmationModal.classList.add('hidden');
+                rejectReasonModal.classList.add('hidden');
+                chefDemandesModal.classList.add('hidden');
+            }
+        });
+
+        // Charger initialement les données
+        loadDemandes();
+        loadChefsService();
+    });
+
+    // Fonctions globales accessibles depuis le HTML
+    window.showConfirmationModal = function(demandeId, action) {
+        // Cette fonction est déjà définie dans le scope principal
+        // Elle est rendue disponible globalement pour les événements onclick dans le HTML
+    };
+
+    window.showChefDemandesModal = function(chefId, chefName) {
+        // Cette fonction est déjà définie dans le scope principal
+        // Elle est rendue disponible globalement pour les événements onclick dans le HTML
+    };
+</script>
+</body>
+</html>
