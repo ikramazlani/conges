@@ -302,7 +302,7 @@
 
     // Chargement des utilisateurs
     // Modifiez la fonction loadUsers comme ceci :
-async function loadUsers() {
+    async function loadUsers() {
     try {
         // Récupérer l'utilisateur connecté
         const currentUserResponse = await fetch('http://localhost:8080/api/users/me', {
@@ -318,23 +318,23 @@ async function loadUsers() {
 
         // Filtrer selon le rôle de l'utilisateur
         if (currentUser.role === 'ADMIN' || currentUser.role === 'RH') {
-            // Les admins et RH voient tous les utilisateurs
-            state.allUsers = allUsers;
+            // Les admins et RH voient tous les utilisateurs sauf eux-mêmes
+            state.allUsers = allUsers.filter(user => user.id !== currentUser.id);
         } else if (currentUser.role === 'CHEF_DEPARTEMENT') {
-            // Les chefs de département voient les utilisateurs de leur département
+            // Les chefs de département voient les utilisateurs de leur département sauf eux-mêmes
             state.allUsers = allUsers.filter(user =>
-                user.departement?.id === currentUser.departement?.id
+                user.departement?.id === currentUser.departement?.id &&
+                user.id !== currentUser.id
             );
         } else if (currentUser.role === 'CHEF_SERVICE') {
-            // Les chefs de service voient les utilisateurs de leur service
+            // Les chefs de service voient les utilisateurs de leur service sauf eux-mêmes
             state.allUsers = allUsers.filter(user =>
-                user.serviceId === currentUser.serviceId
+                user.serviceId === currentUser.serviceId &&
+                user.id !== currentUser.id
             );
         } else {
-            // Les utilisateurs normaux ne voient que leur propre profil
-            state.allUsers = allUsers.filter(user =>
-                user.id === currentUser.id
-            );
+            // Les utilisateurs normaux ne voient personne (car on exclut l'utilisateur courant)
+            state.allUsers = [];
         }
 
         filterUsers();
@@ -349,8 +349,7 @@ async function loadUsers() {
             confirmButtonColor: '#2563eb'
         });
     }
-}
-
+   }
     // Filtrage des résultats
     function filterUsers() {
         const searchTerm = elements.search.value.toLowerCase();
@@ -373,31 +372,36 @@ async function loadUsers() {
 
     // Mise à jour du tableau
     function updateTable() {
-        const start = (state.currentPage - 1) * state.itemsPerPage;
-        const end = start + state.itemsPerPage;
-        const users = state.filteredUsers.slice(start, end);
+    const start = (state.currentPage - 1) * state.itemsPerPage;
+    const end = start + state.itemsPerPage;
+    const users = state.filteredUsers.slice(start, end);
 
-        elements.usersTableBody.innerHTML = users.length > 0 ?
-            users.map(user => `
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${user.matricule}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.lastName} ${user.firstName}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.email}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${user.departement?.nomDepartement || 'Non assigné'}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${user.serviceName || 'Non assigné'}
-                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="user-details.html?username=${user.username}" class="text-primary-600 hover:text-primary-900">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                    </td>
-                </tr>
-            `).join('') :
-            `<tr><td colspan="6" class="px-6 py-4 text-center">Aucun résultat trouvé</td></tr>`;
+    let noResultsMessage = 'Aucun résultat trouvé';
+    if (state.allUsers.length === 0) {
+        noResultsMessage = 'Aucun employé à afficher dans votre département/service';
     }
+
+    elements.usersTableBody.innerHTML = users.length > 0 ?
+        users.map(user => `
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${user.matricule}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.lastName} ${user.firstName}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.email}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    ${user.departement?.nomDepartement || 'Non assigné'}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    ${user.serviceName || 'Non assigné'}
+                 </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <a href="user-details.html?username=${user.username}" class="text-primary-600 hover:text-primary-900">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                </td>
+            </tr>
+        `).join('') :
+        `<tr><td colspan="6" class="px-6 py-4 text-center">${noResultsMessage}</td></tr>`;
+}
 
     // Mettre à jour la pagination
     function updatePagination() {

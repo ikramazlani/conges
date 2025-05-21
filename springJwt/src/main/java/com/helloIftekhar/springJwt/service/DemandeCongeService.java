@@ -48,6 +48,7 @@ public class DemandeCongeService {
         demande.setMotif(demandeDTO.getMotif());
         demande.setDuree(demandeDTO.getDuree());
         demande.setRemplacerPar(demandeDTO.getRemplacerPar());
+        demande.setRemplacantArab(demandeDTO.getRemplacantArab());
         demande.setStatut("EN_ATTENTE"); // Set default status
 
         DemandeConge savedDemande = demandeCongeRepository.save(demande);
@@ -67,6 +68,7 @@ public class DemandeCongeService {
         responseDTO.setDuree(demande.getDuree());
         responseDTO.setRemplacerPar(demande.getRemplacerPar());
         responseDTO.setMotifRefus(demande.getMotifRefus());
+
 
         return responseDTO;
     }
@@ -135,6 +137,7 @@ public class DemandeCongeService {
         demande.setMotif(demandeDTO.getMotif());
         demande.setDuree(demandeDTO.getDuree());
         demande.setRemplacerPar(demandeDTO.getRemplacerPar());
+        demande.setRemplacantArab(demandeDTO.getRemplacantArab());
 
         DemandeConge updatedDemande = demandeCongeRepository.save(demande);
         return mapToResponseDTO(updatedDemande);
