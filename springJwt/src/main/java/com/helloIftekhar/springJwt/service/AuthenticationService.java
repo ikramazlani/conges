@@ -330,11 +330,7 @@ public class AuthenticationService {
     }
 
 
-    //reccupere chef serviice
 
-    public List<User> getChefsServiceByDepartement(Long departementId) {
-        return repository.findChefsServiceByDepartementId(departementId);
-    }
 }
 
 
