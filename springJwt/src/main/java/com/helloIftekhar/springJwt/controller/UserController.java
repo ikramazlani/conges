@@ -168,18 +168,6 @@ public class UserController {
     }
 
 
-//reccupere chef serviice
 
-    @GetMapping("/departement/{departementId}/chefs-service")
-    @PreAuthorize("hasRole('CHEF_DEPARTEMENT')")
-    public ResponseEntity<List<UserDTO>> getChefsServiceByDepartement(@PathVariable Long departementId) {
-        List<User> chefs = userRepository.findChefsServiceByDepartementId(departementId);
-        if (chefs.isEmpty()) {
-            return ResponseEntity.ok(Collections.emptyList());
-        }
-        return ResponseEntity.ok(chefs.stream()
-                .map(DtoMapper::convertToUserDTO)
-                .collect(Collectors.toList()));
-    }
 }
 
