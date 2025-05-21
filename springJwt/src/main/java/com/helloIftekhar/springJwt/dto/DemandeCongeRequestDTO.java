@@ -14,7 +14,7 @@ public class DemandeCongeRequestDTO {
     private String remplacerPar;
     private long idEmployee;
     private String motifRefus;
-
+    private String remplacantArab;
     // Getters et Setters
     public Date getDateDebut() {
         return dateDebut;

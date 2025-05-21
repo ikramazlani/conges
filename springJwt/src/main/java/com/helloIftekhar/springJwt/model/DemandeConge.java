@@ -50,6 +50,9 @@ public class DemandeConge {
     @Column(name = "pdf_file_name", nullable = true)
     private String pdfFileName;
 
+    @Column(name = "remplacant_arab")
+    private String remplacantArab;
+
     // Constructeurs
     public DemandeConge() {
     }

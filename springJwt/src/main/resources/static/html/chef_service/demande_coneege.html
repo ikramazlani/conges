@@ -375,34 +375,37 @@
         }
 
         // Charger les demandes
-        async function loadDemandes() {
-            try {
-                loadingElement.classList.remove('hidden');
-                noResultsElement.classList.add('hidden');
-                demandesTable.innerHTML = '';
+        // Charger les demandes
+async function loadDemandes() {
+    try {
+        loadingElement.classList.remove('hidden');
+        noResultsElement.classList.add('hidden');
+        demandesTable.innerHTML = '';
 
-                const response = await fetch('http://localhost:8080/api/demandes-conge/all-with-employee-info', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+        const response = await fetch('http://localhost:8080/api/demandes-conge/all-with-employee-info', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-                if (!response.ok) throw new Error('Erreur lors du chargement des demandes');
+        if (!response.ok) throw new Error('Erreur lors du chargement des demandes');
 
-                const allDemandes = await response.json();
+        const allDemandes = await response.json();
 
-                // Filtrer les demandes: seulement celles du même département et service que l'utilisateur
-                demandes = allDemandes.filter(demande =>
-                    demande.departement === currentUser.departement.nomDepartement &&
-                    demande.serviceName === currentUser.serviceName
-                );
+        // Filtrer les demandes: seulement celles du même département et service que l'utilisateur
+        // ET qui ne sont pas les siennes
+        demandes = allDemandes.filter(demande =>
+            demande.departement === currentUser.departement.nomDepartement &&
+            demande.serviceName === currentUser.serviceName &&
+            demande.idEmployee !== currentUser.id // Exclure les demandes de l'utilisateur actuel
+        );
 
-                renderDemandes();
-            } catch (err) {
-                console.error(err);
-                showError("Erreur lors du chargement des demandes");
-            } finally {
-                loadingElement.classList.add('hidden');
-            }
-        }
+        renderDemandes();
+    } catch (err) {
+        console.error(err);
+        showError("Erreur lors du chargement des demandes");
+    } finally {
+        loadingElement.classList.add('hidden');
+    }
+}
 
         // Afficher les demandes dans le tableau
         function renderDemandes() {

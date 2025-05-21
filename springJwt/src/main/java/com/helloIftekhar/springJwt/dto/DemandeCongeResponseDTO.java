@@ -21,6 +21,7 @@ public class DemandeCongeResponseDTO {
     private String serviceName;
     private String motifRefus;
 
+
     public DemandeCongeResponseDTO() {
     }
 
@@ -40,6 +41,7 @@ public class DemandeCongeResponseDTO {
         this.remplacerPar = remplacerPar;
         this.role=role;
         this.serviceName=serviceName;
+
     }
     // Getters et Setters
     public Long getId() {
