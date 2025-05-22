@@ -279,4 +279,54 @@ public class DemandeCongeService {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Dans DemandeCongeService.java
+
+    public long countByEmployeeIds(List<Long> employeeIds) {
+        if (employeeIds.isEmpty()) return 0;
+        return demandeCongeRepository.countByIdEmployeeIn(employeeIds);
+    }
+
+    public long countByEmployeeIdsAndStatus(List<Long> employeeIds, String status) {
+        if (employeeIds.isEmpty()) return 0;
+        return demandeCongeRepository.countByIdEmployeeInAndStatut(employeeIds, status);
+    }
+
+
+
+
+    public List<DemandeCongeResponseDTO> findRecentByEmployeeIds(List<Long> employeeIds, int limit) {
+        if (employeeIds.isEmpty()) return Collections.emptyList();
+
+        // Modification importante ici - Ajout du tri explicite
+        Pageable pageable = PageRequest.of(
+                0, // première page
+                limit, // nombre d'éléments
+                Sort.by(Sort.Direction.DESC, "dateCreation") // tri explicite par date décroissante
+        );
+
+        return demandeCongeRepository.findByIdEmployeeIn(employeeIds, pageable)
+                .getContent()
+                .stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 }

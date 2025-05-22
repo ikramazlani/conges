@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Tableau de bord</title>
+    <title>Tableau de bord Chef de Service</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -22,6 +23,15 @@
                             700: '#0369a1',
                             800: '#075985',
                             900: '#0c4a6e',
+                        },
+                        secondary: {
+                            500: '#10b981'
+                        },
+                        danger: {
+                            500: '#ef4444'
+                        },
+                        warning: {
+                            500: '#f59e0b'
                         }
                     },
                     fontFamily: {
@@ -35,6 +45,7 @@
 <body class="bg-gray-50 font-sans">
 <div class="min-h-screen flex flex-col">
 
+    <!-- Navigation -->
     <nav class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -56,9 +67,9 @@
                             <span class="sr-only">Ouvrir le menu utilisateur</span>
                             <div class="flex items-center">
                                 <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
-                                    A
+                                    <span id="userInitials">CS</span>
                                 </div>
-                                <span class="ml-2 text-gray-700">Chef de Service</span>
+                                <span id="userName" class="ml-2 text-gray-700">Chef de Service</span>
                                 <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
@@ -75,6 +86,7 @@
     </nav>
 
     <div class="flex flex-1">
+        <!-- Sidebar -->
         <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
             <div class="h-full flex flex-col">
                 <nav class="flex-1 py-4 px-2 space-y-1">
@@ -134,97 +146,335 @@
                 </nav>
             </div>
         </div>
-        <main class="flex-1 p-6 md:p-10">
-            <div class="mb-6">
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8">
+            <div class="mb-8">
                 <h1 class="text-2xl font-bold text-gray-800">Tableau de bord</h1>
-                <h2 class="text-xl text-gray-600">Vue d'ensemble des congés de votre service</h2>
+                <p class="text-gray-600">Bienvenue sur votre espace chef de service</p>
             </div>
 
-            <div class="bg-white rounded-xl shadow-xl p-6 sm:p-8 mb-8 sm:mb-10">
-                <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Statistiques des employés de mon service</h2>
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow p-6 flex items-center">
+                    <div class="p-3 rounded-full bg-primary-100 text-primary-700 mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Employés dans mon service</h3>
+                        <p id="employeeCount" class="text-2xl font-semibold text-gray-900">-</p>
+                    </div>
+                </div>
 
-                <div class="mb-8">
-                    <div class="bg-primary-700 rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-xl hover:bg-primary-800">
-                        <div class="flex items-center space-x-4">
-                            <div class="flex-shrink-0 p-3 bg-primary-600 rounded-full">
-                                <i class="fas fa-users fa-fw fa-2x text-white"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-semibold text-primary-200 uppercase tracking-wider">Total des Employés du Service</h3>
-                                <p id="totalEmployesService" class="text-3xl font-bold text-white mt-1">--</p>
-                            </div>
-                        </div>
+                <div class="bg-white rounded-lg shadow p-6 flex items-center">
+                    <div class="p-3 rounded-full bg-secondary-100 text-secondary-500 mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Demandes totales</h3>
+                        <p id="totalDemandes" class="text-2xl font-semibold text-gray-900">-</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6 flex items-center">
+                    <div class="p-3 rounded-full bg-warning-100 text-warning-500 mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">En attente</h3>
+                        <p id="enAttente" class="text-2xl font-semibold text-gray-900">-</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6 flex items-center">
+                    <div class="p-3 rounded-full bg-danger-100 text-danger-500 mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Refusées</h3>
+                        <p id="refusees" class="text-2xl font-semibold text-gray-900">-</p>
                     </div>
                 </div>
             </div>
-        </main>
+
+            <!-- Charts and Recent Requests -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Pie Chart -->
+                <div class="bg-white rounded-lg shadow p-6 lg:col-span-1">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Statut des demandes</h3>
+                    <div class="h-64">
+                        <canvas id="demandesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Requests -->
+                <div class="bg-white rounded-lg shadow p-6 lg:col-span-2">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Dernières demandes</h3>
+                        <a href="demande_coneege.html" class="text-sm text-primary-600 hover:text-primary-800">Voir toutes</a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employé</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Période</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durée</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                            </tr>
+                            </thead>
+                            <tbody id="recentRequests" class="bg-white divide-y divide-gray-200">
+                            <!-- Les données seront insérées ici par JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Overview -->
+            <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Aperçu du calendrier</h3>
+                <div class="grid grid-cols-7 gap-1 text-center">
+                    <div class="text-xs font-medium text-gray-500 py-2">Lun</div>
+                    <div class="text-xs font-medium text-gray-500 py-2">Mar</div>
+                    <div class="text-xs font-medium text-gray-500 py-2">Mer</div>
+                    <div class="text-xs font-medium text-gray-500 py-2">Jeu</div>
+                    <div class="text-xs font-medium text-gray-500 py-2">Ven</div>
+                    <div class="text-xs font-medium text-gray-500 py-2">Sam</div>
+                    <div class="text-xs font-medium text-gray-500 py-2">Dim</div>
+
+                    <!-- Placeholder for calendar days -->
+                    <div class="py-2"></div>
+                    <div class="py-2"></div>
+                    <div class="py-2">
+                        <span class="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-primary-600 text-white">21</span>
+                    </div>
+                    <div class="py-2">22</div>
+                    <div class="py-2">23</div>
+                    <div class="py-2">24</div>
+                    <div class="py-2">25</div>
+                    <div class="py-2">26</div>
+                    <div class="py-2">27</div>
+                    <div class="py-2">28</div>
+                    <div class="py-2">29</div>
+                    <div class="py-2">30</div>
+                    <div class="py-2">31</div>
+                    <div class="py-2">1</div>
+                    <div class="py-2">2</div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', async function () {
-            const token = localStorage.getItem('token');
-            if (!token) return window.location.href = 'index.html';
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const token = localStorage.getItem('token');
+        if (!token) return window.location.href = 'index.html';
 
-            document.getElementById('logoutBtn').addEventListener('click', async () => {
-                localStorage.removeItem('token');
-                localStorage.removeItem('refresh_token');
-                localStorage.removeItem('userRole');
-                window.location.href = '../user/index.html';
-            });
-
-            try {
-                // Récupérer les informations de l'utilisateur connecté
-                const userResponse = await fetch('http://localhost:8080/api/users/me', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const currentUser = await userResponse.json();
-
-                // Charger le solde de congé
-                const soldeResponse = await fetch('http://localhost:8080/api/solde-conge/mon-solde', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (!soldeResponse.ok) throw new Error('Erreur lors du chargement du solde');
-                const soldeData = await soldeResponse.json();
-
-                // Charger les statistiques des employés du même service (seulement pour les chefs de service)
-                if (currentUser.role === 'CHEF_SERVICE' && currentUser.serviceId) {
-                    // Récupérer tous les utilisateurs du même service
-                    const employesServiceResponse = await fetch('http://localhost:8080/api/users/all', {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    const allUsers = await employesServiceResponse.json();
-                    const employesSameService = allUsers.filter(user =>
-                        user.serviceId === currentUser.serviceId && user.id !== currentUser.id
-                    );
-
-                    // Mettre à jour les statistiques
-                    document.getElementById('totalEmployesService').textContent = employesSameService.length;
-                }
-
-            } catch (err) {
-                console.error(err);
-            }
-        });
-
-        // User menu toggle
-        const userMenuButton = document.getElementById('userMenuBtn');
+        // Gestion du menu utilisateur
+        const userMenuBtn = document.getElementById('userMenuBtn');
         const userMenu = document.getElementById('userMenu');
 
-        if (userMenuButton && userMenu) {
-            userMenuButton.addEventListener('click', () => {
-                const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
-                userMenuButton.setAttribute('aria-expanded', !expanded);
-                userMenu.classList.toggle('hidden');
+        userMenuBtn.addEventListener('click', () => {
+            userMenu.classList.toggle('hidden');
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('userRole');
+            window.location.href = '../user/index.html';
+        });
+
+        try {
+            // Récupérer les informations de l'utilisateur connecté
+            const userResponse = await fetch('http://localhost:8080/api/users/me', {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            // Close the menu when clicking outside
-            document.addEventListener('click', (event) => {
-                if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
-                    userMenuButton.setAttribute('aria-expanded', 'false');
-                    userMenu.classList.add('hidden');
+            if (!userResponse.ok) {
+                throw new Error('Erreur lors de la récupération des informations utilisateur');
+            }
+
+            const currentUser = await userResponse.json();
+
+            // Mettre à jour l'affichage de l'utilisateur
+            document.getElementById('userInitials').textContent =
+                currentUser.prenom ? currentUser.prenom.charAt(0).toUpperCase() : 'C';
+            document.getElementById('userName').textContent =
+                currentUser.prenom ? currentUser.prenom + ' ' + (currentUser.nom || '') : 'Chef de Service';
+
+            // Récupérer les statistiques
+            const employeeCountResponse = await fetch('http://localhost:8080/api/chef-service/stats/employees/count', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!employeeCountResponse.ok) {
+                throw new Error('Erreur lors de la récupération du nombre d\'employés');
+            }
+
+            const employeeCount = await employeeCountResponse.text();
+            document.getElementById('employeeCount').textContent = employeeCount-1;
+
+            const statsResponse = await fetch('http://localhost:8080/api/chef-service/stats/stats/mon-service', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!statsResponse.ok) {
+                throw new Error('Erreur lors de la récupération des statistiques');
+            }
+
+            const stats = await statsResponse.json();
+
+            document.getElementById('totalDemandes').textContent = stats.total;
+            document.getElementById('enAttente').textContent = stats.enAttente;
+            document.getElementById('refusees').textContent = stats.refusees;
+
+            // Configurer le graphique
+            const ctx = document.getElementById('demandesChart').getContext('2d');
+            const demandesChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Approuvées', 'En attente', 'Refusées'],
+                    datasets: [{
+                        data: [stats.approuvees, stats.enAttente, stats.refusees],
+                        backgroundColor: [
+                            '#10b981',
+                            '#f59e0b',
+                            '#ef4444'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
                 }
             });
+
+            // Récupérer les dernières demandes
+            const demandesResponse = await fetch('http://localhost:8080/api/demandes-conge/all-with-employee-info', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+
+            if (!demandesResponse.ok) {
+                throw new Error('Erreur lors de la récupération des demandes');
+            }
+
+            const allDemandes = await demandesResponse.json();
+
+
+      const currentUserDemandes = allDemandes.filter(demande =>
+    demande.idEmployee === currentUser.id
+);
+
+            // Filtrer les demandes: seulement celles du même département et service que l'utilisateur
+            const filteredDemandes = allDemandes.filter(demande =>
+                demande.departement === currentUser.departement.nomDepartement &&
+                demande.serviceName === currentUser.serviceName &&
+                demande.idEmployee !== currentUser.id
+            );
+
+            // Afficher les 5 dernières demandes
+            const recentDemandes = filteredDemandes.slice(0, 5);
+            renderRecentRequests(recentDemandes);
+
+        } catch (err) {
+            console.error(err);
+            alert('Une erreur est survenue lors du chargement des données');
         }
-    </script>
+    });
+
+    function renderRecentRequests(demandes) {
+        const recentRequestsContainer = document.getElementById('recentRequests');
+
+        if (demandes.length === 0) {
+            recentRequestsContainer.innerHTML = `
+                <tr>
+                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                        Aucune demande récente
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        recentRequestsContainer.innerHTML = demandes.map(demande => {
+            const dateDebut = new Date(demande.dateDebut).toLocaleDateString('fr-FR');
+            const dateFin = new Date(demande.dateFin).toLocaleDateString('fr-FR');
+
+            let statusClass = '';
+            let statusText = '';
+
+            switch(demande.statut) {
+                case 'EN_ATTENTE':
+                    statusClass = 'bg-yellow-100 text-yellow-800';
+                    statusText = 'En attente';
+                    break;
+                case 'APPROUVE':
+                    statusClass = 'bg-green-100 text-green-800';
+                    statusText = 'Approuvé';
+                    break;
+                case 'REFUSE':
+                    statusClass = 'bg-red-100 text-red-800';
+                    statusText = 'Refusé';
+                    break;
+                default:
+                    statusClass = 'bg-gray-100 text-gray-800';
+                    statusText = demande.statut;
+            }
+
+            const actions = demande.statut === 'EN_ATTENTE' ? `
+
+            ` : `
+
+            `;
+
+            return `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-800 font-medium">
+                                ${demande.employeeName ? demande.employeeName.charAt(0) : '?'}
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">${demande.employeeName || 'Inconnu'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${dateDebut} - ${dateFin}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${demande.duree} jour(s)
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+
+                </tr>
+            `;
+        }).join('');
+    }
+
+
+</script>
 </body>
 </html>

@@ -105,5 +105,18 @@ List<DemandeConge> findByIdEmployeeIn(@Param("employeeIds") List<Long> employeeI
 
 
 
+
+    // Dans DemandeCongeRepository.java
+
+    @Query("SELECT COUNT(d) FROM DemandeConge d WHERE d.idEmployee IN :employeeIds")
+    long countByIdEmployeeIn(@Param("employeeIds") List<Long> employeeIds);
+
+    @Query("SELECT COUNT(d) FROM DemandeConge d WHERE d.idEmployee IN :employeeIds AND d.statut = :status")
+    long countByIdEmployeeInAndStatut(@Param("employeeIds") List<Long> employeeIds,
+                                      @Param("status") String status);
+
+    @Query("SELECT d FROM DemandeConge d WHERE d.idEmployee IN :employeeIds ORDER BY d.dateCreation DESC")
+    Page<DemandeConge> findByIdEmployeeIn(@Param("employeeIds") List<Long> employeeIds,
+                                          Pageable pageable);
 }
 
