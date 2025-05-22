@@ -125,6 +125,23 @@
                 margin: 0 15px;
             }
         }
+
+        .reset-container {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -166,6 +183,39 @@
 
     <div class="footer-links">
         <a href="#" id="forgotPassword">Mot de passe oublié ?</a>
+    </div>
+
+    <!-- Ajoutez ce modal à votre HTML existant -->
+    <div id="resetModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; width: 90%; max-width: 500px;">
+            <h2 style="margin-bottom: 1rem; text-align: center;">Réinitialisation du mot de passe</h2>
+
+            <div id="step1" class="step active">
+                <p>Entrez votre adresse email pour recevoir un code de réinitialisation</p>
+                <div class="form-group">
+                    <input type="email" id="resetEmail" placeholder="Votre email" style="width: 100%; padding: 10px; margin-bottom: 1rem;">
+                </div>
+                <button id="sendCodeBtn" style="width: 100%; padding: 10px; background: #3498db; color: white; border: none; border-radius: 4px;">Envoyer le code</button>
+                <p id="emailError" style="color: #e74c3c; margin-top: 1rem; display: none;"></p>
+            </div>
+
+            <div id="step2" class="step">
+                <p>Un code a été envoyé à votre email. Entrez-le ci-dessous ainsi que votre nouveau mot de passe.</p>
+                <div class="form-group">
+                    <input type="text" id="resetCode" placeholder="Code de réinitialisation" style="width: 100%; padding: 10px; margin-bottom: 1rem;">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="newPassword" placeholder="Nouveau mot de passe" style="width: 100%; padding: 10px; margin-bottom: 1rem;">
+                </div>
+                <button id="resetPasswordBtn" style="width: 100%; padding: 10px; background: #2ecc71; color: white; border: none; border-radius: 4px;">Réinitialiser le mot de passe</button>
+                <p id="resetError" style="color: #e74c3c; margin-top: 1rem; display: none;"></p>
+            </div>
+
+            <div id="step3" class="step">
+                <p style="color: #2ecc71; text-align: center;">Votre mot de passe a été réinitialisé avec succès!</p>
+                <button id="closeModalBtn" style="width: 100%; padding: 10px; background: #3498db; color: white; border: none; border-radius: 4px; margin-top: 1rem;">Fermer</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -262,6 +312,144 @@
         `;
         document.head.appendChild(style);
     });
+
+
+
+      // Gestion du mot de passe oublié
+    document.getElementById('forgotPassword').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('resetModal').style.display = 'flex';
+    });
+
+    // Gestion des étapes de réinitialisation
+    function goToStep(stepNumber) {
+        document.querySelectorAll('.step').forEach(step => {
+            step.classList.remove('active');
+        });
+        document.getElementById(`step${stepNumber}`).classList.add('active');
+    }
+
+    // Envoi du code
+document.getElementById('sendCodeBtn').addEventListener('click', async function() {
+    const email = document.getElementById('resetEmail').value;
+    const errorElement = document.getElementById('emailError');
+    errorElement.style.display = 'none';
+
+    if (!email || !email.includes('@')) {
+        errorElement.textContent = "Veuillez entrer une adresse email valide";
+        errorElement.style.display = 'block';
+        return;
+    }
+
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours...';
+
+    try {
+        const response = await fetch('http://localhost:8080/forgot-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Erreur lors de l'envoi du code");
+        }
+
+        goToStep(2);
+    } catch (error) {
+        errorElement.textContent = error.message;
+        errorElement.style.display = 'block';
+        console.error("Erreur:", error);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Envoyer le code';
+    }
+});
+
+
+
+// Réinitialisation du mot de passe - Version adaptée aux réponses texte
+document.getElementById('resetPasswordBtn').addEventListener('click', async function() {
+    const email = document.getElementById('resetEmail').value;
+    const code = document.getElementById('resetCode').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const errorElement = document.getElementById('resetError');
+    errorElement.style.display = 'none';
+
+    // Validation
+    if (!code || code.length !== 6 || !/^\d+$/.test(code)) {
+        errorElement.textContent = "Le code doit contenir exactement 6 chiffres";
+        errorElement.style.display = 'block';
+        return;
+    }
+
+    if (!newPassword || newPassword.length < 8) {
+        errorElement.textContent = "Le mot de passe doit contenir au moins 8 caractères";
+        errorElement.style.display = 'block';
+        return;
+    }
+
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Traitement...';
+
+    try {
+        const response = await fetch('http://localhost:8080/reset-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                code: code,
+                newPassword: newPassword
+            })
+        });
+
+        // Gestion des réponses texte ou JSON
+        const contentType = response.headers.get('content-type');
+        let result;
+
+        if (contentType && contentType.includes('application/json')) {
+            result = await response.json();
+        } else {
+            const text = await response.text();
+            result = { message: text }; // Convertit la réponse texte en objet
+        }
+
+        if (!response.ok) {
+            throw new Error(result.message || "Erreur lors de la réinitialisation");
+        }
+
+        // Si on arrive ici, c'est que c'est un succès
+        goToStep(3); // Affiche le message de succès
+    } catch (error) {
+        errorElement.textContent = error.message || "Une erreur s'est produite";
+        errorElement.style.display = 'block';
+        console.error("Erreur:", error);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Réinitialiser le mot de passe';
+    }
+});
+
+    // Fermeture du modal
+    document.getElementById('closeModalBtn').addEventListener('click', function() {
+        document.getElementById('resetModal').style.display = 'none';
+        // Réinitialiser le formulaire
+        document.getElementById('resetEmail').value = '';
+        document.getElementById('resetCode').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('emailError').style.display = 'none';
+        document.getElementById('resetError').style.display = 'none';
+        goToStep(1);
+    });
+
 </script>
 
 </body>

@@ -7,11 +7,14 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import io.jsonwebtoken.Claims;
@@ -33,7 +37,10 @@ public class AuthenticationService {
     @Autowired
     private DemandeCongeRepository demandeCongeRepository;
 
+    @Autowired
+   private EmailService emailService;
 
+    private final Map<String, String> resetCodes = new HashMap<>();
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -42,6 +49,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final SoldeCongeRepository soldeCongeRepository;
 
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
     private final ServiceDepartementRepository serviceDepartementRepository;
 
@@ -340,6 +349,95 @@ public class AuthenticationService {
         revokeAllTokenByUser(user);
     }
 
+
+
+
+
+    // Ajoutez ces méthodes à AuthenticationService pour rein
+
+    public ResponseEntity<?> initiatePasswordReset(String email) {
+        try {
+            // 1. Vérifier l'email
+            if (email == null || email.isEmpty()) {
+                return ResponseEntity.badRequest().body("L'email est requis");
+            }
+
+            // 2. Rechercher l'utilisateur
+            List<User> users = repository.findByEmail(email);
+
+            if (users.isEmpty()) {
+                return ResponseEntity.badRequest().body("Aucun utilisateur trouvé avec cet email");
+            }
+
+            if (users.size() > 1) {
+                logger.error("Conflit d'email : Plusieurs utilisateurs trouvés pour {}", email);
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Plusieurs comptes associés à cet email. Contactez l'administrateur.");
+            }
+
+            User user = users.get(0);
+
+            // 3. Générer un code de réinitialisation
+            String resetCode = emailService.generateResetCode();
+
+            // 4. Stocker le code (avec expiration)
+            resetCodes.put(email, resetCode);
+
+            // 5. Envoyer l'email
+            emailService.sendResetCode(email, resetCode);
+
+            // 6. Journaliser l'action
+            logger.info("Demande de réinitialisation pour {} - Code envoyé", email);
+
+            return ResponseEntity.ok(
+                    Map.of(
+                            "message", "Un code de réinitialisation a été envoyé à votre email",
+                            "status", "SUCCESS"
+                    )
+            );
+
+        } catch (MailException e) {
+            logger.error("Échec d'envoi d'email à {}", email, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de l'envoi du code. Veuillez réessayer plus tard.");
+        } catch (Exception e) {
+            logger.error("Erreur inattendue lors de la réinitialisation pour {}", email, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Une erreur inattendue s'est produite");
+        }
+    }
+
+    public ResponseEntity<?> resetPassword(String email, String resetCode, String newPassword) {
+        // 1. Trouver l'utilisateur
+        List<User> users = repository.findByEmail(email);
+
+        if (users.isEmpty()) {
+            return ResponseEntity.badRequest().body("Aucun utilisateur trouvé avec cet email");
+        }
+
+        if (users.size() > 1) {
+            logger.error("Conflit: plusieurs utilisateurs avec l'email {}", email);
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Plusieurs comptes associés à cet email");
+        }
+
+        User user = users.get(0); // Prendre le premier utilisateur
+
+        // 2. Vérifier le code de réinitialisation
+        String storedCode = resetCodes.get(email);
+        if (storedCode == null || !storedCode.equals(resetCode)) {
+            return ResponseEntity.badRequest().body("Code de réinitialisation invalide");
+        }
+
+        // 3. Mettre à jour le mot de passe
+        user.setPassword(passwordEncoder.encode(newPassword));
+        repository.save(user);
+
+        // 4. Supprimer le code utilisé
+        resetCodes.remove(email);
+
+        return ResponseEntity.ok("Mot de passe réinitialisé avec succès");
+    }
 
 
 }

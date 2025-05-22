@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réinitialisation de mot de passe</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+            --text-color: #333;
+            --light-gray: #f5f5f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            margin-top: 1rem;
+            padding: 10px;
+            background: #ffeeee;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+                margin: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Réinitialisation du mot de passe</h1>
+
+    <div id="step1" class="step active">
+        <div class="form-group">
+            <label for="email">Adresse email</label>
+            <input type="email" id="email" placeholder="Votre email">
+        </div>
+        <button id="sendCodeBtn">Envoyer le code</button>
+        <div id="emailError" class="error-message"></div>
+    </div>
+
+    <div id="step2" class="step">
+        <div class="form-group">
+            <label for="code">Code de vérification</label>
+            <input type="text" id="code" placeholder="Code à 6 chiffres">
+        </div>
+        <div class="form-group">
+            <label for="newPassword">Nouveau mot de passe</label>
+            <input type="password" id="newPassword" placeholder="Minimum 8 caractères">
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirmer le mot de passe</label>
+            <input type="password" id="confirmPassword" placeholder="Retapez votre mot de passe">
+        </div>
+        <button id="resetPasswordBtn">Réinitialiser</button>
+        <div id="resetError" class="error-message"></div>
+    </div>
+
+    <div id="step3" class="step">
+        <p class="success-message">Votre mot de passe a été réinitialisé avec succès !</p>
+        <button id="loginBtn">Se connecter</button>
+    </div>
+</div>
+
+<script>
+    // Gestion des étapes
+    function goToStep(stepNumber) {
+        document.querySelectorAll('.step').forEach(step => {
+            step.classList.remove('active');
+        });
+        document.getElementById(`step${stepNumber}`).classList.add('active');
+    }
+
+    // Envoi du code
+    document.getElementById('sendCodeBtn').addEventListener('click', async function() {
+        const email = document.getElementById('email').value.trim();
+        const errorElement = document.getElementById('emailError');
+        errorElement.style.display = 'none';
+
+        // Validation
+        if (!email || !email.includes('@')) {
+            errorElement.textContent = "Veuillez entrer une adresse email valide";
+            errorElement.style.display = 'block';
+            return;
+        }
+
+        const btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Envoi en cours...';
+
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/forgot-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email })
+            });
+
+            const result = await parseResponse(response);
+
+            if (!response.ok) {
+                throw new Error(result.message || "Erreur lors de l'envoi du code");
+            }
+
+            goToStep(2);
+        } catch (error) {
+            errorElement.textContent = error.message;
+            errorElement.style.display = 'block';
+            console.error("Erreur:", error);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Envoyer le code';
+        }
+    });
+
+    // Réinitialisation du mot de passe
+    document.getElementById('resetPasswordBtn').addEventListener('click', async function() {
+        const email = document.getElementById('email').value.trim();
+        const code = document.getElementById('code').value.trim();
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const errorElement = document.getElementById('resetError');
+        errorElement.style.display = 'none';
+
+        // Validation
+        if (!code || code.length !== 6 || !/^\d+$/.test(code)) {
+            errorElement.textContent = "Le code doit contenir 6 chiffres";
+            errorElement.style.display = 'block';
+            return;
+        }
+
+        if (!newPassword || newPassword.length < 8) {
+            errorElement.textContent = "Le mot de passe doit contenir au moins 8 caractères";
+            errorElement.style.display = 'block';
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            errorElement.textContent = "Les mots de passe ne correspondent pas";
+            errorElement.style.display = 'block';
+            return;
+        }
+
+        const btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Traitement...';
+
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    code,
+                    newPassword
+                })
+            });
+
+            const result = await parseResponse(response);
+
+            if (!response.ok) {
+                throw new Error(result.message || "Erreur lors de la réinitialisation");
+            }
+
+            goToStep(3);
+        } catch (error) {
+            errorElement.textContent = error.message;
+            errorElement.style.display = 'block';
+            console.error("Erreur:", error);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Réinitialiser';
+        }
+    });
+
+    // Redirection vers la connexion
+    document.getElementById('loginBtn').addEventListener('click', function() {
+        window.location.href = 'login.html';
+    });
+
+    // Fonction pour parser la réponse
+    async function parseResponse(response) {
+        const contentType = response.headers.get('content-type');
+
+        if (contentType && contentType.includes('application/json')) {
+            return await response.json();
+        }
+
+        const text = await response.text();
+        try {
+            return JSON.parse(text);
+        } catch {
+            return {
+                status: response.ok ? "SUCCESS" : "ERROR",
+                message: text || "Réponse inattendue du serveur"
+            };
+        }
+    }
+</script>
+</body>
+</html>
