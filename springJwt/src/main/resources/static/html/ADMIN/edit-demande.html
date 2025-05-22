@@ -338,6 +338,8 @@
             editEndDatePicker.setDate(endDate);
 
             document.getElementById('editReason').value = demande.motif;
+             document.getElementById('remplacant').value=demande.remplacerPar;
+             document.getElementById('remplacantArab').value=demande.remplacantArab;
 
             // Calculer et afficher la durée initiale
             calculateEditDuration();

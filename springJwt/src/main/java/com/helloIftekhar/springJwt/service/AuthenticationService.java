@@ -98,6 +98,11 @@ public class AuthenticationService {
         user.setEchelle(request.getEchelle());
         user.setEmail(request.getEmail());
         user.setService(serviceDepartement);
+        //ajouter des hcmaps pour arab
+        user.setNomArab(request.getNomArab());
+        user.setPrenomArab(request.getPrenomArab());
+        user.setGradeArab(request.getGradeArab());
+        user.setEchelleArab(request.getEchelleArab());
 
         user = repository.save(user);
         createInitialSoldeConge(user);
@@ -226,6 +231,12 @@ public class AuthenticationService {
         existingUser.setDateNaissance(updatedUser.getDateNaissance());
         existingUser.setAdresse(updatedUser.getAdresse());
         existingUser.setEchelle(updatedUser.getEchelle());
+
+        //ajouter des champs arab
+        existingUser.setNomArab(updatedUser.getNomArab());
+        existingUser.setPrenomArab(updatedUser.getPrenomArab());
+        existingUser.setGradeArab(updatedUser.getGradeArab());
+        existingUser.setEchelleArab(updatedUser.getEchelleArab());
 
         // Update role if provided
         if (updatedUser.getRole() != null) {

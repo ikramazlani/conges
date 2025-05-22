@@ -21,6 +21,10 @@ public class DtoMapper {
         userDTO.setAdresse(user.getAdresse());
         userDTO.setDateNaissance(user.getDateNaissance());
         userDTO.setRole(user.getRole());
+        userDTO.setNomArab(user.getNomArab());
+        userDTO.setPrenomArab(user.getPrenomArab());
+        userDTO.setGradeArab(user.getGradeArab());
+        userDTO.setEchelleArab(user.getEchelleArab());
 
         // Ajouter la gestion du service par chef service
         if (user.getService() != null) {

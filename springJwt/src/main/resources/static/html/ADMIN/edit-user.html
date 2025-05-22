@@ -224,8 +224,18 @@
                             </div>
 
                             <div class="sm:col-span-3">
+                                <label for="prenomArab" class="block text-sm font-medium text-gray-700">Prénom (Arabe)</label>
+                                <input type="text" name="prenomArab" id="prenomArab" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" dir="rtl">
+                            </div>
+
+                            <div class="sm:col-span-3">
                                 <label for="lastName" class="block text-sm font-medium text-gray-700">Nom <span class="text-red-500">*</span></label>
                                 <input type="text" name="lastName" id="lastName" autocomplete="family-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="nomArab" class="block text-sm font-medium text-gray-700">Nom (Arabe)</label>
+                                <input type="text" name="nomArab" id="nomArab" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" dir="rtl">
                             </div>
 
                             <div class="sm:col-span-3">
@@ -243,19 +253,33 @@
                                 <input type="text" name="matricule" id="matricule" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
                             </div>
 
+
+
                             <div class="sm:col-span-3">
                                 <label for="grade" class="block text-sm font-medium text-gray-700">Grade <span class="text-red-500">*</span></label>
                                 <input type="text" name="grade" id="grade" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
                             </div>
 
                             <div class="sm:col-span-3">
-                                <label for="dateNaissance" class="block text-sm font-medium text-gray-700">Date de Naissance <span class="text-red-500">*</span></label>
-                                <input type="date" name="dateNaissance" id="dateNaissance" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                                <label for="gradeArab" class="block text-sm font-medium text-gray-700">Grade (Arabe)</label>
+                                <input type="text" name="gradeArab" id="gradeArab" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" dir="rtl">
                             </div>
+
+
 
                             <div class="sm:col-span-3">
                                 <label for="echelle" class="block text-sm font-medium text-gray-700">Échelle <span class="text-red-500">*</span></label>
                                 <input type="text" name="echelle" id="echelle" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="echelleArab" class="block text-sm font-medium text-gray-700">Échelle (Arabe)</label>
+                                <input type="text" name="echelleArab" id="echelleArab" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" dir="rtl">
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="dateNaissance" class="block text-sm font-medium text-gray-700">Date de Naissance <span class="text-red-500">*</span></label>
+                                <input type="date" name="dateNaissance" id="dateNaissance" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
                             </div>
 
                             <div class="sm:col-span-6">
@@ -369,16 +393,21 @@
         const user = await userResponse.json();
 
         // Remplir le formulaire avec les données de l'utilisateur
-        document.getElementById('firstName').value = user.firstName || '';
-        document.getElementById('lastName').value = user.lastName || '';
-        document.getElementById('username').value = user.username || '';
-        document.getElementById('email').value = user.email || '';
-        document.getElementById('matricule').value = user.matricule || '';
-        document.getElementById('grade').value = user.grade || '';
-        document.getElementById('dateNaissance').value = user.dateNaissance || '';
-        document.getElementById('echelle').value = user.echelle || '';
-        document.getElementById('adresse').value = user.adresse || '';
-        document.getElementById('role').value = user.role || '';
+       // Remplir le formulaire avec les données de l'utilisateur
+document.getElementById('firstName').value = user.firstName || '';
+document.getElementById('lastName').value = user.lastName || '';
+document.getElementById('nomArab').value = user.nomArab || '';
+document.getElementById('prenomArab').value = user.prenomArab || '';
+document.getElementById('username').value = user.username || '';
+document.getElementById('email').value = user.email || '';
+document.getElementById('matricule').value = user.matricule || '';
+document.getElementById('grade').value = user.grade || '';
+document.getElementById('gradeArab').value = user.gradeArab || '';
+document.getElementById('dateNaissance').value = user.dateNaissance || '';
+document.getElementById('echelle').value = user.echelle || '';
+document.getElementById('echelleArab').value = user.echelleArab || '';
+document.getElementById('adresse').value = user.adresse || '';
+document.getElementById('role').value = user.role || '';
 
         // Sélectionner le département si disponible
         if (user.departement && user.departement.id) {
@@ -485,15 +514,19 @@
       // Préparer les données à envoyer
       const formData = {
         firstName: document.getElementById('firstName').value.trim(),
-        lastName: document.getElementById('lastName').value.trim(),
-        username: document.getElementById('username').value.trim(),
-        matricule: document.getElementById('matricule').value.trim(),
-        grade: document.getElementById('grade').value.trim(),
-        dateNaissance: document.getElementById('dateNaissance').value,
-        adresse: document.getElementById('adresse').value.trim(),
-        echelle: document.getElementById('echelle').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        role: document.getElementById('role').value,
+    lastName: document.getElementById('lastName').value.trim(),
+    nomArab: document.getElementById('nomArab').value.trim(),
+    prenomArab: document.getElementById('prenomArab').value.trim(),
+    username: document.getElementById('username').value.trim(),
+    matricule: document.getElementById('matricule').value.trim(),
+    grade: document.getElementById('grade').value.trim(),
+    gradeArab: document.getElementById('gradeArab').value.trim(),
+    dateNaissance: document.getElementById('dateNaissance').value,
+    adresse: document.getElementById('adresse').value.trim(),
+    echelle: document.getElementById('echelle').value.trim(),
+    echelleArab: document.getElementById('echelleArab').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    role: document.getElementById('role').value,
         departement: {
           id: parseInt(document.getElementById('departement').value)
         },

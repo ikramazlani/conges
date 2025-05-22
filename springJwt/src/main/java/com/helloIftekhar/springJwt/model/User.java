@@ -63,6 +63,21 @@ public class User implements UserDetails {
     @JoinColumn(name = "service_id", nullable = true)
     private ServiceDepartement service;
 
+    //autres chmaps arba
+
+    @Column(name = "nom_arab")
+    private String nomArab;
+
+    @Column(name = "prenom_arab")
+    private String prenomArab;
+
+    @Column(name = "grade_arab")
+    private String gradeArab;
+
+    @Column(name = "echelle_arab")
+    private String echelleArab;
+
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> tokens;

@@ -23,6 +23,12 @@ public class UserDTO {
     private String serviceName;
     private Long departementId;
     private String departementName;
+
+    //des cchmaps pour arab
+    private String nomArab;
+    private String prenomArab;
+    private String gradeArab;
+    private String echelleArab;
     }
 
 
