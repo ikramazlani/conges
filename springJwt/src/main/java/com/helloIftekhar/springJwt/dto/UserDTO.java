@@ -29,6 +29,7 @@ public class UserDTO {
     private String prenomArab;
     private String gradeArab;
     private String echelleArab;
+    private String remplacantArab;
     }
 
 

@@ -91,14 +91,15 @@ public interface DemandeCongeRepository extends JpaRepository<DemandeConge, Long
 
     // Dans DemandeCongeRepository.java
     @Modifying
-    @Query("UPDATE DemandeConge d SET d.dateDebut = :dateDebut, d.dateFin = :dateFin, d.motif = :motif, d.duree = :duree, d.remplacerPar = :remplacerPar WHERE d.id = :id AND d.idEmployee = :employeeId")
+    @Query("UPDATE DemandeConge d SET d.dateDebut = :dateDebut, d.dateFin = :dateFin, d.motif = :motif, d.duree = :duree, d.remplacerPar = :remplacerPar, d.remplacantArab = :remplacantArab WHERE d.id = :id AND d.idEmployee = :employeeId")
     int updateDemande(@Param("id") Long id,
                       @Param("employeeId") Long employeeId,
                       @Param("dateDebut") Date dateDebut,
                       @Param("dateFin") Date dateFin,
                       @Param("motif") String motif,
                       @Param("duree") int duree,
-                      @Param("remplacerPar") String remplacerPar);
+                      @Param("remplacerPar") String remplacerPar,
+                      @Param("remplacantArab") String remplacantArab);
 
 
 /// ////////////////////////////

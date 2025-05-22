@@ -120,6 +120,8 @@ public class DemandeCongeController {
         responseDTO.setStatut(demande.getStatut());
         responseDTO.setDuree(demande.getDuree());
         responseDTO.setRemplacerPar(demande.getRemplacerPar());
+        responseDTO.setRemplacantArab(demande.getRemplacantArab()); // Ajout de ce champ
+        responseDTO.setMotifRefus(demande.getMotifRefus());
         return responseDTO;
     }
 

@@ -190,12 +190,12 @@
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
         const token = localStorage.getItem('token');
-        if (!token) return window.location.href = 'index.html';
+        if (!token) return window.location.href = '../user/index.html';
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             localStorage.removeItem('token');
             localStorage.removeItem('refresh_token');
-            window.location.href = 'index.html';
+            window.location.href = '../user/index.html';
         });
 
         try {
@@ -285,7 +285,7 @@
 
     async function deleteDemande(demandeId) {
         const token = localStorage.getItem('token');
-        if (!token) return window.location.href = 'index.html';
+        if (!token) return window.location.href = '../user/index.html';
 
         if (!confirm('Êtes-vous sûr de vouloir supprimer cette demande ?')) return;
 

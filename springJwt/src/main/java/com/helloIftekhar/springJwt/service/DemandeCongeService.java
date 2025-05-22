@@ -69,8 +69,7 @@ public class DemandeCongeService {
         responseDTO.setDuree(demande.getDuree());
         responseDTO.setRemplacerPar(demande.getRemplacerPar());
         responseDTO.setMotifRefus(demande.getMotifRefus());
-
-
+        responseDTO.setRemplacantArab(demande.getRemplacantArab()); // Ajout de ce champ
         return responseDTO;
     }
 
