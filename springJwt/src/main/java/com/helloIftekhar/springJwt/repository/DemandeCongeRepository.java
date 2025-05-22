@@ -1,9 +1,7 @@
 package com.helloIftekhar.springJwt.repository;
 
 import com.helloIftekhar.springJwt.dto.DemandeCongeResponseDTO;
-import com.helloIftekhar.springJwt.dto.StatutDemande;
 import com.helloIftekhar.springJwt.model.DemandeConge;
-import com.helloIftekhar.springJwt.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -106,5 +104,19 @@ public interface DemandeCongeRepository extends JpaRepository<DemandeConge, Long
 List<DemandeConge> findByIdEmployeeIn(@Param("employeeIds") List<Long> employeeIds);
 
 
+
+
+    // Dans DemandeCongeRepository.java
+
+    @Query("SELECT COUNT(d) FROM DemandeConge d WHERE d.idEmployee IN :employeeIds")
+    long countByIdEmployeeIn(@Param("employeeIds") List<Long> employeeIds);
+
+    @Query("SELECT COUNT(d) FROM DemandeConge d WHERE d.idEmployee IN :employeeIds AND d.statut = :status")
+    long countByIdEmployeeInAndStatut(@Param("employeeIds") List<Long> employeeIds,
+                                      @Param("status") String status);
+
+    @Query("SELECT d FROM DemandeConge d WHERE d.idEmployee IN :employeeIds ORDER BY d.dateCreation DESC")
+    Page<DemandeConge> findByIdEmployeeIn(@Param("employeeIds") List<Long> employeeIds,
+                                          Pageable pageable);
 }
 
