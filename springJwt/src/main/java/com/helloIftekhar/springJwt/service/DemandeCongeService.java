@@ -264,7 +264,29 @@ public class DemandeCongeService {
 
 
 
+// Ajoutez cette méthode pour les statistiques
 
+
+    public DemandeStatsDTO getStatsDemandesChefsByDepartement(Long departementId) {
+        // 1. Récupérer tous les chefs de service du département
+        List<User> chefsService = userRepository.findChefsServiceByDepartementId(departementId);
+
+        // 2. Collecter leurs IDs
+        List<Long> chefsIds = chefsService.stream()
+                .map(user -> Long.valueOf(user.getId()))
+                .collect(Collectors.toList());
+
+        if (chefsIds.isEmpty()) {
+            return new DemandeStatsDTO(0, 0, 0);
+        }
+
+        // 3. Compter les demandes par statut
+        long approuvees = demandeCongeRepository.countByIdEmployeeInAndStatut(chefsIds, StatutDemande.APPROUVE);
+        long enAttente = demandeCongeRepository.countByIdEmployeeInAndStatut(chefsIds, StatutDemande.EN_ATTENTE);
+        long refusees = demandeCongeRepository.countByIdEmployeeInAndStatut(chefsIds, StatutDemande.REFUSE);
+
+        return new DemandeStatsDTO(approuvees, enAttente, refusees);
+    }
 
 
 
