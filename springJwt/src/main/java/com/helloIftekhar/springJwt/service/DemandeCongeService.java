@@ -258,25 +258,6 @@ public class DemandeCongeService {
                 .collect(Collectors.toList());
     }
 
-    // Ajoutez cette méthode pour les statistiques
-    public DemandeStatsDTO getStatsDemandesChefsByDepartement(Long departementId) {
-        List<DemandeCongeResponseDTO> demandes = getDemandesChefsByDepartement(departementId);
-
-        long approuvees = demandes.stream()
-                .filter(d -> "APPROUVE".equals(d.getStatut()))
-                .count();
-
-        long refusees = demandes.stream()
-                .filter(d -> "REFUSE".equals(d.getStatut()))
-                .count();
-
-        long enAttente = demandes.stream()
-                .filter(d -> "EN_ATTENTE".equals(d.getStatut()))
-                .count();
-
-        return new DemandeStatsDTO(approuvees, refusees, enAttente);
-    }
-
 
 
 }

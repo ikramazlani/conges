@@ -178,7 +178,6 @@ public class DemandeCongeController {
     @PreAuthorize("hasRole('CHEF_DEPARTEMENT')")
     public ResponseEntity<DemandeStatsDTO> getStatsDemandesChefsByDepartement(
             @PathVariable Long departementId) {
-
         DemandeStatsDTO stats = demandeCongeService.getStatsDemandesChefsByDepartement(departementId);
         return ResponseEntity.ok(stats);
     }

@@ -7,33 +7,83 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#EFF6FF',
+                            100: '#DBEAFE',
+                            200: '#BFDBFE',
+                            300: '#93C5FD',
+                            400: '#60A5FA',
+                            500: '#3B82F6',
+                            600: '#2563EB',
+                            700: '#1D4ED8',
+                            800: '#1E40AF',
+                            900: '#1E3A8A',
+                        },
+                        secondary: {
+                            50: '#F0FDFA',
+                            100: '#CCFBF1',
+                            200: '#99F6E4',
+                            300: '#5EEAD4',
+                            400: '#2DD4BF',
+                            500: '#14B8A6',
+                            600: '#0D9488',
+                            700: '#0F766E',
+                            800: '#115E59',
+                            900: '#134E4A',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
     <style>
         .service-card {
             transition: all 0.3s ease;
-            border-left: 4px solid #6366F1;
+            border-left: 4px solid #3B82F6;
         }
         .service-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
         }
         .chef-card {
-            border-left: 4px solid #10B981;
+            border-left: 4px solid #14B8A6;
         }
         .avatar {
             background-color: #EFF6FF;
             color: #3B82F6;
         }
+        .chef-detail-card {
+            transition: all 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+        .chef-detail-card.active {
+            max-height: 500px;
+            opacity: 1;
+        }
+        .table-row-hover:hover {
+            background-color: #F8FAFC;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
 <div class="min-h-screen flex flex-col">
-    <!-- Navigation (identique à votre dashboard) -->
+    <!-- Navigation -->
     <nav class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-700 mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600 mr-2">
                             <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
                             <line x1="16" x2="16" y1="2" y2="6"></line>
                             <line x1="8" x2="8" y1="2" y2="6"></line>
@@ -47,7 +97,7 @@
                     <div class="relative">
                         <button id="userMenuBtn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" aria-expanded="false">
                             <div class="flex items-center">
-                                <div class="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-white">
+                                <div class="h-8 w-8 rounded-full bg-primary-600 flex items-center justify-center text-white">
                                     <i class="fas fa-user"></i>
                                 </div>
                                 <span class="ml-2 text-gray-700">Chef Département</span>
@@ -71,17 +121,17 @@
     </nav>
 
     <div class="flex flex-1">
-        <!-- Sidebar (identique à votre dashboard) -->
+        <!-- Sidebar -->
         <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
             <div class="h-full flex flex-col">
                 <nav class="flex-1 py-4 px-2 space-y-1">
-                    <a href="Dash_ChefDep.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                        <i class="fas fa-tachometer-alt text-primary-700 mr-3"></i>
+                    <a href="Dash_ChefDep.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-tachometer-alt text-gray-500 group-hover:text-gray-600 mr-3"></i>
                         Tableau de bord
                     </a>
 
-                    <a href="services.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                        <i class="fas fa-cogs text-gray-500 group-hover:text-gray-600 mr-3"></i>
+                    <a href="services.html" class="bg-primary-50 text-primary-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-cogs text-primary-700 mr-3"></i>
                         Gestion des Services
                     </a>
 
@@ -116,26 +166,50 @@
         <!-- Main Content -->
         <div class="flex-1 p-8">
             <div class="mb-8">
-                <h1 class="text-2xl font-bold text-gray-900">Chefs de Service - Département IT</h1>
-                <p class="text-gray-600">Liste des chefs de service et leurs services associés</p>
-                <p class="text-sm text-gray-500 mt-2" id="currentDate"></p>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Chefs de Service</h1>
+                        <p class="text-gray-600">Liste des chefs de service et leurs services associés</p>
+                    </div>
+                    <div class="text-sm bg-blue-50 text-blue-600 px-3 py-1 rounded-full flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                </div>
             </div>
 
             <!-- Services Section -->
             <div class="mb-10">
-                <div class="flex justify-between items-center mb-4">
+                <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-semibold text-gray-800">Services du Département</h2>
+                    <span class="text-sm text-gray-500">Total: <span id="servicesCount" class="font-medium">0</span> services</span>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="servicesContainer">
                     <!-- Services will be loaded here -->
+                    <div class="animate-pulse bg-white rounded-lg shadow p-6">
+                        <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                        <div class="h-3 bg-gray-200 rounded w-1/2 mb-6"></div>
+                        <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+                    </div>
+                    <div class="animate-pulse bg-white rounded-lg shadow p-6">
+                        <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                        <div class="h-3 bg-gray-200 rounded w-1/2 mb-6"></div>
+                        <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+                    </div>
+                    <div class="animate-pulse bg-white rounded-lg shadow p-6">
+                        <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                        <div class="h-3 bg-gray-200 rounded w-1/2 mb-6"></div>
+                        <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Chefs de Service Section -->
             <div>
-                <div class="flex justify-between items-center mb-4">
+                <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-semibold text-gray-800">Chefs de Service</h2>
+                    <span class="text-sm text-gray-500">Total: <span id="chefsCount" class="font-medium">0</span> chefs</span>
                 </div>
 
                 <div class="bg-white shadow-sm rounded-lg overflow-hidden">
@@ -151,9 +225,33 @@
                             </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200" id="chefsTableBody">
-                            <!-- Chefs will be loaded here -->
+                            <!-- Loading state -->
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                    <div class="flex justify-center items-center space-x-2">
+                                        <i class="fas fa-circle-notch fa-spin text-blue-500"></i>
+                                        <span>Chargement des données...</span>
+                                    </div>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- Chef Details Card (hidden by default) -->
+                <div id="chefDetailCard" class="chef-detail-card mt-6 bg-white rounded-lg shadow-md p-6 transition-all duration-300 border-t-4 border-secondary-500">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">Détails du Chef de Service</h3>
+                            <p class="text-sm text-gray-500">Informations complètes</p>
+                        </div>
+                        <button id="closeDetailBtn" class="text-gray-400 hover:text-gray-600 transition-colors">
+                            <i class="fas fa-times text-lg"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="chefDetailContent">
+                        <!-- Details will be loaded here -->
                     </div>
                 </div>
             </div>
@@ -168,6 +266,36 @@
     // Fetch and display data
     document.addEventListener('DOMContentLoaded', async function() {
         try {
+            // Show loading states
+            document.getElementById('servicesContainer').innerHTML = `
+                <div class="animate-pulse bg-white rounded-lg shadow p-6">
+                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                    <div class="h-3 bg-gray-200 rounded w-1/2 mb-6"></div>
+                    <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+                </div>
+                <div class="animate-pulse bg-white rounded-lg shadow p-6">
+                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                    <div class="h-3 bg-gray-200 rounded w-1/2 mb-6"></div>
+                    <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+                </div>
+                <div class="animate-pulse bg-white rounded-lg shadow p-6">
+                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                    <div class="h-3 bg-gray-200 rounded w-1/2 mb-6"></div>
+                    <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+                </div>
+            `;
+
+            document.getElementById('chefsTableBody').innerHTML = `
+                <tr>
+                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                        <div class="flex justify-center items-center space-x-2">
+                            <i class="fas fa-circle-notch fa-spin text-blue-500"></i>
+                            <span>Chargement des données...</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+
             const users = await makeAuthenticatedRequest('http://localhost:8080/api/users/by-departement/1');
 
             // Filter chefs de service (role CHEF_SERVICE)
@@ -175,6 +303,12 @@
 
             // Get unique services
             const services = [...new Set(users.map(user => user.serviceName))].filter(name => name);
+
+            // Display services count
+            document.getElementById('servicesCount').textContent = services.length;
+
+            // Display chefs count
+            document.getElementById('chefsCount').textContent = chefsService.length;
 
             // Display services
             displayServices(services);
@@ -184,16 +318,53 @@
 
         } catch (error) {
             console.error('Error fetching data:', error);
-            alert('Une erreur est survenue lors du chargement des données.');
+
+            // Show error state for services
+            document.getElementById('servicesContainer').innerHTML = `
+                <div class="col-span-3 bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                    <i class="fas fa-exclamation-triangle text-red-400 text-2xl mb-2"></i>
+                    <p class="text-red-600 font-medium">Erreur de chargement des services</p>
+                    <p class="text-sm text-red-500 mt-1">${error.message || 'Veuillez réessayer plus tard'}</p>
+                    <button onclick="window.location.reload()" class="mt-3 text-sm text-red-600 hover:text-red-800 font-medium">
+                        <i class="fas fa-sync-alt mr-1"></i> Réessayer
+                    </button>
+                </div>
+            `;
+
+            // Show error state for chefs
+            document.getElementById('chefsTableBody').innerHTML = `
+                <tr>
+                    <td colspan="5" class="px-6 py-4 text-center">
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 inline-block">
+                            <i class="fas fa-exclamation-triangle text-red-400 mr-2"></i>
+                            <span class="text-red-600">Erreur de chargement des chefs de service</span>
+                            <button onclick="window.location.reload()" class="ml-3 text-sm text-red-600 hover:text-red-800 font-medium">
+                                <i class="fas fa-sync-alt mr-1"></i> Réessayer
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
         }
     });
 
     function displayServices(services) {
         const container = document.getElementById('servicesContainer');
+        container.innerHTML = '';
+
+        if (services.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-3 bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+                    <i class="fas fa-info-circle text-gray-400 text-2xl mb-2"></i>
+                    <p class="text-gray-600">Aucun service disponible</p>
+                </div>
+            `;
+            return;
+        }
 
         services.forEach(service => {
             const serviceCard = document.createElement('div');
-            serviceCard.className = 'service-card bg-white rounded-lg shadow p-6 flex items-start';
+            serviceCard.className = 'service-card bg-white rounded-lg shadow p-6 flex items-start hover:shadow-md transition-shadow';
 
             serviceCard.innerHTML = `
                 <div class="flex-shrink-0">
@@ -201,13 +372,17 @@
                         <i class="fas fa-cog text-xl"></i>
                     </div>
                 </div>
-                <div class="ml-4">
-                    <h3 class="text-lg font-medium text-gray-900">${service}</h3>
-                    <p class="text-gray-500 mt-1">Service du département IT</p>
-                    <div class="mt-4">
+                <div class="ml-4 flex-1">
+                    <h3 class="text-lg font-medium text-gray-900 truncate">${service}</h3>
+                    <p class="text-gray-500 mt-1 text-sm">Service du département IT</p>
+                    <div class="mt-4 flex justify-between items-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            <i class="fas fa-circle text-green-500 mr-1" style="font-size: 6px;"></i>
                             Actif
                         </span>
+                        <button class="text-primary-600 hover:text-primary-800 text-sm font-medium">
+                            <i class="fas fa-chevron-right mr-1"></i> Voir
+                        </button>
                     </div>
                 </div>
             `;
@@ -218,41 +393,62 @@
 
     function displayChefs(chefs) {
         const tableBody = document.getElementById('chefsTableBody');
+        tableBody.innerHTML = '';
+
+        if (chefs.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 inline-block">
+                            <i class="fas fa-info-circle text-gray-400 mr-2"></i>
+                            <span>Aucun chef de service trouvé</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
 
         chefs.forEach(chef => {
             const row = document.createElement('tr');
-            row.className = 'hover:bg-gray-50';
+            row.className = 'table-row-hover transition-colors';
 
             row.innerHTML = `
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
                         <div class="flex-shrink-0 h-10 w-10">
                             <div class="avatar h-10 w-10 rounded-full flex items-center justify-center">
-                                <i class="fas fa-user"></i>
+                                ${chef.firstName.charAt(0)}${chef.lastName.charAt(0)}
                             </div>
                         </div>
                         <div class="ml-4">
                             <div class="text-sm font-medium text-gray-900">${chef.firstName} ${chef.lastName}</div>
-                            <div class="text-sm text-gray-500">${chef.grade}</div>
+                            <div class="text-sm text-gray-500">${chef.grade || 'Non spécifié'}</div>
                         </div>
                     </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900">${chef.serviceName}</div>
+                    <div class="text-sm text-gray-900 flex items-center">
+                        <i class="fas fa-building text-gray-400 mr-2 text-sm"></i>
+                        ${chef.serviceName || 'Non spécifié'}
+                    </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900">${chef.email}</div>
+                    <div class="text-sm text-gray-900 flex items-center">
+                        <i class="fas fa-envelope text-gray-400 mr-2 text-sm"></i>
+                        ${chef.email}
+                    </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                        ${chef.matricule}
+                        ${chef.matricule || 'N/A'}
                     </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button class="text-primary-600 hover:text-primary-900 mr-3">
+                    <button class="mail-chef-btn text-blue-600 hover:text-blue-900 mr-4 transition-colors" data-chef-email="${chef.email}" title="Envoyer un email">
                         <i class="fas fa-envelope"></i>
                     </button>
-                    <button class="text-indigo-600 hover:text-indigo-900">
+                    <button class="view-chef-btn text-secondary-600 hover:text-secondary-900 transition-colors" data-chef-id="${chef.id}" title="Voir les détails">
                         <i class="fas fa-eye"></i>
                     </button>
                 </td>
@@ -260,7 +456,106 @@
 
             tableBody.appendChild(row);
         });
+
+        // Add event listeners for eye buttons
+        document.querySelectorAll('.view-chef-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const chefId = this.getAttribute('data-chef-id');
+                const chef = chefs.find(c => c.id == chefId);
+                showChefDetails(chef);
+            });
+        });
+
+        // Add event listeners for mail buttons
+        document.querySelectorAll('.mail-chef-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const chefEmail = this.getAttribute('data-chef-email');
+                openMailClient(chefEmail);
+            });
+        });
     }
+
+    function showChefDetails(chef) {
+        const detailCard = document.getElementById('chefDetailCard');
+        const detailContent = document.getElementById('chefDetailContent');
+
+        detailContent.innerHTML = `
+            <div>
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium text-gray-500">Nom complet</h4>
+                    <p class="mt-1 text-sm text-gray-900 flex items-center">
+                        <i class="fas fa-user mr-2 text-gray-400"></i>
+                        ${chef.firstName} ${chef.lastName}
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium text-gray-500">Grade</h4>
+                    <p class="mt-1 text-sm text-gray-900 flex items-center">
+                        <i class="fas fa-user-tag mr-2 text-gray-400"></i>
+                        ${chef.grade || 'Non spécifié'}
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium text-gray-500">Service</h4>
+                    <p class="mt-1 text-sm text-gray-900 flex items-center">
+                        <i class="fas fa-building mr-2 text-gray-400"></i>
+                        ${chef.serviceName || 'Non spécifié'}
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium text-gray-500">Département</h4>
+                    <p class="mt-1 text-sm text-gray-900 flex items-center">
+                        <i class="fas fa-sitemap mr-2 text-gray-400"></i>
+                        ${chef.departementName || 'Non spécifié'}
+                    </p>
+                </div>
+            </div>
+            <div>
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium text-gray-500">Email</h4>
+                    <p class="mt-1 text-sm text-gray-900 flex items-center">
+                        <i class="fas fa-envelope mr-2 text-gray-400"></i>
+                        ${chef.email}
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium text-gray-500">Matricule</h4>
+                    <p class="mt-1 text-sm text-gray-900 flex items-center">
+                        <i class="fas fa-id-card mr-2 text-gray-400"></i>
+                        ${chef.matricule || 'Non spécifié'}
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium text-gray-500">Date d'embauche</h4>
+                    <p class="mt-1 text-sm text-gray-900 flex items-center">
+                        <i class="fas fa-calendar-day mr-2 text-gray-400"></i>
+                        ${chef.dateEmbauche ? new Date(chef.dateEmbauche).toLocaleDateString('fr-FR') : 'Non spécifiée'}
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium text-gray-500">Téléphone</h4>
+                    <p class="mt-1 text-sm text-gray-900 flex items-center">
+                        <i class="fas fa-phone mr-2 text-gray-400"></i>
+                        ${chef.phone || 'Non spécifié'}
+                    </p>
+                </div>
+            </div>
+        `;
+
+        detailCard.classList.add('active');
+
+        // Scroll to the detail card
+        detailCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function openMailClient(email) {
+        window.location.href = `mailto:${email}`;
+    }
+
+    // Close detail card
+    document.getElementById('closeDetailBtn').addEventListener('click', function() {
+        document.getElementById('chefDetailCard').classList.remove('active');
+    });
 
     // Function to get JWT token from localStorage
     function getToken() {
