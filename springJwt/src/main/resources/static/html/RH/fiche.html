@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Administrative</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        /* Custom styles for Arabic text alignment if needed */
+        /* The 'dir="rtl"' attribute on parent elements handles most of this */
+       .arabic-text {
+            direction: rtl;
+        }
+        /* Ensure text justification for main paragraphs as seen in the original document */
+       .main-content-paragraph {
+            text-align: justify;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-100 flex items-center justify-center p-10 text-right arabic-text mx-8">
+
+<div id="fiche-administrative" class="bg-white max-w-3xl w-full shadow-md rounded">
+    <div class="flex items-center justify-between p-4 border-b relative" style="margin-bottom: 60px;" >
+
+        <div class="text-right">
+            <p class="text-sm text-cyan-700 font-bold" dir="rtl">المملكة المغربية</p>
+            <p class="text-sm text-cyan-700 font-bold" dir="rtl">وكالة الحوض المائي</p>
+            <p class="text-sm text-cyan-700 font-bold" dir="rtl">لأم الربيع</p>
+        </div>
+        <div class="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+            <img
+                    src="LOGOSTAGE.png"
+                    alt="Agency Logo"
+                    class="w-26 h-24"
+            />
+        </div>
+
+
+        <div class="text-left">
+            <p class="text-sm text-cyan-700 font-bold">Royaume du Maroc</p>
+            <p class="text-sm text-cyan-700 font-bold">Agence du Bassin Hydraulique</p>
+            <p class="text-sm text-cyan-700 font-bold">de l'Oum Er-Rbia</p>
+            <p class="text-xs text-cyan-700 font-bold">ⵜⴰⴳⴻⵏⵙⴰ ⵏ ⵡⴰⵎⴰⵏ ⵏ ⵓⵎ ⵔⴱⵉⵄ</p>
+        </div>
+
+    </div>
+
+    <div class="pl-12 pr-12 text-right arabic-text" style="margin-bottom: 200px;">
+        <div class="flex justify-between mb-1" style="margin-bottom: 40px; " >
+            <div class="flex items-start">
+                <p>رقم :</p>
+                <p class="mr-14"> ك.ش.إ/4/2025</p>
+            </div>
+            <p class="text-left mr-14 ml-0">    بني ملال، في : 02 ماي 2025   </p>
+        </div>
+
+        <h2 class="text-center font-bold text-lg mb-4">مقـــــــــــــرر <br/> عطلة إدارية</h2>
+
+        <p class="mb-3 leading-relaxed main-content-paragraph">
+            إن رئيس قسم الشؤون الإدارية و المالية لوكالة الحوض المائي لأم الربيع ببني ملال،
+        </p>
+
+        <p class="mb-3 leading-relaxed main-content-paragraph">
+            بمقتضى الظهير الشريف رقم 1.58.008 بتاريخ 4 شعبان 1377 (24 فبراير 1958) بمثابة
+            النظام الأساسي للوظيفة العمومية حسبما وقع تغييره و تتميمه،
+        </p>
+
+        <p class="mb-3 leading-relaxed main-content-paragraph">
+            وبناء على الظهير الشريف رقم 1.11.10 الصادر في ربيع الأول 1432 (18 فبراير 2011)
+            بتنفيذ القانون رقم 50.05 بتغيير وتتميم الظهير الشريف رقم 1.58.008 بتاريخ 4 شعبان 1377 (24
+            فبراير 1958) بمثابة النظام الأساسي للوظيفة العمومية، ولا سيما الفصل 40 منه،
+        </p>
+
+        <p class="mb-3 leading-relaxed main-content-paragraph">
+            وبناء على النظام الأساسي لموظفي وكالات الأحواض المائية المصادق عليه بتاريخ 12 يوليوز
+            2010 وحسب ما تم تغييره وتتميمه بتاريخ 27 ماي 2014.
+        </p>
+
+        <p class="mb-5 leading-relaxed main-content-paragraph">
+            بناء على الطلب المقدم من طرف السيدة.................... بتاريخ 02 ماي 2025.
+        </p>
+
+        <h3 class="font-bold text-center mb-4">يقرر ما يلي:</h3>
+
+        <p class="mb-3 leading-relaxed main-content-paragraph">
+            <strong>الفصل الأول:</strong> ابتداء من 05 ماي 2025، تمنح رخصة إدارية للسيدة............... تقنية من
+            الدرجة الرابعة، بوكالة الحوض المائي لأم الربيع لمدة خمسة (05) أيام عمل تطابق حقها في العطلة لسنة
+            2024.
+        </p>
+
+        <p class="mb-3 leading-relaxed main-content-paragraph">
+            <strong>الفصل الثاني:</strong> تحتفظ المعنية بالأمر ب (14) يوم عمل كبقية حقها في العطلة برسم سنة 2024 و (22)
+            يوم عمل برسم سنة 2025.
+        </p>
+
+        <p class="mb-5 leading-relaxed main-content-paragraph">
+            <strong>الفصل الثالث:</strong> ينوب عن المعنية بالأمر طيلة الرخصة السيد(ة)...................
+        </p>
+    </div >
+
+    <div class="border-t px-4 py-2 flex flex-wrap justify-between text-xs text-cyan-700">
+        <div class="flex flex-col">
+            <p class="font-bold">Tel : <a href="tel:0523482355">05 23 48 23 55</a> / <a href="tel:05232855">28 55</a> / <a href="tel:05233713">37 13</a></p>
+            <p class="font-bold">Fax : 05 23 48 94 15</p>
+            <p class="font-bold">Email : <a href="mailto:agence@abhoer.ma">agence@abhoer.ma</a></p>
+            <p class="font-bold">B.P : 511 Béni-Mellal</p>
+        </div>
+
+        <div class="flex flex-col items-center">
+            <p class="font-bold"><a href="http://www.abhoer.ma" target="_blank" rel="noopener noreferrer">www.abhoer.ma</a></p>
+            <p class="font-bold">ICE:003076338000071</p>
+            <p class="font-bold">IF:6141013</p>
+        </div>
+
+        <div class="flex flex-col text-right arabic-text">
+            <p class="font-bold">الهاتف: 05 23 48 23 55 / 28 55 / 37 13</p>
+            <p class="font-bold">الفاكس: 05 23 48 94 15</p>
+            <p class="font-bold">البريد الإلكتروني: agence@abhoer.ma</p>
+            <p class="font-bold">ص.ب: 511 بني ملال</p>
+        </div>
+    </div>
+
+    <div class="fixed bottom-4 right-4 flex space-x-2">
+        <button id="exporterPdfBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Exporter PDF
+        </button>
+        <button id="retourBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Retour
+        </button>
+    </div>
+</div>
+
+<script>
+    document.getElementById('retourBtn').addEventListener('click', function() {
+        window.location.href = 'leave-requests.html';
+    });
+
+    document.getElementById('exporterPdfBtn').addEventListener('click', function() {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+        const ficheAdministrative = document.getElementById('fiche-administrative');
+
+        // Options pour html2canvas (améliorer la qualité si nécessaire)
+        const options = {
+            scale: 2, // Augmenter l'échelle pour une meilleure résolution
+            logging: false,
+            useCORS: true
+        };
+
+        html2canvas(ficheAdministrative, options).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = pdf.internal.pageSize.getWidth();
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            pdf.save('fiche_administrative.pdf');
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>
