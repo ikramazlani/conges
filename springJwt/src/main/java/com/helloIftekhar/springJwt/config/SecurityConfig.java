@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/login/**", "/register/**", "/refresh_token/**")
                         .permitAll()
+                        .requestMatchers("/forgot-password","/reset-password").permitAll()
                         .requestMatchers("/api/users/change-password").authenticated()
                         .requestMatchers("/api/users/departement/**").hasRole("CHEF_DEPARTEMENT")
                         .requestMatchers("/admin_only/**").hasAuthority("ADMIN")

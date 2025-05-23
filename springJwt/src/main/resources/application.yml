@@ -1,6 +1,12 @@
+# ===================================
+# Email Configuration
+# ===================================
+
+
+
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/kh
+    url: jdbc:mysql://localhost:3306/ll
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -24,6 +30,17 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: zouhrihajar77@gmail.com
+    password: qkqk gacu lvwa aqaf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 file:
   upload-dir: uploads
 

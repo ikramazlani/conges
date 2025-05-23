@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Système d'Authentification</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --error-color: #e74c3c;
+            --text-color: #333;
+            --light-gray: #f5f5f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .login-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            transition: all 0.3s ease;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        .footer-links {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1.5rem;
+                margin: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="login-header">
+        <h1>Connexion</h1>
+        <p>Veuillez entrer vos identifiants pour accéder à votre compte</p>
+    </div>
+
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="username">Nom d'utilisateur</label>
+            <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Entrez votre nom d'utilisateur"
+                    required
+                    autocomplete="username"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Entrez votre mot de passe"
+                    required
+                    autocomplete="current-password"
+            >
+        </div>
+
+        <button type="submit" class="login-btn">Se connecter</button>
+
+        <div id="errorMessage" class="error-message"></div>
+    </form>
+
+    <div class="footer-links">
+        <a href="#" id="forgotPassword">Mot de passe oublié ?</a>
+    </div>
+</div>
+
+<!-- Inclure les scripts -->
+<script src="../../js/apiService.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Vérifier si l'utilisateur est déjà connecté
+        if (localStorage.getItem('token')) {
+            const userRole = localStorage.getItem('userRole');
+            redirectBasedOnRole(userRole);
+        }
+
+        // Gestion de la soumission du formulaire
+        const loginForm = document.getElementById('loginForm');
+        const errorElement = document.getElementById('errorMessage');
+
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Afficher un indicateur de chargement
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.textContent = 'Connexion en cours...';
+            submitBtn.disabled = true;
+            errorElement.textContent = '';
+
+            try {
+                const response = await ApiService.login(username, password);
+
+                // Stocker les tokens et le rôle
+                localStorage.setItem('token', response.access_token);
+                localStorage.setItem('refresh_token', response.refresh_token);
+                localStorage.setItem('userRole', response.role); // Stocker le rôle
+
+                // Rediriger en fonction du rôle
+                redirectBasedOnRole(response.role);
+
+            } catch (error) {
+                console.error('Erreur de connexion:', error);
+                errorElement.textContent = error.message || 'Identifiants incorrects. Veuillez réessayer.';
+
+                // Secouer l'interface pour indiquer une erreur
+                loginForm.classList.add('shake');
+                setTimeout(() => {
+                    loginForm.classList.remove('shake');
+                }, 500);
+            } finally {
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Fonction pour rediriger en fonction du rôle
+        function redirectBasedOnRole(role) {
+            // Convertir le rôle en minuscules pour une comparaison insensible à la casse
+            const normalizedRole = role ? role.toLowerCase() : 'user';
+
+            switch(normalizedRole) {
+                case 'admin':
+                    window.location.href = '../ADMIN/dashbord.html';
+                    break;
+                case 'rh':
+                    window.location.href = 'rh-dashboard.html';
+                    break;
+                case 'user':
+                default:
+                    window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Animation de secousse pour les erreurs
+        const style = document.createElement('style');
+        style.textContent = `
+            .shake {
+                animation: shake 0.5s;
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    });
+</script>
+
+</body>
+</html>
