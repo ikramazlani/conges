@@ -1,9 +1,7 @@
 package com.helloIftekhar.springJwt.repository;
 
 import com.helloIftekhar.springJwt.dto.DemandeCongeResponseDTO;
-import com.helloIftekhar.springJwt.dto.StatutDemande;
 import com.helloIftekhar.springJwt.model.DemandeConge;
-import com.helloIftekhar.springJwt.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -101,21 +99,6 @@ public interface DemandeCongeRepository extends JpaRepository<DemandeConge, Long
                       @Param("remplacerPar") String remplacerPar);
 
 
-/// ////////////////////////////
-@Query("SELECT d FROM DemandeConge d WHERE d.idEmployee IN :employeeIds ORDER BY d.dateCreation DESC")
-List<DemandeConge> findByIdEmployeeIn(@Param("employeeIds") List<Long> employeeIds);
-
-
-//en train de dev
-    long countByIdEmployeeInAndStatut(List<Long> employeeIds, StatutDemande statut);
-
-
-    @Query("SELECT u FROM User u WHERE u.departement.id = :departementId AND u.role = 'CHEF_SERVICE'")
-    List<User> findChefsServiceByDepartementId(@Param("departementId") Long departementId);
-
-
-
-
 
     // Dans DemandeCongeRepository.java
 
@@ -127,7 +110,6 @@ List<DemandeConge> findByIdEmployeeIn(@Param("employeeIds") List<Long> employeeI
                                       @Param("status") String status);
 
     @Query("SELECT d FROM DemandeConge d WHERE d.idEmployee IN :employeeIds ORDER BY d.dateCreation DESC")
-    Page<DemandeConge> findByIdEmployeeIn(@Param("employeeIds") List<Long> employeeIds,
-                                          Pageable pageable);
+    Page<DemandeConge> findByIdEmployeeIn(@Param("employeeIds") List<Long> employeeIds);
 }
 

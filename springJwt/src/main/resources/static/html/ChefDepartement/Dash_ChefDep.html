@@ -113,7 +113,7 @@
     </nav>
 
     <div class="flex flex-1">
-        <!-- Sidebar - Utilisation du même design que dans la page de demande de congé -->
+        <!-- Sidebar -->
         <div class="bg-white shadow-sm border-r border-gray-200 w-64 hidden md:block">
             <div class="h-full flex flex-col">
                 <nav class="flex-1 py-4 px-2 space-y-1">
@@ -127,7 +127,6 @@
                         Gestion des Services
                     </a>
 
-                    <!-- Nouvelle entrée pour la gestion des demandes -->
                     <a href="leave-requests-chef-service.html" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <i class="fas fa-file-signature text-gray-500 group-hover:text-gray-600 mr-3"></i>
                         Demandes Chef Service
@@ -155,6 +154,7 @@
                 </nav>
             </div>
         </div>
+
         <!-- Main Content -->
         <div class="flex-1 min-w-0 overflow-auto">
             <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
@@ -167,7 +167,7 @@
                 </div>
 
                 <!-- Stats Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <!-- Services du département -->
                     <div class="stat-card services-card bg-white rounded-lg shadow overflow-hidden">
                         <div class="px-4 py-5 sm:p-6">
@@ -218,7 +218,7 @@
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:px-6">
                             <div class="text-sm">
-                                <a href="leave-requests-chef-service.html?status=APPROUVÉ" class="font-medium text-green-600 hover:text-green-500 flex items-center">
+                                <a href="leave-requests-chef-service.html?status=APPROUVE" class="font-medium text-green-600 hover:text-green-500 flex items-center">
                                     <span>Voir les demandes</span>
                                     <i class="fas fa-chevron-right ml-1 text-xs"></i>
                                 </a>
@@ -228,43 +228,14 @@
 
                     <!-- Demandes en attente -->
                     <div class="stat-card pending-card bg-white rounded-lg shadow overflow-hidden">
-                        <div class="px-4 py-5 sm:p-6">
+                        <div class=" px-4 py-5 sm:p-6">
                             <div class="flex items-center">
-                                <div class="flex-shrink-0 bg-yellow-100 rounded-full p-3">
-                                    <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                                <div class="flex-shrink-0 bg-yellow-100 rounded-full p-3 ">
+                                    <i class="  fas fa-clock text-yellow-600 text-xl"></i>
                                 </div>
                                 <div class="ml-5">
-                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                    <dt class=" text-sm font-medium text-gray-500 truncate">
                                         En attente
-                                    </dt>
-                                    <dd class="flex items-baseline">
-                                        <div id="pendingLeaves" class="text-2xl font-semibold text-gray-900">
-                                            --
-                                        </div>
-                                    </dd>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-gray-50 px-4 py-3 sm:px-6">
-                            <div class="text-sm">
-                                <a href="leave-requests-chef-service.html?status=EN_ATTENTE" class="font-medium text-yellow-600 hover:text-yellow-500 flex items-center">
-                                    <span>Voir les demandes</span>
-                                    <i class="fas fa-chevron-right ml-1 text-xs"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Demandes rejetées -->
-                    <div class="stat-card rejected-card bg-white rounded-lg shadow overflow-hidden">
-                        <div class="px-4 py-5 sm:p-6">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 bg-red-100 rounded-full p-3">
-                                    <i class="fas fa-times-circle text-red-600 text-xl"></i>
-                                </div>
-                                <div class="ml-5">
-                                    <dt class="text-sm font-medium text-gray-500 truncate">
-                                        Rejetées
                                     </dt>
                                     <dd class="flex items-baseline">
                                         <div id="rejectedLeaves" class="text-2xl font-semibold text-gray-900">
@@ -276,9 +247,38 @@
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:px-6">
                             <div class="text-sm">
-                                <a href="leave-requests-chef-service.html?status=REJETÉ" class="font-medium text-red-600 hover:text-red-500 flex items-center">
+                                <a href="leave-requests-chef-service.html?status=REFUSE" class="   font-medium text-yellow-600 hover:text-yellow-500 flex items-center">
                                     <span>Voir les demandes</span>
                                     <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Demandes rejetées -->
+                    <div class="stat-card rejected-card bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="   flex-shrink-0 bg-red-100 rounded-full p-3">
+                                    <i class="fas fa-times-circle text-red-600 text-xl "></i>
+                                </div>
+                                <div class="ml-5">
+                                    <dt class="text-sm font-medium text-gray-500 truncate">
+                                        Rejetées
+                                    </dt>
+                                    <dd class="flex items-baseline">
+                                        <div id="pendingLeaves" class="text-2xl font-semibold text-gray-900">
+                                            --
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:px-6">
+                            <div class="text-sm">
+                                <a href="leave-requests-chef-service.html?status=EN_ATTENTE" class="font-medium text-red-600 hover:text-red-500 flex items-center">
+                                    <span>Voir les demandes</span>
+                                    <i class=" fas fa-chevron-right ml-1 text-xs"></i>
                                 </a>
                             </div>
                         </div>
@@ -345,11 +345,20 @@
             const services = await makeAuthenticatedRequest(`http://localhost:8080/api/services-departement/departement/${departementId}/all`);
             document.getElementById('totalServices').textContent = services.length || '0';
 
-            // 3. Get leave requests stats
-            const leavesStats = await makeAuthenticatedRequest('http://localhost:8080/api/demandes-conge/departement/{departementId}/chefs-demandes/stats');
-            document.getElementById('approvedLeaves').textContent = leavesStats.approuvees || '0';
-            document.getElementById('pendingLeaves').textContent = leavesStats.enAttente || '0';
-            document.getElementById('rejectedLeaves').textContent = leavesStats.refusees || '0';
+            // 3. Get leave requests stats for chefs de service
+            const chefsStats = await makeAuthenticatedRequest(`http://localhost:8080/api/demandes-conge/departement/${departementId}/chef-service/stats`);
+
+            // Debug: Afficher les stats reçues
+            console.log("Statistiques reçues:", chefsStats);
+
+            // Update the stats cards
+            document.getElementById('approvedLeaves').textContent = chefsStats.approuvees || '0';
+            document.getElementById('pendingLeaves').textContent = chefsStats.enAttente || '0';
+            document.getElementById('rejectedLeaves').textContent = chefsStats.refusees || '0';
+
+            // Vérification des totaux
+            const total = (chefsStats.approuvees || 0) + (chefsStats.enAttente || 0) + (chefsStats.refusees || 0);
+            console.log("Total des demandes:", total);
 
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
@@ -404,6 +413,9 @@
             window.location.href = '../user/index.html';
         } else {
             fetchDashboardData();
+
+            // Rafraîchir les données toutes les 30 secondes
+            setInterval(fetchDashboardData, 30000);
         }
     });
 </script>

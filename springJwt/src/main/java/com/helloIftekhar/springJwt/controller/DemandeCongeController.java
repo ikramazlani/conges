@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/demandes-conge")
@@ -172,14 +173,6 @@ public class DemandeCongeController {
 
 
 
-    // ========== NOUVELLES FONCTIONNALITÉS ==========
 
-    @GetMapping("/departement/{departementId}/chefs-demandes/stats")
-    @PreAuthorize("hasRole('CHEF_DEPARTEMENT')")
-    public ResponseEntity<DemandeStatsDTO> getStatsDemandesChefsByDepartement(
-            @PathVariable Long departementId) {
-        DemandeStatsDTO stats = demandeCongeService.getStatsDemandesChefsByDepartement(departementId);
-        return ResponseEntity.ok(stats);
-    }
 
 }
